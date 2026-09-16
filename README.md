@@ -81,6 +81,26 @@ Adding an exercise means a `<div id="...">` in the page and one
 
 ## Testing
 
+### Writing a new page
+
+`.claude/skills/course-page/SKILL.md` is the house style — page skeleton, voice,
+the exercise contract, and the rule that nothing may be used before it is
+taught. Claude Code picks it up automatically in this directory; read it
+directly if you're working by hand.
+
+Three checks, all of which must be green before a page is done:
+
+```sh
+python3 scripts/check_vocabulary.py   # nothing used before the step that teaches it
+python3 scripts/verify_exercises.py   # solutions pass, starters don't, nav ids match
+python3 -m http.server 8000           # then actually read it
+```
+
+`scripts/vocabulary.json` is the ledger of which step first shows each piece of
+Python, plus written exemptions where a page deliberately builds something in
+early. An exemption has to describe something the page actually does.
+
+
 Two checks, both worth running after touching any page:
 
 ```sh

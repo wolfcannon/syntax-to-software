@@ -35,6 +35,14 @@ row.get("walk_index", 0)  <span class="c"># 0 — with a default of your choosin
       exist in the other dataset, missing is data, and <code>.get()</code> lets
       you record it.</p>
 
+      <div class="note">
+        <h4>Still borrowing from step 6</h4>
+        <p>This page keeps using <code>for</code> and <code>if</code> the way
+        step 4 introduced them — a dictionary is no more usable than a list
+        without walking it. Step 6 is where branching and looping get taught
+        as subjects rather than borrowed as tools.</p>
+      </div>
+
       <h2>From positional rows to named fields</h2>
       <p><code>zip</code> pairs up two sequences; <code>dict</code> turns pairs
       into a mapping. Together they convert a row you have to count your way
@@ -251,6 +259,7 @@ COURSE.exercise("ex3", {
     "then is a useful discomfort.</p>",
   setup: SAMPLE,
   starter:
+    "# given: the lookup from exercise 2, written compactly (step 7 explains how)\n" +
     "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n\n" +
     "joined = []\nfor row in acs_raw[1:]:\n    pass\n\n" +
     "n_matched = \nunmatched_geoids = \norphan_geoids = \n\n" +
@@ -277,6 +286,7 @@ COURSE.exercise("ex3", {
       code: "expect(sorted(expect_defined(globals(), 'orphan_geoids')), ['180973201071'])" }
   ],
   solution:
+    "# given: the lookup from exercise 2, written compactly (step 7 explains how)\n" +
     "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n\n" +
     "joined = []\n" +
     "for row in acs_raw[1:]:\n" +

@@ -59,6 +59,21 @@
         no overlap and no gap, for any k.</figcaption>
       </figure>
 
+      <h2>Two shapes you need now</h2>
+      <p>You cannot do anything with a list without walking it, so here are the
+      two pieces of grammar the rest of this page uses. Both get taught properly
+      in step 6 — this is just enough to read what follows.</p>
+<pre><span class="c"># do something once per item</span>
+for row in rows:
+    print(row)
+
+<span class="c"># do something only sometimes</span>
+if len(row) == 10:
+    print("full row")</pre>
+      <p>A colon opens the block and the indented lines under it are the block,
+      exactly as in step 1. The name after <code>for</code> is yours to choose;
+      it takes each item in turn.</p>
+
       <h2>List or tuple?</h2>
       <p>Both hold an ordered sequence. The difference is mutability, and the
       convention that has grown around it:</p>

@@ -1,0 +1,271 @@
+{
+  "_comment": [
+    "The course's vocabulary ledger: which step first shows each piece of Python.",
+    "scripts/check_vocabulary.py enforces it \u2014 no page may USE syntax in learner-",
+    "visible code before the step that teaches it. Prose may mention anything, as",
+    "long as it signposts (the block says 'step N'), because forward signposting",
+    "is orientation rather than assumed knowledge.",
+    "'position' is the course order: a step's own number, interludes in between."
+  ],
+  "positions": {
+    "step-01": 1,
+    "step-02": 2,
+    "step-03": 3,
+    "step-04": 4,
+    "step-05": 5,
+    "step-06": 6,
+    "step-07": 7,
+    "step-08": 8,
+    "interlude-jupyter": 8.5,
+    "step-09": 9,
+    "step-10": 10,
+    "step-11": 11,
+    "step-12": 12,
+    "step-13": 13,
+    "step-14": 14,
+    "step-15": 15,
+    "step-16": 16,
+    "interlude-scripts": 16.5,
+    "step-17": 17,
+    "step-18": 18,
+    "step-19": 19,
+    "step-20": 20,
+    "step-21": 21
+  },
+  "concepts": [
+    {
+      "name": "f-string",
+      "step": 3,
+      "patterns": [
+        "f\"[^\"]*\\{",
+        "f'[^']*\\{"
+      ]
+    },
+    {
+      "name": "str method",
+      "step": 3,
+      "patterns": [
+        "\\.(zfill|startswith|strip|split|replace|lower|upper|join)\\("
+      ]
+    },
+    {
+      "name": "slice",
+      "step": 3,
+      "patterns": [
+        "\\w\\[\\d*:\\d*\\]"
+      ]
+    },
+    {
+      "name": "sorted(key=)",
+      "step": 4,
+      "patterns": [
+        "sorted\\([^)]*key\\s*="
+      ]
+    },
+    {
+      "name": "lambda",
+      "step": 4,
+      "patterns": [
+        "\\blambda\\b"
+      ]
+    },
+    {
+      "name": "enumerate",
+      "step": 4,
+      "patterns": [
+        "\\benumerate\\("
+      ]
+    },
+    {
+      "name": ".append",
+      "step": 4,
+      "patterns": [
+        "\\.append\\("
+      ]
+    },
+    {
+      "name": "dict literal",
+      "step": 5,
+      "patterns": [
+        "^(?:(?!f[\"']).)*\\{\\s*[\"'][^\"']+[\"']\\s*:"
+      ]
+    },
+    {
+      "name": "dict .get",
+      "step": 5,
+      "patterns": [
+        "\\.get\\("
+      ]
+    },
+    {
+      "name": "zip",
+      "step": 5,
+      "patterns": [
+        "\\bzip\\("
+      ]
+    },
+    {
+      "name": "dict .items/.values",
+      "step": 5,
+      "patterns": [
+        "\\.(items|values|keys)\\("
+      ]
+    },
+    {
+      "name": "for loop",
+      "step": 6,
+      "patterns": [
+        "^\\s*for\\s+\\w"
+      ]
+    },
+    {
+      "name": "if statement",
+      "step": 6,
+      "patterns": [
+        "^\\s*if\\s+",
+        "^\\s*elif\\s+"
+      ]
+    },
+    {
+      "name": "while loop",
+      "step": 6,
+      "patterns": [
+        "^\\s*while\\s+"
+      ]
+    },
+    {
+      "name": "continue/break",
+      "step": 6,
+      "patterns": [
+        "^\\s*(continue|break)\\b"
+      ]
+    },
+    {
+      "name": "list comprehension",
+      "step": 7,
+      "patterns": [
+        "\\[[^\\]]*\\bfor\\b[^\\]]*\\]"
+      ]
+    },
+    {
+      "name": "dict/set comprehension",
+      "step": 7,
+      "patterns": [
+        "\\{[^}]*\\bfor\\b[^}]*\\}"
+      ]
+    },
+    {
+      "name": "set operations",
+      "step": 7,
+      "patterns": [
+        "\\bset\\(",
+        "\\w\\s[-&|]\\s\\w+_ids\\b"
+      ]
+    },
+    {
+      "name": "def",
+      "step": 8,
+      "patterns": [
+        "^\\s*def\\s+\\w"
+      ]
+    },
+    {
+      "name": "return",
+      "step": 8,
+      "patterns": [
+        "^\\s*return\\b"
+      ]
+    },
+    {
+      "name": "try/except",
+      "step": 11,
+      "patterns": [
+        "^\\s*try:",
+        "^\\s*except\\b"
+      ]
+    },
+    {
+      "name": "raise",
+      "step": 11,
+      "patterns": [
+        "^\\s*raise\\b"
+      ]
+    },
+    {
+      "name": "open()/with",
+      "step": 12,
+      "patterns": [
+        "^\\s*with\\s+",
+        "\\bopen\\("
+      ]
+    },
+    {
+      "name": "import",
+      "step": 13,
+      "patterns": [
+        "^\\s*import\\s+\\w",
+        "^\\s*from\\s+[\\w.]+\\s+import\\b"
+      ]
+    },
+    {
+      "name": "class",
+      "step": 14,
+      "patterns": [
+        "^\\s*class\\s+\\w"
+      ]
+    },
+    {
+      "name": "third-party library",
+      "step": 15,
+      "patterns": [
+        "\\b(pd|np|plt|pandas|numpy|matplotlib|scipy|geopandas)\\."
+      ]
+    },
+    {
+      "name": "requests",
+      "step": 16,
+      "patterns": [
+        "\\brequests\\.(get|post)\\("
+      ]
+    },
+    {
+      "name": "pytest",
+      "step": 18,
+      "patterns": [
+        "\\bpytest\\b"
+      ]
+    }
+  ],
+  "exemptions": [
+    {
+      "page": "step-01",
+      "concept": "for loop",
+      "why": "the indentation demo and the broken-syntax exercise are ABOUT block structure; the loop is scenery, and the exercise exists to be repaired"
+    },
+    {
+      "page": "step-01",
+      "concept": "if statement",
+      "why": "same block-structure demo"
+    },
+    {
+      "page": "step-01",
+      "concept": "slice",
+      "why": "acs_raw[1:] is scenery in the broken-syntax exercise; the learner repairs punctuation around it and never has to reason about the slice"
+    },
+    {
+      "page": "step-04",
+      "concept": "for loop",
+      "why": "introduced on the page itself in a 'two shapes you need now' box \u2014 you cannot do anything with a list without walking it. Step 6 teaches control flow properly"
+    },
+    {
+      "page": "step-04",
+      "concept": "if statement",
+      "why": "same box"
+    },
+    {
+      "page": "step-05",
+      "concept": "for loop",
+      "why": "same box, carried forward; dictionaries are equally unusable without iteration"
+    }
+  ]
+}
