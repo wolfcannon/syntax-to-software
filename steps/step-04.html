@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Step 4 — Strings and formatting</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="shell">
+  <div id="sidebar"></div>
+  <div class="main">
+    <div id="topbar"></div>
+    <div class="wrap">
+
+      <p class="eyebrow">Unit 1 — Foundations · Step 4</p>
+      <h1>Strings and formatting</h1>
+      <p class="lede">Now that identifiers must stay text, you need to be good
+      at text: slicing it, padding it, and printing numbers so a human can read
+      them.</p>
+
+      <h2>Indexing and slicing</h2>
+      <p>A string is a sequence of characters, indexed from zero. A slice
+      <code>s[a:b]</code> takes from <code>a</code> up to but <em>not
+      including</em> <code>b</code>, so the length of the slice is always
+      <code>b - a</code>. That half-open convention is the same one that makes
+      <code>range</code> and array slicing behave, and it is worth accepting
+      early rather than fighting.</p>
+<pre>geoid = "180973401103"
+geoid[0:2]    <span class="c"># '18'      state</span>
+geoid[2:5]    <span class="c"># '097'     county</span>
+geoid[5:11]   <span class="c"># '340110'  tract</span>
+geoid[11:]    <span class="c"># '3'       block group</span>
+geoid[-1]     <span class="c"># '3'       negative indices count from the end</span></pre>
+
+      <h2>Methods worth knowing now</h2>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>Call</th><th>Gives</th><th>Used for</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">"18".zfill(2)</td><td class="mono">'18'</td><td>Pad a FIPS code with leading zeros</td></tr>
+          <tr><td class="mono">"1".zfill(2)</td><td class="mono">'01'</td><td>…which is the whole point</td></tr>
+          <tr><td class="mono">"a, b".split(",")</td><td class="mono">['a', ' b']</td><td>Cut a NAME field into fields</td></tr>
+          <tr><td class="mono">" b ".strip()</td><td class="mono">'b'</td><td>Remove the whitespace split leaves behind</td></tr>
+          <tr><td class="mono">"Tract 31".startswith("T")</td><td class="mono">True</td><td>Cheap filtering</td></tr>
+          <tr><td class="mono">"18-097".replace("-", "")</td><td class="mono">'18097'</td><td>Normalising before a join</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>Strings are <b>immutable</b>: every one of these returns a new string
+      and changes nothing. <code>name.strip()</code> on its own line does
+      precisely nothing useful — you have to assign the result.</p>
+
+      <h2>f-strings</h2>
+      <p>An <code>f</code> before the quotes makes every <code>{...}</code> an
+      expression to evaluate and insert. After a colon comes a <b>format
+      spec</b>, which is a tiny language of its own and the reason f-strings
+      replace everything that came before them.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 220" role="img" aria-label="Anatomy of an f-string format spec.">
+          <text x="14" y="24" class="svg-muted" style="font-size:11px; letter-spacing:.08em">ANATOMY OF A FORMAT SPEC</text>
+          <rect class="svg-box" x="14" y="38" width="692" height="56" rx="8"/>
+          <text x="40" y="74" class="svg-ink mono" style="font-size:20px">f"{ county :0&gt;3 }"</text>
+          <text x="66" y="74" class="svg-muted mono" style="font-size:20px"></text>
+
+          <path class="svg-line" d="M104 96 v22 h-34" marker-end="url(#a4)"/>
+          <path class="svg-line" d="M196 96 v40 h-60" marker-end="url(#a4)"/>
+          <path class="svg-line" d="M216 96 v58 h-70" marker-end="url(#a4)"/>
+          <path class="svg-line" d="M236 96 v76 h-80" marker-end="url(#a4)"/>
+          <defs><marker id="a4" markerWidth="8" markerHeight="8" refX="1" refY="4" orient="auto">
+            <path d="M8 0 L0 4 L8 8 z" class="svg-muted"/></marker></defs>
+
+          <text x="250" y="122" class="svg-ink mono" style="font-size:12px">county</text>
+          <text x="330" y="122" class="svg-muted" style="font-size:12px">any expression — a name, a call, arithmetic</text>
+          <text x="250" y="140" class="svg-ink mono" style="font-size:12px">0</text>
+          <text x="330" y="140" class="svg-muted" style="font-size:12px">the character to pad with</text>
+          <text x="250" y="158" class="svg-ink mono" style="font-size:12px">&gt;</text>
+          <text x="330" y="158" class="svg-muted" style="font-size:12px">align right, so padding lands on the left</text>
+          <text x="250" y="176" class="svg-ink mono" style="font-size:12px">3</text>
+          <text x="330" y="176" class="svg-muted" style="font-size:12px">pad out to this total width</text>
+
+          <line x1="14" y1="192" x2="706" y2="192" class="svg-line"/>
+          <text x="14" y="212" class="svg-muted mono" style="font-size:12px">county = 97  →  "097"          county = "97"  →  "097"          county = 7  →  "007"</text>
+        </svg>
+        <figcaption>Because the expression is evaluated first, this works
+        whether the county arrives as an integer or a string — which matters,
+        since the API gives you one and your own code often produces the
+        other.</figcaption>
+      </figure>
+
+      <p>The specs you will use constantly:</p>
+<pre>share = 0.01612
+f"{share:.1%}"        <span class="c"># '1.6%'    percent, one decimal</span>
+f"{share:.4f}"        <span class="c"># '0.0161'  fixed decimals</span>
+f"{1303:,}"           <span class="c"># '1,303'   thousands separators</span>
+f"{14.5:&gt;6.1f}"       <span class="c"># '  14.5'  right-aligned in 6 columns</span>
+f"{'3101.03':&lt;10}|"   <span class="c"># '3101.03   |'  left-aligned, for tables</span></pre>
+
+      <div class="note">
+        <h4>The debugging one</h4>
+        <p><code>f"{workers=}"</code> prints <code>workers=1303</code> — name
+        and value together. It is the fastest print-debugging tool in the
+        language and you will use it in step 11 more than you expect.</p>
+      </div>
+
+      <h2>Exercises</h2>
+      <div id="ex1"></div>
+      <div id="ex2"></div>
+      <div id="ex3"></div>
+
+      <div class="project">
+        <h4>Project work</h4>
+        <p>In your notebook, build the 12-character GEOID for every row of
+        <code>acs_raw</code> and for every row of <code>walk_raw</code>, and
+        print them side by side. They will not line up — <code>acs_raw[3]</code>
+        and <code>walk_raw[3]</code> are different block groups entirely. Notice
+        that now; step 6 is about fixing it properly.</p>
+        <p style="margin-bottom:0">Then print one formatted summary line per
+        row: GEOID, walkability to one decimal, and bike share as a
+        percentage.</p>
+      </div>
+
+      <details class="checkq">
+        <summary><span class="q">Build a GEOID where the state arrives as the integer <code>1</code> and confirm it comes out as <code>01…</code></span></summary>
+        <div class="ans">
+          <p><code>f"{1:0&gt;2}"</code> gives <code>'01'</code>, and so does
+          <code>str(1).zfill(2)</code>. Both work; the f-string version reads
+          better inside a larger template.</p>
+          <p>What you cannot do is <code>str(state).zfill(2)</code> where
+          <code>state</code> came from <code>int(geoid[:2])</code> of a GEOID
+          you already damaged — padding restores the width but not the
+          information. If a GEOID has already been through <code>int()</code>,
+          you cannot always tell whether <code>1073</code> was Alabama county
+          073 or state 10 county 73. The zero has to survive from the
+          source.</p>
+          <p style="margin-bottom:0">This is why step 9 turns
+          <code>build_geoid</code> into a function and step 20 makes it the
+          very first thing tested.</p>
+        </div>
+      </details>
+
+      <div id="pager"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/nav.js"></script>
+<script src="../assets/runner.js"></script>
+<script src="../assets/sample.js"></script>
+<script>
+COURSE.exercise("ex1", {
+  id: "s04-geoid", tag: "Exercise 1", title: "Build a GEOID that survives",
+  prompt:
+    "<p>Assemble a 12-character block group GEOID from its four parts: state " +
+    "(2), county (3), tract (6), block group (1). The parts arrive as a " +
+    "mixture of integers and strings, exactly as they do in real life.</p>" +
+    "<p>Build <code>geoid_al</code> from the Alabama parts and " +
+    "<code>geoid_in</code> from the Indiana ones. Both must be 12 characters.</p>",
+  setup: SAMPLE,
+  starter:
+    "# Alabama: state 1, county 73, tract 000100, block group 1\n" +
+    "state, county, tract, bg = 1, 73, \"000100\", 1\n" +
+    "geoid_al = \n\n" +
+    "# Indiana: the same parts, already as strings\n" +
+    "state2, county2, tract2, bg2 = \"18\", \"097\", \"340110\", \"3\"\n" +
+    "geoid_in = \n\n" +
+    "print(geoid_al, geoid_in, len(geoid_al), len(geoid_in))",
+  checks: [
+    { label: "geoid_al keeps Alabama's leading zero",
+      code: "expect(expect_defined(globals(), 'geoid_al'), '010730001001')" },
+    { label: "geoid_al is 12 characters of text",
+      code: "expect_type(geoid_al, str); expect(len(geoid_al), 12)" },
+    { label: "geoid_in is built the same way",
+      code: "expect(expect_defined(globals(), 'geoid_in'), '180973401103')" },
+    { label: "the method generalises — a single-digit county pads too",
+      code: "expect(f'{1:0>2}{7:0>3}{\"000100\"}{1}', '010070001001')" }
+  ],
+  solution:
+    "state, county, tract, bg = 1, 73, \"000100\", 1\n" +
+    "geoid_al = f\"{state:0>2}{county:0>3}{tract:0>6}{bg}\"\n\n" +
+    "state2, county2, tract2, bg2 = \"18\", \"097\", \"340110\", \"3\"\n" +
+    "geoid_in = f\"{state2:0>2}{county2:0>3}{tract2:0>6}{bg2}\"\n\n" +
+    "print(geoid_al, geoid_in, len(geoid_al), len(geoid_in))\n" +
+    "# The same spec handles both because the expression is evaluated before\n" +
+    "# it is padded. That is what makes this safe to reuse -- step 9 makes it\n" +
+    "# a function, and step 20 tests exactly this case."
+});
+
+COURSE.exercise("ex2", {
+  id: "s04-format", tag: "Exercise 2", title: "A line a human can read",
+  prompt:
+    "<p>Produce one summary line for the block group in <code>acs_raw[6]</code>, " +
+    "assigned to <code>line</code>, in exactly this shape:</p>" +
+    "<pre>180973401103  walk 14.5  bike 21 of 1,303 (1.6%)</pre>" +
+    "<p>Two spaces between the sections, walkability to one decimal, the " +
+    "worker count with a thousands separator, and the share as a percentage " +
+    "to one decimal.</p>",
+  setup: SAMPLE,
+  starter:
+    "row = acs_raw[6]\n" +
+    "geoid = \"18\" + \"097\" + row[8] + row[9]\n" +
+    "workers = int(row[1])\n" +
+    "bike = int(row[2])\n" +
+    "walk = float(walk_raw[6][4])\n\n" +
+    "line = \n\nprint(line)",
+  checks: [
+    { label: "line is a single string",
+      code: "expect_type(expect_defined(globals(), 'line'), str)" },
+    { label: "the walkability score shows one decimal place",
+      code: "expect('walk 14.5' in line, True)" },
+    { label: "the worker count is separated with a comma",
+      code: "expect('1,303' in line, True)" },
+    { label: "the share is a percentage to one decimal",
+      code: "expect('(1.6%)' in line, True)" },
+    { label: "the whole line matches, spacing included",
+      code: "expect(line, '180973401103  walk 14.5  bike 21 of 1,303 (1.6%)')" }
+  ],
+  solution:
+    "row = acs_raw[6]\n" +
+    "geoid = \"18\" + \"097\" + row[8] + row[9]\n" +
+    "workers = int(row[1])\n" +
+    "bike = int(row[2])\n" +
+    "walk = float(walk_raw[6][4])\n\n" +
+    "line = f\"{geoid}  walk {walk:.1f}  bike {bike} of {workers:,} ({bike/workers:.1%})\"\n\n" +
+    "print(line)\n" +
+    "# ':.1%' multiplies by 100 and appends the sign -- don't do it yourself\n" +
+    "# as well, or you'll report 161.2% bike commuting in Indianapolis."
+});
+
+COURSE.exercise("ex3", {
+  id: "s04-parse", tag: "Exercise 3", title: "Pull a NAME apart",
+  prompt:
+    "<p>The ACS <code>NAME</code> field is a comma-separated description:</p>" +
+    "<pre>Block Group 3, Census Tract 3401.1, Marion County, Indiana</pre>" +
+    "<p>From <code>acs_raw[6][0]</code>, extract <code>bg_number</code> (the " +
+    "digit, as an <code>int</code> — a block group number <em>is</em> " +
+    "countable) and <code>tract_label</code> (the string " +
+    "<code>\"3401.1\"</code>, with no surrounding spaces).</p>" +
+    "<p>Set <code>county_name</code> to <code>\"Marion County\"</code>.</p>",
+  setup: SAMPLE,
+  starter:
+    "name = acs_raw[6][0]\n" +
+    "print(name)\n\n" +
+    "parts = \n\n" +
+    "bg_number = \ntract_label = \ncounty_name = ",
+  checks: [
+    { label: "the name was split into its four comma-separated parts",
+      code: "expect(len(expect_defined(globals(), 'parts')), 4)" },
+    { label: "bg_number is the block group as an int",
+      code: "expect(expect_defined(globals(), 'bg_number'), 3)" },
+    { label: "tract_label is the bare tract number as text",
+      code: "expect(expect_defined(globals(), 'tract_label'), '3401.1')" },
+    { label: "tract_label has no stray whitespace",
+      code: "expect(tract_label, tract_label.strip())" },
+    { label: "county_name is trimmed",
+      code: "expect(expect_defined(globals(), 'county_name'), 'Marion County')" }
+  ],
+  solution:
+    "name = acs_raw[6][0]\n" +
+    "parts = name.split(\",\")            # ['Block Group 3', ' Census Tract 3401.1', ...]\n\n" +
+    "bg_number = int(parts[0].split()[-1])\n" +
+    "tract_label = parts[1].strip().split()[-1]\n" +
+    "county_name = parts[2].strip()\n\n" +
+    "# Note tract_label stays a string: '3401.1' is a label, and float('3401.1')\n" +
+    "# would turn tract 3401.10 and tract 3401.1 into the same number.\n" +
+    "# The tract code in row[8] -- '340110' -- is the one to join on."
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Secrets — step 19 asks whether your Census key is in here. Keep the answer no.
+.env
+
+# Raw downloads: big, re-fetchable, and not ours to redistribute.
+data/raw/
+
+# OS
+.DS_Store

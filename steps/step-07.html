@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Step 7 — Control structures</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="shell">
+  <div id="sidebar"></div>
+  <div class="main">
+    <div id="topbar"></div>
+    <div class="wrap">
+
+      <p class="eyebrow">Unit 1 — Foundations · Step 7</p>
+      <h1>Control structures</h1>
+      <p class="lede">Branching and looping, and the boundary conditions that
+      turn a tidy classification into an off-by-a-hundredth bug.</p>
+
+      <h2><code>if</code> / <code>elif</code> / <code>else</code></h2>
+      <p>Only the first matching branch runs, and <code>elif</code> is not
+      decoration — a chain of separate <code>if</code>s can fire more than once
+      and give a different answer:</p>
+<pre>if score &lt;= 5.75:
+    label = "Least Walkable"
+elif score &lt;= 10.5:          <span class="c"># reached only if the first was False</span>
+    label = "Below Average"
+else:
+    label = "Above Average"</pre>
+      <p>Because earlier branches have already excluded the lower ranges, each
+      test only needs its upper bound. Writing <code>elif 5.76 &lt;= score &lt;=
+      10.5</code> is not wrong, but it states a condition that is already
+      guaranteed — and it is how gaps sneak in.</p>
+
+      <h2>The EPA's four categories</h2>
+      <p>The National Walkability Index runs 1 to 20, and the EPA's own
+      documentation cuts it into four bands:</p>
+
+      <figure>
+        <svg viewBox="0 0 720 200" role="img" aria-label="The four EPA walkability bands on a number line from 1 to 20, with the gaps between published bounds marked.">
+          <text x="14" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">NATIONAL WALKABILITY INDEX</text>
+
+          <rect x="14" y="40" width="182" height="40" rx="6" fill="var(--surface-2)" stroke="var(--line-2)"/>
+          <rect x="196" y="40" width="182" height="40" fill="var(--warn-wash)" stroke="var(--line-2)"/>
+          <rect x="378" y="40" width="182" height="40" fill="var(--accent-wash)" stroke="var(--line-2)"/>
+          <rect x="560" y="40" width="146" height="40" rx="6" fill="var(--ok-wash)" stroke="var(--line-2)"/>
+
+          <text x="28" y="65" class="svg-ink" style="font-size:11.5px">Least Walkable</text>
+          <text x="210" y="65" class="svg-ink" style="font-size:11.5px">Below Average</text>
+          <text x="392" y="65" class="svg-ink" style="font-size:11.5px">Above Average</text>
+          <text x="574" y="65" class="svg-ink" style="font-size:11.5px">Most Walkable</text>
+
+          <line x1="14" y1="94" x2="706" y2="94" class="svg-line"/>
+          <g class="svg-muted mono" style="font-size:11px">
+            <text x="10" y="112">1</text>
+            <text x="168" y="112">5.75</text>
+            <text x="350" y="112">10.5</text>
+            <text x="532" y="112">15.25</text>
+            <text x="690" y="112">20</text>
+          </g>
+          <g>
+            <line x1="196" y1="86" x2="196" y2="102" stroke="var(--bad)" fill="none"/>
+            <line x1="378" y1="86" x2="378" y2="102" stroke="var(--bad)" fill="none"/>
+            <line x1="560" y1="86" x2="560" y2="102" stroke="var(--bad)" fill="none"/>
+          </g>
+          <text x="14" y="140" class="svg-bad" style="font-size:12px">The published bands are 1–5.75, 5.76–10.5, 10.51–15.25, 15.26–20.</text>
+          <text x="14" y="158" class="svg-ink" style="font-size:12px">A score of 5.753 belongs to none of them. The index is continuous; the bands are written as if it weren't.</text>
+          <text x="14" y="182" class="svg-muted" style="font-size:12px">Use &lt;= on the upper bound of each band, and every possible score lands somewhere.</text>
+        </svg>
+        <figcaption>Marion County scores are thirds — 3.666…, 14.5, 9.333… —
+        so values inside the published gaps genuinely occur. Deciding the rule
+        yourself, once, beats discovering later that some rows were silently
+        uncategorised.</figcaption>
+      </figure>
+
+      <div class="note warn">
+        <h4>And remember floats are approximate</h4>
+        <p>A score computed as <code>(13 + 7 + 19 + 17) / 4</code> may not
+        compare equal to the literal <code>14.0</code>. When a boundary matters
+        as much as this one does, test values <em>either side</em> of it rather
+        than relying on exact equality. This is what makes step 20's
+        parametrised boundary tests worth writing.</p>
+      </div>
+
+      <h2>Loops, and leaving them early</h2>
+      <p><code>for</code> walks a sequence; <code>while</code> repeats until a
+      condition goes false. Inside either, <code>continue</code> skips to the
+      next iteration and <code>break</code> abandons the loop entirely.</p>
+<pre>for row in joined:
+    if row["workers"] == 0:
+        continue            <span class="c"># no workers: no share exists. Skip, don't zero.</span>
+    share = row["bike"] / row["workers"]</pre>
+      <p>That <code>continue</code> is doing analytical work, not just avoiding
+      a <code>ZeroDivisionError</code>. A block group with no workers has no
+      bike share to contribute; including it as 0% would pull the mean down on
+      the strength of no evidence at all.</p>
+
+      <h2>Truthiness</h2>
+      <p>Python will treat almost anything as a condition: <code>0</code>,
+      <code>0.0</code>, <code>""</code>, <code>[]</code>, <code>{}</code> and
+      <code>None</code> are false, and essentially everything else is true.
+      That makes <code>if rows:</code> a neat way to say "if there are any
+      rows".</p>
+      <div class="note trap">
+        <h4>Where truthiness betrays you here</h4>
+        <p><code>if row["walk_index"]:</code> is <em>not</em> the same as
+        <code>if row["walk_index"] is not None:</code>. A perfectly valid score
+        of <code>0.0</code> would be treated as missing. Walkability starts at
+        1 so you would get away with it — but bike counts start at 0, and there
+        the same shortcut silently discards every block group where nobody
+        cycles, which are precisely the rows the analysis is about. Use
+        <code>is None</code> when you mean missing.</p>
+      </div>
+
+      <h2>Exercises</h2>
+      <div id="ex1"></div>
+      <div id="ex2"></div>
+
+      <div class="project">
+        <h4>Project work</h4>
+        <p>Classify every joined block group into the four EPA categories and
+        count how many fall in each. Skip rows with no workers and rows with no
+        walkability score, and report how many you skipped for each reason
+        rather than letting them vanish.</p>
+        <p style="margin-bottom:0">Save those counts — a plain dict is fine. In
+        step 11 you will refactor this code and use the saved counts to prove
+        the refactor changed nothing.</p>
+      </div>
+
+      <details class="checkq">
+        <summary><span class="q">Does a score of exactly 10.5 land in the right bucket?</span></summary>
+        <div class="ans">
+          <p>Only if you wrote <code>&lt;=</code>. With <code>score &lt;
+          10.5</code>, a score of exactly 10.5 falls through to the next branch
+          and is reported as Above Average, when the EPA calls it Below
+          Average.</p>
+          <p>It matters more than one row usually would, because the index is
+          built by averaging four integer ranks — so scores land on clean
+          fractions far more often than continuous data normally would. 10.5 is
+          <code>(a+b+c+d)/4</code> for plenty of integer combinations, and 14.5
+          appears in your sample data.</p>
+          <p style="margin-bottom:0">The general habit: whenever you write a
+          threshold, immediately ask what happens <em>at</em> it. That question
+          has a permanent home in step 20, where <code>5.75</code>,
+          <code>10.5</code> and <code>15.25</code> become parametrised test
+          cases and stop depending on anyone remembering.</p>
+        </div>
+      </details>
+
+      <div id="pager"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/nav.js"></script>
+<script src="../assets/runner.js"></script>
+<script src="../assets/sample.js"></script>
+<script>
+COURSE.exercise("ex1", {
+  id: "s07-category", tag: "Exercise 1", title: "Four bands, no gaps",
+  prompt:
+    "<p>Turn <code>scores</code> into <code>labels</code>: one EPA category per " +
+    "score, in order. The categories are exactly " +
+    "<code>\"Least Walkable\"</code>, <code>\"Below Average\"</code>, " +
+    "<code>\"Above Average\"</code> and <code>\"Most Walkable\"</code>.</p>" +
+    "<p>The list includes every boundary value and the awkward numbers just " +
+    "either side of them. Every score must get a label — no <code>None</code>, " +
+    "no empty strings.</p>",
+  setup: SAMPLE,
+  starter:
+    "scores = [1.0, 5.75, 5.753, 5.76, 10.5, 10.51, 14.5, 15.25, 15.26, 20.0]\n\n" +
+    "labels = []\nfor score in scores:\n    pass\n\n" +
+    "for s, l in zip(scores, labels):\n    print(f\"{s:>6}  {l}\")",
+  checks: [
+    { label: "every score got a label",
+      code: "expect(len(expect_defined(globals(), 'labels')), len(scores))\nexpect(all(isinstance(l, str) and l for l in labels), True)" },
+    { label: "only the four EPA category names were used",
+      code: "expect(set(labels) <= {'Least Walkable','Below Average','Above Average','Most Walkable'}, True)" },
+    { label: "the boundary values 5.75, 10.5 and 15.25 fall in the lower band",
+      code: ("d = dict(zip(scores, labels))\n"
+           + "expect(d[5.75], 'Least Walkable')\n"
+           + "expect(d[10.5], 'Below Average')\n"
+           + "expect(d[15.25], 'Above Average')") },
+    { label: "the values just above a boundary move up a band",
+      code: ("d = dict(zip(scores, labels))\n"
+           + "expect(d[5.76], 'Below Average')\n"
+           + "expect(d[10.51], 'Above Average')\n"
+           + "expect(d[15.26], 'Most Walkable')") },
+    { label: "5.753 — inside the published gap — is still classified",
+      code: "expect(dict(zip(scores, labels))[5.753], 'Below Average')" },
+    { label: "the ends of the scale work",
+      code: "d = dict(zip(scores, labels))\nexpect(d[1.0], 'Least Walkable')\nexpect(d[20.0], 'Most Walkable')" }
+  ],
+  solution:
+    "scores = [1.0, 5.75, 5.753, 5.76, 10.5, 10.51, 14.5, 15.25, 15.26, 20.0]\n\n" +
+    "labels = []\n" +
+    "for score in scores:\n" +
+    "    if score <= 5.75:\n" +
+    "        labels.append(\"Least Walkable\")\n" +
+    "    elif score <= 10.5:\n" +
+    "        labels.append(\"Below Average\")\n" +
+    "    elif score <= 15.25:\n" +
+    "        labels.append(\"Above Average\")\n" +
+    "    else:\n" +
+    "        labels.append(\"Most Walkable\")\n\n" +
+    "# 5.753 has to go somewhere, and 'the band whose upper bound it hasn't\n" +
+    "# passed' is the only defensible answer. Write that decision down in the\n" +
+    "# notebook -- an undocumented judgement call is indistinguishable from\n" +
+    "# a bug six months later."
+});
+
+COURSE.exercise("ex2", {
+  id: "s07-count", tag: "Exercise 2", title: "Count, and account for the skips",
+  prompt:
+    "<p>Walk <code>joined</code> and fill in <code>counts</code> — how many " +
+    "usable block groups fall in each category. A row is usable only if it has " +
+    "a walkability score <em>and</em> at least one worker.</p>" +
+    "<p>Track the rest too: <code>skipped_no_score</code> and " +
+    "<code>skipped_no_workers</code>. Every row must be accounted for exactly " +
+    "once — the last check enforces it.</p>",
+  setup: SAMPLE + "\n" +
+    "walk_lookup = {r[0]+r[1]+r[2]+r[3]: float(r[4]) for r in walk_raw[1:]}\n" +
+    "joined = [{'geoid': r[6]+r[7]+r[8]+r[9], 'workers': int(r[1]),\n" +
+    "           'bike': int(r[2]), 'walk_index': walk_lookup.get(r[6]+r[7]+r[8]+r[9])}\n" +
+    "          for r in acs_raw[1:]]\n",
+  starter:
+    "counts = {\"Least Walkable\": 0, \"Below Average\": 0,\n" +
+    "          \"Above Average\": 0, \"Most Walkable\": 0}\n" +
+    "skipped_no_score = 0\n" +
+    "skipped_no_workers = 0\n\n" +
+    "for row in joined:\n    pass\n\n" +
+    "print(counts, skipped_no_score, skipped_no_workers)",
+  checks: [
+    { label: "rows with no walkability score were skipped and counted",
+      code: "expect(expect_defined(globals(), 'skipped_no_score'), sum(1 for r in joined if r['walk_index'] is None))" },
+    { label: "rows with no workers were skipped and counted",
+      code: ("expect(expect_defined(globals(), 'skipped_no_workers'),\n"
+           + "       sum(1 for r in joined if r['walk_index'] is not None and r['workers'] == 0))") },
+    { label: "the category counts are right",
+      code: ("def cat(s):\n"
+           + "    return ('Least Walkable' if s <= 5.75 else 'Below Average' if s <= 10.5\n"
+           + "            else 'Above Average' if s <= 15.25 else 'Most Walkable')\n"
+           + "want = {'Least Walkable': 0, 'Below Average': 0, 'Above Average': 0, 'Most Walkable': 0}\n"
+           + "for r in joined:\n"
+           + "    if r['walk_index'] is not None and r['workers'] > 0:\n"
+           + "        want[cat(r['walk_index'])] += 1\n"
+           + "expect(expect_defined(globals(), 'counts'), want)") },
+    { label: "a zero-worker row was not quietly counted as a category",
+      code: "expect(sum(counts.values()) + skipped_no_score + skipped_no_workers, len(joined))" }
+  ],
+  solution:
+    "counts = {\"Least Walkable\": 0, \"Below Average\": 0,\n" +
+    "          \"Above Average\": 0, \"Most Walkable\": 0}\n" +
+    "skipped_no_score = 0\n" +
+    "skipped_no_workers = 0\n\n" +
+    "for row in joined:\n" +
+    "    score = row[\"walk_index\"]\n" +
+    "    if score is None:               # 'is None', not 'if not score'\n" +
+    "        skipped_no_score += 1\n" +
+    "        continue\n" +
+    "    if row[\"workers\"] == 0:\n" +
+    "        skipped_no_workers += 1\n" +
+    "        continue\n" +
+    "    if score <= 5.75:\n" +
+    "        counts[\"Least Walkable\"] += 1\n" +
+    "    elif score <= 10.5:\n" +
+    "        counts[\"Below Average\"] += 1\n" +
+    "    elif score <= 15.25:\n" +
+    "        counts[\"Above Average\"] += 1\n" +
+    "    else:\n" +
+    "        counts[\"Most Walkable\"] += 1\n\n" +
+    "print(counts, skipped_no_score, skipped_no_workers)\n" +
+    "# The final check -- counted + skipped == total -- is the cheapest data\n" +
+    "# audit there is. Run one every time you filter, and rows can never\n" +
+    "# disappear without you noticing."
+});
+</script>
+</body>
+</html>

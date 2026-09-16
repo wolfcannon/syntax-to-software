@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Step 1 — Notebooks as a working environment</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="shell">
+  <div id="sidebar"></div>
+  <div class="main">
+    <div id="topbar"></div>
+    <div class="wrap">
+
+      <p class="eyebrow">Unit 1 — Foundations · Step 1</p>
+      <h1>Notebooks as a working environment</h1>
+      <p class="lede">Before any Python, the thing you will be typing it into —
+      and the one way it lies to you.</p>
+
+      <h2>The idea</h2>
+      <p>A Jupyter notebook is a list of <b>cells</b>. Some hold text, some hold
+      code. You run a code cell and its output appears underneath it. That much
+      is obvious from looking at one.</p>
+
+      <p>What isn't obvious is that a notebook has <em>two</em> different
+      orders, and they are allowed to disagree:</p>
+      <ul>
+        <li><b>Document order</b> — top to bottom, the order a reader sees.</li>
+        <li><b>Execution order</b> — the order you actually pressed Shift+Enter,
+        which is whatever your afternoon happened to be.</li>
+      </ul>
+
+      <p>Behind the notebook sits a <b>kernel</b>: a Python process that stays
+      alive between cells and remembers every name you have ever assigned in
+      it. The notebook file is a document. The kernel is a memory. Editing the
+      document does not edit the memory.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 300" role="img" aria-label="A notebook's document order on the left and the kernel's memory on the right; deleting a cell leaves its variable in memory.">
+          <text x="14" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">WHAT THE DOCUMENT SAYS</text>
+          <text x="430" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">WHAT THE KERNEL REMEMBERS</text>
+
+          <rect class="svg-box" x="14" y="36" width="330" height="46" rx="7"/>
+          <text x="28" y="58" class="svg-muted mono" style="font-size:11px">In [3]:</text>
+          <text x="84" y="58" class="svg-ink mono">bike = 21</text>
+          <text x="28" y="74" class="svg-muted" style="font-size:10.5px">ran third</text>
+
+          <rect class="svg-box" x="14" y="92" width="330" height="46" rx="7"/>
+          <text x="28" y="114" class="svg-muted mono" style="font-size:11px">In [1]:</text>
+          <text x="84" y="114" class="svg-ink mono">workers = 1303</text>
+          <text x="28" y="130" class="svg-muted" style="font-size:10.5px">ran first</text>
+
+          <rect class="svg-box" x="14" y="148" width="330" height="46" rx="7" stroke-dasharray="5 4"/>
+          <text x="28" y="170" class="svg-muted mono" style="font-size:11px">In [2]:</text>
+          <text x="84" y="170" class="svg-bad mono" style="text-decoration:line-through">home = 71</text>
+          <text x="28" y="186" class="svg-bad" style="font-size:10.5px">you deleted this cell</text>
+
+          <rect class="svg-box" x="14" y="204" width="330" height="46" rx="7"/>
+          <text x="28" y="226" class="svg-muted mono" style="font-size:11px">In [4]:</text>
+          <text x="84" y="226" class="svg-ink mono">bike / (workers - home)</text>
+          <text x="28" y="242" class="svg-ok" style="font-size:10.5px">still works — for you, today</text>
+
+          <path class="svg-line" d="M352 130 h44" marker-end="url(#a1)"/>
+          <defs><marker id="a1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" class="svg-muted"/></marker></defs>
+
+          <rect class="svg-box" x="404" y="36" width="300" height="214" rx="9"/>
+          <text x="424" y="62" class="svg-muted" style="font-size:11px">kernel namespace</text>
+          <line x1="424" y1="74" x2="684" y2="74" class="svg-line"/>
+          <text x="424" y="102" class="svg-ink mono">workers</text><text x="600" y="102" class="svg-ink mono">1303</text>
+          <text x="424" y="132" class="svg-ink mono">bike</text><text x="600" y="132" class="svg-ink mono">21</text>
+          <text x="424" y="162" class="svg-bad mono">home</text><text x="600" y="162" class="svg-bad mono">71</text>
+          <text x="424" y="180" class="svg-bad" style="font-size:10.5px">cell gone, value still here</text>
+          <line x1="424" y1="198" x2="684" y2="198" class="svg-line"/>
+          <text x="424" y="224" class="svg-muted" style="font-size:11px">Restart clears this column.</text>
+          <text x="424" y="240" class="svg-muted" style="font-size:11px">The document on the left is unchanged.</text>
+        </svg>
+        <figcaption>The notebook on disk and the kernel in memory are two
+        different things. Everything confusing about notebooks comes from
+        forgetting that.</figcaption>
+      </figure>
+
+      <div class="note trap">
+        <h4>The failure this causes</h4>
+        <p>Your notebook works. You send it to someone. They run it top to
+        bottom and it dies on cell 4 with <code>NameError: name 'home' is not
+        defined</code>, because the definition only ever existed in
+        <em>your</em> kernel. This is the single most common way notebook
+        analyses turn out to be irreproducible, and the fix is a habit:
+        <b>Restart &amp; Run All</b> before you believe a result or show it to
+        anyone.</p>
+      </div>
+
+      <h2>Cells, and what to put in them</h2>
+      <p>Markdown cells hold prose: what you are trying to find out, what a
+      number means, why you threw some rows away. A notebook without them is a
+      transcript. A notebook with them is an argument, and the project you are
+      about to start is an argument.</p>
+      <p>Three keyboard facts worth having from day one:</p>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>Keys</th><th>Does</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">Shift + Enter</td><td>Run this cell, select the next</td></tr>
+          <tr><td class="mono">Esc then M / Y</td><td>Turn the cell into Markdown / back into code</td></tr>
+          <tr><td class="mono">Esc then 0 0</td><td>Restart the kernel — i.e. empty that right-hand column</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h2>Exercises</h2>
+      <p>These two are about predicting the kernel, not about writing Python —
+      you'll be assigning a single value. Everything after this step is real
+      code.</p>
+
+      <div id="ex1"></div>
+      <div id="ex2"></div>
+
+      <div class="project">
+        <h4>Project work</h4>
+        <p>Create <code>notebooks/exploration.ipynb</code>. Put the research
+        question in a Markdown cell at the top, in your own words.</p>
+        <p>Then reproduce the trap deliberately, because doing it on purpose
+        once is worth reading about it five times:</p>
+        <ol>
+          <li>In a cell, assign <code>workers = 500</code>. Run it.</li>
+          <li>Delete that cell.</li>
+          <li>In a new cell, <code>print(workers)</code>. It still works.</li>
+          <li>Restart the kernel and run that cell again. Read the
+          <code>NameError</code> carefully — it is the first traceback of the
+          course and you will see a hundred more.</li>
+        </ol>
+        <p style="margin-bottom:0" class="small">Nothing to install yet if you
+        don't have Jupyter: <code>pip install jupyterlab</code> then
+        <code>jupyter lab</code>. Step 18 does environments properly.</p>
+      </div>
+
+      <details class="checkq">
+        <summary><span class="q">Why might a notebook that works for you fail when someone else runs it top to bottom?</span></summary>
+        <div class="ans">
+          <p>Because what makes it work for you is kernel state, not the
+          document. Three ways that happens:</p>
+          <ul>
+            <li>A cell that defined something has been deleted or edited since
+            it ran.</li>
+            <li>Cells were run out of order, so a later cell depends on a name
+            that document order defines after it.</li>
+            <li>Something was defined in a cell you never saved, or typed into
+            a console attached to the same kernel.</li>
+          </ul>
+          <p style="margin-bottom:0">The check is mechanical: restart, run all,
+          and see whether it survives. If it doesn't, the notebook was never
+          really working — you just couldn't tell.</p>
+        </div>
+      </details>
+
+      <div id="pager"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/nav.js"></script>
+<script src="../assets/runner.js"></script>
+<script>
+COURSE.exercise("ex1", {
+  id: "s01-order", tag: "Exercise 1", title: "Execution order",
+  prompt:
+    "<p>A notebook contains these three cells, in this order in the document:</p>" +
+    "<pre><span class='c'># Cell A</span>\nworkers = 500\n\n<span class='c'># Cell B</span>\nworkers = workers + 120\n\n<span class='c'># Cell C</span>\nprint(workers)</pre>" +
+    "<p>You run them in this order: <b>A, B, B, C</b>. Set <code>answer</code> " +
+    "to the number that Cell C prints.</p>",
+  starter: "answer = ",
+  checks: [
+    { label: "answer is a whole number",
+      code: "expect_type(expect_defined(globals(), 'answer'), int)" },
+    { label: "answer matches what Cell C would print",
+      code: "expect(answer, 740)" }
+  ],
+  solution: "answer = 740\n\n# A sets 500. B runs twice, adding 120 each time: 500 -> 620 -> 740.\n# Running a cell twice is not the same as having it twice in the document."
+});
+
+COURSE.exercise("ex2", {
+  id: "s01-state", tag: "Exercise 2", title: "Deleted cells, surviving values",
+  prompt:
+    "<p>Starting from a fresh kernel, you run these three cells in order:</p>" +
+    "<pre><span class='c'># Cell A</span>\nbike = 21\n\n<span class='c'># Cell B</span>\nworkers = 1303\n\n<span class='c'># Cell C</span>\nprint(round(bike / workers, 4))</pre>" +
+    "<p>Now you <b>delete Cell A</b> and run Cell C again.</p>" +
+    "<p>Set <code>printed</code> to the number it prints this time, and set " +
+    "<code>after_restart</code> to the name of the exception you get if you " +
+    "then restart the kernel and run all the cells — as a string, e.g. " +
+    "<code>\"ValueError\"</code>.</p>",
+  starter: "printed = \nafter_restart = ",
+  checks: [
+    { label: "Cell C still prints its number after the cell is deleted",
+      code: "expect_close(expect_defined(globals(), 'printed'), 0.0161, 1e-9)" },
+    { label: "after_restart names the right exception",
+      code: "expect(expect_defined(globals(), 'after_restart'), 'NameError')" }
+  ],
+  solution:
+    "printed = 0.0161        # 21 / 1303, rounded\nafter_restart = \"NameError\"\n\n" +
+    "# Deleting the cell removes the line from the document, not the name from\n" +
+    "# the kernel. Restarting empties the kernel, and only then does the\n" +
+    "# document have to stand on its own -- which it no longer can."
+});
+</script>
+</body>
+</html>

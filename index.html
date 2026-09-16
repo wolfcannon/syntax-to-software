@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>From Syntax to Software — Python Through a Walkability Project</title>
+<link rel="stylesheet" href="assets/course.css">
+</head>
+<body>
+<div class="shell">
+  <div id="sidebar"></div>
+  <div class="main">
+    <div id="topbar"></div>
+    <div class="wrap">
+
+      <p class="eyebrow">A 23-step course</p>
+      <h1>From Syntax to Software</h1>
+      <p class="lede">Learning Python by building one real thing: an analysis of
+      whether neighbourhood walkability predicts bike commuting — and what
+      explains the places that don't fit the trend.</p>
+
+      <p>This is a course for someone with a strong mathematical background and
+      no Python experience, aimed at data work. Every step teaches one layer of
+      the language or of the development process, and every step advances the
+      same project. There are no toy exercises about animals and shapes; by
+      step 4 you are building Census block group identifiers, and by step 8 you
+      are diagnosing why 12 of them failed to join.</p>
+
+      <div class="note">
+        <h4>The research question</h4>
+        <p>Does neighbourhood walkability predict bike commuting, and what
+        explains the places that don't fit the trend?</p>
+        <p class="small" style="margin-bottom:0">Scope: Marion County, Indiana
+        (state FIPS <code>18</code>, county FIPS <code>097</code>) — 632 census
+        block groups, already in this repo. The capstone scales it up.</p>
+      </div>
+
+      <h2>How the course works</h2>
+      <p>Two halves that do different jobs:</p>
+      <ul>
+        <li><b>These pages</b> explain the ideas and check your work. The
+        exercises run Python in your browser — nothing is uploaded, nothing is
+        installed, and there is no account. Your answers and progress are
+        remembered locally on this machine.</li>
+        <li><b>The notebooks and scripts</b> in this repo are where the real
+        project lives. From step 13 onward the work moves permanently out of
+        the browser and onto your own machine, because installing packages,
+        reading files, calling an API, using git and running tests <em>is</em>
+        the subject matter from that point on.</li>
+      </ul>
+
+      <div class="note">
+        <h4>About the hidden checks</h4>
+        <p>Each exercise runs your code and then runs a handful of assertions
+        you don't see. That is deliberate. In <b>step 20</b> we stop hiding
+        them — the harness that has been grading you all along turns out to be
+        a few dozen lines of <code>pytest</code>, and you start writing your
+        own.</p>
+      </div>
+
+      <h2>Getting started</h2>
+      <p>The exercises need the page served over HTTP rather than opened
+      straight off the disk, which takes one command you already have:</p>
+<pre>git clone &lt;this repo&gt;
+cd syntax-to-software
+python3 -m http.server 8000
+<span class="c"># then open http://localhost:8000</span></pre>
+      <p class="small">The first exercise you run downloads the Python runtime
+      (<a href="https://pyodide.org">Pyodide</a>, about 10&nbsp;MB) from a CDN,
+      so step&nbsp;1 needs an internet connection. After that the browser caches
+      it. Nothing else phones home.</p>
+
+      <h2>The data</h2>
+      <p>Both datasets are already in <code>data/</code>, so Unit 1 needs no
+      downloads and no API key.</p>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>Source</th><th>What it provides</th><th>Geography</th></tr></thead>
+        <tbody>
+          <tr><td>EPA National Walkability Index</td>
+              <td>Walkability score 1–20 plus its four ranked inputs</td>
+              <td class="mono">632 block groups</td></tr>
+          <tr><td>Census ACS 5-year, table B08301</td>
+              <td>Commuters by mode of transportation</td>
+              <td class="mono">630 block groups</td></tr>
+          <tr><td>PeopleForBikes City Ratings</td>
+              <td>Bike network quality, 0–100 <span class="small">(capstone only)</span></td>
+              <td class="mono">city</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <div class="note warn">
+        <h4>One honest caveat</h4>
+        <p>The walkability data is real, pulled from the EPA. The commute data
+        is currently <b>synthetic</b> — shaped exactly like the real API
+        response, with a plausible relationship to the real walkability scores,
+        but generated rather than measured. Everything you learn from Units 1–3
+        is unaffected; the capstone's <em>findings</em> are not meaningful until
+        it is replaced. <code>README.md</code> has the three commands that
+        replace it, and they need a free Census API key.</p>
+      </div>
+
+      <p>They do not line up perfectly, and that is the point: 7 block groups
+      have a walkability score and no commute data, 5 have commute data and no
+      walkability score, 14 have no workers at all, and 9 carry the Census
+      "estimate unavailable" sentinel <code>-666666666</code>. You meet all four
+      of those in Unit 1.</p>
+
+      <h2 id="roadmap">The 23 steps</h2>
+
+      <h3>Unit 1 — Foundations <span class="small">(steps 1–9, available now)</span></h3>
+      <p>Read, represent, and transform the project data using only the core
+      language. No third-party packages, no files — the data arrives as a
+      literal you can read with your eyes.</p>
+
+      <h3>Unit 2 — Correctness <span class="small">(steps 10–13)</span></h3>
+      <p>Equivalent forms of the same computation; reading tracebacks;
+      refactoring while proving the output didn't change; exceptions and the
+      failure modes this data actually has; and finally real files, which
+      retires the sample cell for good.</p>
+
+      <h3>Unit 3 — Structure and the ecosystem <span class="small">(steps 14–17)</span></h3>
+      <p>Modules, classes and dataclasses, choosing third-party packages
+      (pandas, matplotlib, scipy — and rebuilding the hand-written join to check
+      it), and talking to the Census API yourself.</p>
+
+      <h3>Unit 4 — Development practice <span class="small">(steps 18–23)</span></h3>
+      <p>Virtual environments, a multi-file project, git, pytest, the
+      reproduce&rarr;test&rarr;fix&rarr;commit cycle run against two realistic
+      tickets, project layout, and a capstone that answers the research
+      question honestly — margins of error included.</p>
+
+      <div class="note warn">
+        <h4>Needed later, not now</h4>
+        <p>Step 17 has you call the Census API yourself, which needs a free key
+        from <a href="https://api.census.gov/data/key_signup.html">api.census.gov</a>.
+        Steps 1–16 do not.</p>
+      </div>
+
+      <h2>Texts</h2>
+      <ul>
+        <li><a href="https://allendowney.github.io/ThinkPython/"><i>Think Python</i>, 3rd ed.</a>
+        (Allen Downey, 2024) — free, and covers steps 1–15.</li>
+        <li><a href="https://third-bit.com/py-rse/"><i>Research Software Engineering with Python</i></a>
+        (Irving et al., 2021) — free, and covers steps 18–22.</li>
+        <li><a href="https://docs.python.org/3/tutorial/">The official Python tutorial</a>,
+        <a href="https://inventwithpython.com/"><i>Beyond the Basic Stuff with Python</i></a>,
+        and <a href="https://missing.csail.mit.edu/">The Missing Semester of Your CS Education</a>.</li>
+      </ul>
+
+      <p style="margin-top:34px"><a href="steps/step-01.html"><b>Start with step 1 →</b></a></p>
+
+      <div id="pager"></div>
+    </div>
+  </div>
+</div>
+<script src="assets/nav.js"></script>
+<script src="assets/runner.js"></script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Step 2 — Keywords, types, and syntax</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="shell">
+  <div id="sidebar"></div>
+  <div class="main">
+    <div id="topbar"></div>
+    <div class="wrap">
+
+      <p class="eyebrow">Unit 1 — Foundations · Step 2</p>
+      <h1>Keywords, types, and syntax</h1>
+      <p class="lede">The small fixed vocabulary Python reserves for itself,
+      the rule that indentation is grammar, and how to read the error you get
+      when you break it.</p>
+
+      <h2>A very small reserved vocabulary</h2>
+      <p>Python has about 35 words you cannot use as names, and that is the
+      whole of the language's fixed vocabulary. Everything else —
+      <code>print</code>, <code>len</code>, <code>int</code> — is an ordinary
+      name that happens to come pre-assigned.</p>
+<pre>import keyword
+print(len(keyword.kwlist))   <span class="c"># 35</span>
+print(keyword.kwlist[:8])    <span class="c"># ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await']</span></pre>
+      <p>The practical consequence is a rule of thumb: if a name turns red in
+      your editor and assigning to it is a <code>SyntaxError</code>, it is a
+      keyword. If assigning to it works but something later breaks
+      mysteriously, you have shadowed a builtin — <code>list = [1, 2]</code> is
+      legal and then <code>list(...)</code> stops working for the rest of the
+      kernel's life.</p>
+
+      <h2>Indentation is syntax</h2>
+      <p>In most languages layout is a courtesy to the reader. In Python it is
+      the grammar itself: a colon opens a block, and the indented lines under
+      it <em>are</em> the block. There is no closing brace, which means a
+      misplaced indent is not a style problem, it is a different program.</p>
+<pre>total = 0
+for row in rows:
+    total = total + 1
+    print(total)      <span class="c"># inside the loop — prints once per row</span>
+
+total = 0
+for row in rows:
+    total = total + 1
+print(total)          <span class="c"># outside the loop — prints once, at the end</span></pre>
+      <p>Both are valid. Only one is what you meant. Pick four spaces and never
+      think about it again.</p>
+
+      <h2>Expressions and statements</h2>
+      <p>An <b>expression</b> has a value: <code>21 / 1303</code>,
+      <code>len(rows)</code>, <code>bike &gt; 0</code>. A <b>statement</b> does
+      something: <code>bike = 21</code>, <code>import csv</code>,
+      <code>for ...:</code>. A notebook cell displays the value of its last
+      line if that line is an expression — which is why
+      <code>bike / workers</code> alone on the last line shows a number, but
+      <code>bike = 21</code> shows nothing. It has no value; it has an effect.</p>
+
+      <h2>Reading a SyntaxError</h2>
+      <p>A <code>SyntaxError</code> is raised before a single line of your code
+      runs — Python could not even parse it. Two things about the message
+      matter:</p>
+      <ul>
+        <li>The caret <code>^</code> points at where the parser gave up, which
+        is often <em>after</em> the real mistake. An unclosed bracket on line 4
+        reports an error on line 5.</li>
+        <li>So when the flagged line looks fine, look at the line above it.</li>
+      </ul>
+<pre><span class="o">  File "your code", line 3
+    for row in acs_raw
+                      ^
+SyntaxError: expected ':'</span></pre>
+
+      <div class="note warn">
+        <h4>Everything from the Census arrives as a string</h4>
+        <p>This is worth internalising now, because it causes bugs for the next
+        three steps. The ACS API returns JSON, and every value in it — counts,
+        codes, FIPS identifiers — is delivered as text. <code>"401"</code>, not
+        <code>401</code>. Nothing converts it for you.</p>
+      </div>
+
+      <h2>The sample data</h2>
+      <p>Every exercise from here to step 12 has these rows already loaded, in
+      exactly the shape the API hands them over: a list of lists, header row
+      first, all strings. They are also in <code>data/sample_rows.py</code> for
+      you to paste into your notebook.</p>
+<pre>acs_raw[0]   <span class="c"># ['NAME', 'B08301_001E', 'B08301_018E', ... ]</span>
+acs_raw[1]   <span class="c"># ['Block Group 2, Census Tract 3101.03, ...', '401', '-666666666', ...]</span>
+walk_raw[1]  <span class="c"># ['18', '097', '310103', '2', '3.666667', '7', '3', '5', '1', '931']</span></pre>
+
+      <h2>Exercises</h2>
+      <div id="ex1"></div>
+      <div id="ex2"></div>
+
+      <div class="project">
+        <h4>Project work</h4>
+        <p>Paste <code>data/sample_rows.py</code> into a cell of your notebook
+        — this is the sample data cell the next ten steps build on.</p>
+        <p>Then run <code>type()</code> over a few values from
+        <code>acs_raw[1]</code> and convince yourself of the claim above: the
+        worker count, the bicycle count and the FIPS codes are all
+        <code>str</code>. Write a Markdown cell underneath saying so, because
+        in step 3 it becomes the source of the project's worst bug.</p>
+        <p style="margin-bottom:0">Also run <code>import keyword;
+        keyword.kwlist</code> once and read the list. It is shorter than you
+        expect.</p>
+      </div>
+
+      <details class="checkq">
+        <summary><span class="q">Given a line with a misplaced colon or bad indentation, can you locate the problem from the error message?</span></summary>
+        <div class="ans">
+          <p>The procedure, in order:</p>
+          <ol>
+            <li>Read the last line of the message — it names the category
+            (<code>expected ':'</code>, <code>unexpected indent</code>,
+            <code>'(' was never closed</code>).</li>
+            <li>Look at the reported line. If it is obviously fine, look at the
+            line above — unclosed brackets and missing colons report late.</li>
+            <li>For indentation errors, check whether you have mixed tabs and
+            spaces. This is invisible on screen and is why everyone settles on
+            four spaces.</li>
+          </ol>
+          <p style="margin-bottom:0">A <code>SyntaxError</code> means nothing
+          ran at all. That's actually the friendly case: no half-finished
+          state, no partly-written file. Step 11 deals with the errors that
+          happen <em>while</em> running, which are messier.</p>
+        </div>
+      </details>
+
+      <div id="pager"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/nav.js"></script>
+<script src="../assets/runner.js"></script>
+<script src="../assets/sample.js"></script>
+<script>
+COURSE.exercise("ex1", {
+  id: "s02-fix", tag: "Exercise 1", title: "Fix the syntax",
+  prompt:
+    "<p>Four things are wrong with this cell: a missing colon, an indentation " +
+    "that puts a line in the wrong block, a keyword used as a variable name, " +
+    "and an unclosed bracket. Fix all four so that <code>counted</code> ends " +
+    "up as the number of sample rows whose worker count is not " +
+    "<code>\"0\"</code>.</p>" +
+    "<p class='small'>Run it as-is first and read the error you get — then fix " +
+    "one thing at a time. The error changes as you go, which is the point.</p>",
+  setup: SAMPLE,
+  starter:
+    "counted = 0\n" +
+    "for row in acs_raw[1:]\n" +
+    "class = row[1]\n" +
+    "    if class != \"0\":\n" +
+    "        counted = counted + 1\n" +
+    "        print(len(acs_raw[1:])\n",
+  checks: [
+    { label: "the cell parses and runs at all",
+      code: "expect_defined(globals(), 'counted')" },
+    { label: "counted holds the number of sample rows with workers",
+      code: "expect(counted, sum(1 for r in acs_raw[1:] if r[1] != '0'))" },
+    { label: "the header row was not counted as data",
+      code: "expect(counted <= len(acs_raw) - 1, True)" }
+  ],
+  solution:
+    "counted = 0\n" +
+    "for row in acs_raw[1:]:          # 1. the colon opens the block\n" +
+    "    workers = row[1]             # 2. indented in;  3. 'class' is a keyword\n" +
+    "    if workers != \"0\":\n" +
+    "        counted = counted + 1\n" +
+    "print(len(acs_raw[1:]))          # 4. bracket closed, and dedented so it\n" +
+    "                                 #    runs once rather than once per row"
+});
+
+COURSE.exercise("ex2", {
+  id: "s02-types", tag: "Exercise 2", title: "What type is it, really?",
+  prompt:
+    "<p>Take the first data row, <code>acs_raw[1]</code>. Build a list called " +
+    "<code>kinds</code> holding the <em>name</em> of each value's type, as " +
+    "strings — so <code>[\"str\", \"str\", ...]</code>. The expression " +
+    "<code>type(v).__name__</code> gives you the name.</p>" +
+    "<p>Then set <code>all_strings</code> to <code>True</code> or " +
+    "<code>False</code>: is every value in that row a string?</p>",
+  setup: SAMPLE,
+  starter:
+    "row = acs_raw[1]\n\n" +
+    "kinds = \nall_strings = \n\nprint(kinds)",
+  checks: [
+    { label: "kinds has one entry per value in the row",
+      code: "expect(len(expect_defined(globals(), 'kinds')), len(acs_raw[1]))" },
+    { label: "each entry is the type's name as a string",
+      code: "expect(kinds, [type(v).__name__ for v in acs_raw[1]])" },
+    { label: "all_strings answers the question correctly",
+      code: "expect(expect_defined(globals(), 'all_strings'), True)" },
+    { label: "the count that looks like a number is text",
+      code: "expect_type(acs_raw[1][1], str)" }
+  ],
+  solution:
+    "row = acs_raw[1]\n\n" +
+    "kinds = [type(v).__name__ for v in row]   # a loop works too -- step 8 explains this form\n" +
+    "all_strings = set(kinds) == {\"str\"}\n\n" +
+    "print(kinds)\n" +
+    "# Every field is 'str'. The JSON the API returns contains no numbers at all,\n" +
+    "# so nothing arrives typed the way you'd want it. Step 3 converts them --\n" +
+    "# and shows which ones must never be converted."
+});
+</script>
+</body>
+</html>
