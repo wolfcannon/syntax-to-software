@@ -1,58 +1,72 @@
-/* Shared chrome: sidebar, topbar, pager. Defined once so nine step pages
-   don't drift apart. */
+/* Shared chrome: sidebar, topbar, pager. Defined once so the pages don't drift.
+
+   ITEMS is the whole course in order — 21 numbered steps and 2 interludes.
+   An entry with `n: null` is an interlude: a level-up between units, where the
+   work moves onto the learner's own machine. An entry with `file: null` is not
+   written yet; it shows greyed in the sidebar and the pager skips over it, so
+   filling one in is a one-line change here. */
 (function () {
-  const STEPS = [
+  const ITEMS = [
     { unit: "Unit 1 — Foundations", n: 1, file: "steps/step-01.html",
-      title: "Notebooks as a working environment", ex: ["s01-order", "s01-state"] },
-    { n: 2, file: "steps/step-02.html",
-      title: "Keywords, types, and syntax", ex: ["s02-fix", "s02-types"] },
-    { n: 3, file: "steps/step-03.html",
-      title: "Primitives and assignment", ex: ["s03-convert", "s03-geoid", "s03-division"] },
-    { n: 4, file: "steps/step-04.html",
-      title: "Strings and formatting", ex: ["s04-geoid", "s04-format", "s04-parse"] },
-    { n: 5, file: "steps/step-05.html",
-      title: "Lists, tuples, and ranges", ex: ["s05-split", "s05-sort", "s05-unpack"] },
-    { n: 6, file: "steps/step-06.html",
-      title: "Dictionaries", ex: ["s06-zip", "s06-lookup", "s06-join"] },
-    { n: 7, file: "steps/step-07.html",
-      title: "Control structures", ex: ["s07-category", "s07-count"] },
-    { n: 8, file: "steps/step-08.html",
-      title: "Comprehensions", ex: ["s08-dictcomp", "s08-sets", "s08-filter"] },
-    { n: 9, file: "steps/step-09.html",
-      title: "Functions", ex: ["s09-buildgeoid", "s09-bikeshare", "s09-pipeline"] },
-  ];
-  const LATER = [
-    { unit: "Unit 2 — Correctness", items: [
-      [10, "Equivalent forms"], [11, "Debugging and refactoring"],
-      [12, "Exceptions"], [13, "File I/O"]] },
-    { unit: "Unit 3 — Structure and ecosystem", items: [
-      [14, "Modules"], [15, "Classes"], [16, "Third-party modules"],
-      [17, "Servers and clients"]] },
-    { unit: "Unit 4 — Development practice", items: [
-      [18, "Notebooks to scripts"], [19, "Git"], [20, "Testing with pytest"],
-      [21, "The maintenance cycle"], [22, "Organizing a project"],
-      [23, "Capstone"]] },
+      title: "Keywords, types, and syntax", ex: ["s01-fix", "s01-types"] },
+    { n: 2, file: "steps/step-02.html", title: "Primitives and assignment",
+      ex: ["s02-convert", "s02-geoid", "s02-division"] },
+    { n: 3, file: "steps/step-03.html", title: "Strings and formatting",
+      ex: ["s03-geoid", "s03-format", "s03-parse"] },
+    { n: 4, file: "steps/step-04.html", title: "Lists, tuples, and ranges",
+      ex: ["s04-split", "s04-sort", "s04-unpack"] },
+    { n: 5, file: "steps/step-05.html", title: "Dictionaries",
+      ex: ["s05-zip", "s05-lookup", "s05-join"] },
+    { n: 6, file: "steps/step-06.html", title: "Control structures",
+      ex: ["s06-category", "s06-count"] },
+    { n: 7, file: "steps/step-07.html", title: "Comprehensions",
+      ex: ["s07-dictcomp", "s07-sets", "s07-filter"] },
+    { n: 8, file: "steps/step-08.html", title: "Functions",
+      ex: ["s08-buildgeoid", "s08-bikeshare", "s08-pipeline"] },
+
+    { unit: "Level up", n: null, file: "steps/interlude-jupyter.html",
+      title: "Jupyter notebooks", ex: ["int-order", "int-state"] },
+
+    { unit: "Unit 2 — Correctness", n: 9, file: null, title: "Equivalent forms" },
+    { n: 10, file: null, title: "Debugging and refactoring" },
+    { n: 11, file: null, title: "Exceptions" },
+    { n: 12, file: null, title: "File I/O" },
+
+    { unit: "Unit 3 — Structure and ecosystem", n: 13, file: null, title: "Modules" },
+    { n: 14, file: null, title: "Classes" },
+    { n: 15, file: null, title: "Third-party modules" },
+    { n: 16, file: null, title: "Servers and clients" },
+
+    { unit: "Level up", n: null, file: "steps/interlude-scripts.html",
+      title: "Notebooks to scripts",
+      ex: ["scr-layout", "scr-requirements", "scr-order"] },
+
+    { unit: "Unit 4 — Development practice", n: 17, file: null, title: "Git" },
+    { n: 18, file: null, title: "Testing with pytest" },
+    { n: 19, file: null, title: "The maintenance cycle" },
+    { n: 20, file: null, title: "Organizing a project" },
+    { n: 21, file: null, title: "Capstone" },
   ];
 
-  const inSteps = /\/steps\//.test(location.pathname);
-  const base = inSteps ? "../" : "";
+  const base = /\/steps\//.test(location.pathname) ? "../" : "";
   const here = location.pathname.split("/").pop() || "index.html";
+  const label = (it) => (it.n === null ? "Level up" : "Step " + it.n);
 
-  let toc = "";
-  let unit = null;
-  for (const s of STEPS) {
-    if (s.unit && s.unit !== unit) { unit = s.unit; toc += `<div class="unit-label">${unit}</div><ul class="toc">`; }
-    toc += `<li><a href="${base}${s.file}" data-step-exercises="${s.ex.join(",")}">` +
-           `<span class="n">${s.n}</span><span>${s.title}</span><span class="dot"></span></a></li>`;
+  let toc = "", unit = null;
+  for (const it of ITEMS) {
+    if (it.unit && it.unit !== unit) {
+      if (unit !== null) toc += "</ul>";
+      unit = it.unit;
+      toc += `<div class="unit-label">${unit}</div><ul class="toc">`;
+    }
+    const num = it.n === null ? "↑" : it.n;
+    toc += it.file
+      ? `<li><a href="${base}${it.file}" data-step-exercises="${(it.ex || []).join(",")}">` +
+        `<span class="n">${num}</span><span>${it.title}</span><span class="dot"></span></a></li>`
+      : `<li><a href="${base}index.html#roadmap" style="opacity:.45">` +
+        `<span class="n">${num}</span><span>${it.title}</span></a></li>`;
   }
   toc += "</ul>";
-  for (const g of LATER) {
-    toc += `<div class="unit-label">${g.unit}</div><ul class="toc">`;
-    for (const [n, t] of g.items)
-      toc += `<li><a href="${base}index.html#roadmap" style="opacity:.5">` +
-             `<span class="n">${n}</span><span>${t}</span></a></li>`;
-    toc += "</ul>";
-  }
 
   const sb = document.getElementById("sidebar");
   if (sb) {
@@ -62,29 +76,41 @@
       `<b>From Syntax to Software</b><span>Python through a walkability project</span></a>` + toc;
   }
 
+  const i = ITEMS.findIndex((it) => it.file && it.file.split("/").pop() === here);
+
   const tb = document.getElementById("topbar");
   if (tb) {
-    const i = STEPS.findIndex((s) => s.file.split("/").pop() === here);
+    const steps = ITEMS.filter((it) => it.n !== null).length;
     tb.className = "topbar";
     tb.innerHTML =
       `<button class="menu-btn">☰ Steps</button>` +
-      `<span>${i >= 0 ? "Step " + STEPS[i].n + " of 23" : "Course overview"}</span>` +
+      `<span>${i < 0 ? "Course overview"
+                     : ITEMS[i].n === null ? "Level up — " + ITEMS[i].title
+                     : "Step " + ITEMS[i].n + " of " + steps}</span>` +
       `<span class="prog"><span class="lbl small"></span>` +
       `<span class="bar"><i></i></span></span>`;
   }
 
   const pg = document.getElementById("pager");
   if (pg) {
-    const i = STEPS.findIndex((s) => s.file.split("/").pop() === here);
-    const prev = i > 0 ? STEPS[i - 1] : null;
-    const next = i >= 0 && i < STEPS.length - 1 ? STEPS[i + 1] : null;
+    // Skip over steps that aren't written yet, so the pager never dead-ends.
+    let prev = null, next = null, skipped = 0;
+    for (let k = i - 1; k >= 0; k--) if (ITEMS[k].file) { prev = ITEMS[k]; break; }
+    for (let k = i + 1; i >= 0 && k < ITEMS.length; k++) {
+      if (ITEMS[k].file) { next = ITEMS[k]; break; }
+      skipped++;
+    }
+    // Don't imply adjacency across steps that aren't written yet.
+    const nextDir = !next ? ""
+                  : skipped ? `Skipping ${skipped} unwritten →`
+                  : label(next) + " →";
     pg.className = "pager";
     pg.innerHTML =
-      (prev ? `<a href="${base}${prev.file}"><span class="dir">← Step ${prev.n}</span>` +
+      (prev ? `<a href="${base}${prev.file}"><span class="dir">← ${label(prev)}</span>` +
               `<span class="t">${prev.title}</span></a>`
             : `<a href="${base}index.html"><span class="dir">← Back</span>` +
               `<span class="t">Course overview</span></a>`) +
-      (next ? `<a class="next" href="${base}${next.file}"><span class="dir">Step ${next.n} →</span>` +
+      (next ? `<a class="next" href="${base}${next.file}"><span class="dir">${nextDir}</span>` +
               `<span class="t">${next.title}</span></a>`
             : `<a class="next" href="${base}index.html#roadmap"><span class="dir">What's next →</span>` +
               `<span class="t">Unit 2: Correctness</span></a>`);

@@ -1,13 +1,32 @@
 # From Syntax to Software
 
-A 23-step Python course for someone with a strong mathematical background and
-no Python experience, aimed at data work. Every step teaches one layer of the
-language or of the development process, and every step advances the same
-project: **does neighbourhood walkability predict bike commuting, and what
-explains the places that don't fit the trend?**
+A Python course for someone with a strong mathematical background and no Python
+experience, aimed at data work — 21 steps and two level-ups. Every step teaches
+one layer of the language or of the development process, and every step advances
+the same project: **does neighbourhood walkability predict bike commuting, and
+what explains the places that don't fit the trend?**
 
-**Unit 1 (steps 1–9) is built.** Units 2–4 are outlined in the course home page
-and not yet written.
+### Shape
+
+| | Where the work happens |
+| --- | --- |
+| **Unit 1 — Foundations** (steps 1–8) ✅ built | the browser |
+| **↑ Level up: Jupyter notebooks** ✅ built | your machine, in a notebook |
+| **Unit 2 — Correctness** (steps 9–12) | " |
+| **Unit 3 — Structure and the ecosystem** (steps 13–16) | " |
+| **↑ Level up: Notebooks to scripts** ✅ built | your machine, in a terminal |
+| **Unit 4 — Development practice** (steps 17–21) | " |
+
+The two level-ups are deliberate. Each is a change of environment, and each
+lands *after* the learner has something worth putting there — Jupyter arrives
+once there is a pipeline to run in it, and virtual environments arrive once
+there are dependencies to isolate. Putting either at the front would be
+teaching a tool before the problem it solves.
+
+Units 2–4 are outlined on the course home page and not yet written. Adding a
+step is: write `steps/step-NN.html`, then give it a `file:` in the `ITEMS`
+array in `assets/nav.js` — the sidebar, progress bar and pager all follow from
+there.
 
 ## Running it
 
@@ -31,12 +50,16 @@ that one moment needs an internet connection.
 
 ```
 index.html            course home: how it works, the data, all 23 steps
-steps/step-01..09     Unit 1, one page per step
+steps/step-01..08     Unit 1, one page per step
+steps/interlude-*     the two level-ups
 assets/course.css     styles (light and dark, follows the browser)
 assets/nav.js         sidebar, topbar, pager — defined once for every page
 assets/runner.js      the exercise harness: Pyodide + the hidden checks
 assets/sample.js      sample rows, generated — do not hand-edit
-data/                 the project's two datasets, plus the sample cell
+data/                 the project's two datasets, the sample cell, and
+                      marion_full.py — the whole county as literals, a
+                      stopgap so the first level-up can run on real data
+                      before file I/O (step 12) exists
 notebooks/            where the learner's own work goes
 scripts/              data preparation and the repo's own tests
 ```
@@ -48,7 +71,7 @@ never sees. `assets/runner.js` runs their code in a fresh namespace, then runs
 the assertions against it, and reports each one separately — `got '1731001'
 (str), expected '017300001001' (str)` rather than a bare red traceback.
 
-That is a setup for **step 20**, where the harness stops being hidden: the
+That is a setup for **step 18**, where the harness stops being hidden: the
 assertions grading the learner turn out to be ordinary `pytest`-style
 assertions, and they start writing their own. Keep the checks honest and
 readable, because they eventually get read.
@@ -61,10 +84,13 @@ Adding an exercise means a `<div id="...">` in the page and one
 Two checks, both worth running after touching any page:
 
 ```sh
-python3 scripts/verify_exercises.py   # every check must pass on its own solution,
-                                      # and no starter may already pass
-node /tmp/…/dom.mjs                   # (see below) pages render, cards mount
+python3 scripts/verify_exercises.py
 ```
+
+It asserts three things: every hidden check passes against its own published
+solution, no starter already passes (an exercise with nothing to do is a bug),
+and the exercise ids listed in `assets/nav.js` match the ones the pages
+actually define — otherwise a progress dot silently never lights up.
 
 `verify_exercises.py` lifts the Python harness straight out of `runner.js`, so
 there is one source of truth. It runs under whatever CPython you have; to run
@@ -79,7 +105,8 @@ Both datasets are committed, so Unit 1 needs no downloads and no API key.
 | --- | --- | --- |
 | `data/walkability_marion.csv` | EPA National Walkability Index, via the EPA's ArcGIS service | 632 block groups |
 | `data/acs_commute_marion.csv` | Census ACS 5-year 2015–2019, table B08301 | 630 block groups |
-| `data/sample_rows.py` | ~11 rows of each, for steps 2–12 | generated |
+| `data/sample_rows.py` | ~11 rows of each, for steps 1–11 | generated |
+| `data/marion_full.py` | the whole county as Python literals | generated |
 
 > **The walkability data is real. The commute data is not yet.**
 > `acs_commute_marion.csv` is currently **synthetic** — generated with a
@@ -103,16 +130,16 @@ Both datasets are committed, so Unit 1 needs no downloads and no API key.
 The two files deliberately do not line up: 7 block groups have a walkability
 score and no commute data, 5 the reverse, 14 have no workers, and 9 carry the
 Census "estimate unavailable" sentinel. Those aren't blemishes, they're the
-curriculum — steps 6, 7, 8 and 12 each exist partly to deal with one of them.
+curriculum — steps 5, 6, 8 and 12 each exist partly to deal with one of them.
 
 Use the **2015–2019** ACS release (`/data/2019/acs/acs5`). Later releases use
 2020 block group boundaries and will not join cleanly to the EPA file, which is
-ticket B in step 21.
+ticket B in step 19.
 
 ## Texts
 
-- [*Think Python*, 3rd ed.](https://allendowney.github.io/ThinkPython/) — free; covers steps 1–15
-- [*Research Software Engineering with Python*](https://third-bit.com/py-rse/) — free; covers steps 18–22
+- [*Think Python*, 3rd ed.](https://allendowney.github.io/ThinkPython/) — free; covers steps 1–14
+- [*Research Software Engineering with Python*](https://third-bit.com/py-rse/) — free; covers steps 16–20
 - [The official Python tutorial](https://docs.python.org/3/tutorial/),
   [*Beyond the Basic Stuff with Python*](https://inventwithpython.com/),
   [The Missing Semester](https://missing.csail.mit.edu/)

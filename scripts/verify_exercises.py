@@ -23,6 +23,30 @@ def harness_source():
     return m.group(1).replace("\\`", "`").replace("\\$", "$")
 
 
+def check_nav(exercises):
+    """The progress dots are driven by ids listed in nav.js. If a page renames
+    an exercise and nav.js isn't updated, the dot silently never lights up --
+    so compare the two lists rather than trusting them to stay in step."""
+    nav = (ROOT / "assets/nav.js").read_text()
+    problems = []
+    for page, ids in re.findall(r'file:\s*"steps/([^"]+)"[^}]*?ex:\s*\[([^\]]*)\]',
+                                nav, re.S):
+        listed = set(re.findall(r'"([^"]+)"', ids))
+        actual = {e["id"] for e in exercises if e["file"] == page}
+        if listed != actual:
+            for missing in sorted(actual - listed):
+                problems.append((page, f"exercise '{missing}' is on the page but "
+                                       "not listed in nav.js", ""))
+            for extra in sorted(listed - actual):
+                problems.append((page, f"nav.js lists '{extra}', which no page "
+                                       "defines", ""))
+    pages_with_ex = {e["file"] for e in exercises}
+    for page in sorted(pages_with_ex):
+        if f'"steps/{page}"' not in nav:
+            problems.append((page, "page has exercises but isn't in nav.js", ""))
+    return problems
+
+
 def main():
     exercises = json.loads(
         subprocess.run(["node", "scripts/extract_exercises.mjs"], cwd=ROOT,
@@ -49,6 +73,8 @@ def main():
         res = json.loads(run(setup, ex.get("starter", ""), checks))
         if not res["error"] and res["checks"] and all(c["ok"] for c in res["checks"]):
             failures.append((ex["id"], "starter already passes every check", ""))
+
+    failures += check_nav(exercises)
 
     print(f"{len(exercises)} exercises, {n_checks} checks")
     for ident, what, detail in failures:

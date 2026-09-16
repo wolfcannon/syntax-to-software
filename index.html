@@ -13,7 +13,7 @@
     <div id="topbar"></div>
     <div class="wrap">
 
-      <p class="eyebrow">A 23-step course</p>
+      <p class="eyebrow">21 steps and two level-ups</p>
       <h1>From Syntax to Software</h1>
       <p class="lede">Learning Python by building one real thing: an analysis of
       whether neighbourhood walkability predicts bike commuting — and what
@@ -23,8 +23,14 @@
       no Python experience, aimed at data work. Every step teaches one layer of
       the language or of the development process, and every step advances the
       same project. There are no toy exercises about animals and shapes; by
-      step 4 you are building Census block group identifiers, and by step 8 you
+      step 3 you are building Census block group identifiers, and by step 7 you
       are diagnosing why 12 of them failed to join.</p>
+
+      <p>Between the units sit two <b>level-ups</b>. These are the points where
+      the work moves outward — first into a notebook on your own machine, then
+      out of the notebook into a project that runs from a terminal. Each comes
+      when you have something worth putting there, which is later than courses
+      usually put them, and is the point.</p>
 
       <div class="note">
         <h4>The research question</h4>
@@ -42,17 +48,19 @@
         exercises run Python in your browser — nothing is uploaded, nothing is
         installed, and there is no account. Your answers and progress are
         remembered locally on this machine.</li>
-        <li><b>The notebooks and scripts</b> in this repo are where the real
-        project lives. From step 13 onward the work moves permanently out of
-        the browser and onto your own machine, because installing packages,
+        <li><b>Your own machine</b> is where the project ends up. The first
+        level-up, straight after Unit 1, is where you install Jupyter and run
+        what you have written against all 632 block groups instead of eleven.
+        After that the browser keeps explaining and keeps checking small
+        things, but the analysis is yours — because installing packages,
         reading files, calling an API, using git and running tests <em>is</em>
-        the subject matter from that point on.</li>
+        the subject matter from there on.</li>
       </ul>
 
       <div class="note">
         <h4>About the hidden checks</h4>
         <p>Each exercise runs your code and then runs a handful of assertions
-        you don't see. That is deliberate. In <b>step 20</b> we stop hiding
+        you don't see. That is deliberate. In <b>step 18</b> we stop hiding
         them — the harness that has been grading you all along turns out to be
         a few dozen lines of <code>pytest</code>, and you start writing your
         own.</p>
@@ -106,43 +114,55 @@ python3 -m http.server 8000
       "estimate unavailable" sentinel <code>-666666666</code>. You meet all four
       of those in Unit 1.</p>
 
-      <h2 id="roadmap">The 23 steps</h2>
+      <h2 id="roadmap">The shape of it</h2>
 
-      <h3>Unit 1 — Foundations <span class="small">(steps 1–9, available now)</span></h3>
+      <h3>Unit 1 — Foundations <span class="small">(steps 1–8 · available now)</span></h3>
       <p>Read, represent, and transform the project data using only the core
-      language. No third-party packages, no files — the data arrives as a
-      literal you can read with your eyes.</p>
+      language. No third-party packages, no files, nothing to install — the
+      data arrives as a literal you can read with your eyes, and every exercise
+      runs in this browser.</p>
 
-      <h3>Unit 2 — Correctness <span class="small">(steps 10–13)</span></h3>
+      <h3>↑ Level up: Jupyter notebooks <span class="small">(available now)</span></h3>
+      <p>Install Jupyter, learn the one genuinely tricky thing about notebooks
+      — that they remember more than they show — and run your Unit 1 pipeline
+      against all 632 block groups. The first real evidence about the research
+      question.</p>
+
+      <h3>Unit 2 — Correctness <span class="small">(steps 9–12)</span></h3>
       <p>Equivalent forms of the same computation; reading tracebacks;
       refactoring while proving the output didn't change; exceptions and the
       failure modes this data actually has; and finally real files, which
       retires the sample cell for good.</p>
 
-      <h3>Unit 3 — Structure and the ecosystem <span class="small">(steps 14–17)</span></h3>
+      <h3>Unit 3 — Structure and the ecosystem <span class="small">(steps 13–16)</span></h3>
       <p>Modules, classes and dataclasses, choosing third-party packages
       (pandas, matplotlib, scipy — and rebuilding the hand-written join to check
       it), and talking to the Census API yourself.</p>
 
-      <h3>Unit 4 — Development practice <span class="small">(steps 18–23)</span></h3>
-      <p>Virtual environments, a multi-file project, git, pytest, the
-      reproduce&rarr;test&rarr;fix&rarr;commit cycle run against two realistic
-      tickets, project layout, and a capstone that answers the research
-      question honestly — margins of error included.</p>
+      <h3>↑ Level up: Notebooks to scripts <span class="small">(available now)</span></h3>
+      <p>Virtual environments, dependency pinning, and splitting the notebook
+      into <code>fetch</code> / <code>clean</code> / <code>analyze</code> /
+      <code>run</code>. The test is deleting the environment, rebuilding it
+      from a file, and finding out what your analysis secretly depended on.</p>
+
+      <h3>Unit 4 — Development practice <span class="small">(steps 17–21)</span></h3>
+      <p>Git, pytest, the reproduce&rarr;test&rarr;fix&rarr;commit cycle run
+      against two realistic tickets, project layout, and a capstone that
+      answers the research question honestly — margins of error included.</p>
 
       <div class="note warn">
         <h4>Needed later, not now</h4>
-        <p>Step 17 has you call the Census API yourself, which needs a free key
+        <p>Step 16 has you call the Census API yourself, which needs a free key
         from <a href="https://api.census.gov/data/key_signup.html">api.census.gov</a>.
-        Steps 1–16 do not.</p>
+        Nothing before it does, and neither level-up does.</p>
       </div>
 
       <h2>Texts</h2>
       <ul>
         <li><a href="https://allendowney.github.io/ThinkPython/"><i>Think Python</i>, 3rd ed.</a>
-        (Allen Downey, 2024) — free, and covers steps 1–15.</li>
+        (Allen Downey, 2024) — free, and covers Unit 1 through Unit 3.</li>
         <li><a href="https://third-bit.com/py-rse/"><i>Research Software Engineering with Python</i></a>
-        (Irving et al., 2021) — free, and covers steps 18–22.</li>
+        (Irving et al., 2021) — free, and covers the second level-up and Unit 4.</li>
         <li><a href="https://docs.python.org/3/tutorial/">The official Python tutorial</a>,
         <a href="https://inventwithpython.com/"><i>Beyond the Basic Stuff with Python</i></a>,
         and <a href="https://missing.csail.mit.edu/">The Missing Semester of Your CS Education</a>.</li>

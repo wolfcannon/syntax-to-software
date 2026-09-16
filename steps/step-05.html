@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Step 5 — Lists, tuples, and ranges</title>
+<title>Step 5 — Dictionaries</title>
 <link rel="stylesheet" href="../assets/course.css">
 </head>
 <body>
@@ -14,101 +14,105 @@
     <div class="wrap">
 
       <p class="eyebrow">Unit 1 — Foundations · Step 5</p>
-      <h1>Lists, tuples, and ranges</h1>
-      <p class="lede">Your data arrives as a list of lists. Time to be
-      deliberate about which sequence type means what.</p>
+      <h1>Dictionaries</h1>
+      <p class="lede">The type that turns two unrelated tables into one dataset
+      — and the step where the project stops being exercises and starts being
+      an analysis.</p>
 
-      <h2>Slice boundaries sit between elements</h2>
-      <p>The cleanest way to stop making off-by-one errors is to stop picturing
-      indices as labels on elements and start picturing them as the gaps
-      between them. <code>rows[1:4]</code> is everything between gap 1 and gap
-      4 — three elements, because 4 − 1 = 3.</p>
+      <h2>Lookup by key, not by position</h2>
+      <p>A dictionary maps keys to values. Looking one up costs the same
+      whether it holds ten entries or ten million, which is the property the
+      rest of this step depends on.</p>
+<pre>row = {"geoid": "180973401103", "workers": 1303, "bike": 21}
+row["workers"]            <span class="c"># 1303</span>
+row["walk_index"]         <span class="c"># KeyError — it isn't there</span>
+row.get("walk_index")     <span class="c"># None — the polite version</span>
+row.get("walk_index", 0)  <span class="c"># 0 — with a default of your choosing</span></pre>
+      <p>The difference between <code>[]</code> and <code>.get()</code> is a
+      decision about whether a missing key is a bug or a fact. For a column
+      name you wrote yourself, missing means you typo'd it and you want the
+      <code>KeyError</code> immediately. For a GEOID that may legitimately not
+      exist in the other dataset, missing is data, and <code>.get()</code> lets
+      you record it.</p>
+
+      <h2>From positional rows to named fields</h2>
+      <p><code>zip</code> pairs up two sequences; <code>dict</code> turns pairs
+      into a mapping. Together they convert a row you have to count your way
+      through into one you can read:</p>
+<pre>header = acs_raw[0]
+row = dict(zip(header, acs_raw[1]))
+row["B08301_001E"]    <span class="c"># '401' — no more row[1]</span></pre>
+      <p>This is worth doing immediately and permanently.
+      <code>row[8] + row[9]</code> was fine for two steps; it is unreadable in
+      a hundred lines and it breaks silently if the API reorders its
+      columns.</p>
+
+      <h2>The join</h2>
+      <p>You have two tables describing the same block groups, and no
+      relationship between them except a shared identifier. Joining means:
+      build a lookup from one, then walk the other asking questions of it.</p>
 
       <figure>
-        <svg viewBox="0 0 720 180" role="img" aria-label="Slice indices as boundaries between list elements.">
-          <text x="14" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">acs_raw[1:4]</text>
-          <g>
-            <rect class="svg-box" x="40" y="46" width="128" height="44" rx="6"/>
-            <text x="56" y="73" class="svg-muted mono" style="font-size:12px">header row</text>
-            <rect x="172" y="46" width="128" height="44" rx="6" fill="var(--accent-wash)" stroke="var(--accent)"/>
-            <text x="188" y="73" class="svg-accent mono" style="font-size:12px">3101.03 bg2</text>
-            <rect x="304" y="46" width="128" height="44" rx="6" fill="var(--accent-wash)" stroke="var(--accent)"/>
-            <text x="320" y="73" class="svg-accent mono" style="font-size:12px">3102.01 bg2</text>
-            <rect x="436" y="46" width="128" height="44" rx="6" fill="var(--accent-wash)" stroke="var(--accent)"/>
-            <text x="452" y="73" class="svg-accent mono" style="font-size:12px">3103.08 bg3</text>
-            <rect class="svg-box" x="568" y="46" width="128" height="44" rx="6"/>
-            <text x="584" y="73" class="svg-muted mono" style="font-size:12px">3201.07 bg2</text>
-          </g>
-          <g class="svg-muted">
-            <line x1="36" y1="38" x2="36" y2="102" class="svg-line"/>
-            <line x1="168" y1="38" x2="168" y2="110" stroke="var(--accent)" fill="none"/>
-            <line x1="564" y1="38" x2="564" y2="110" stroke="var(--accent)" fill="none"/>
-            <line x1="700" y1="38" x2="700" y2="102" class="svg-line"/>
-            <text x="30" y="120" class="svg-muted mono" style="font-size:12px">0</text>
-            <text x="163" y="126" class="svg-accent mono" style="font-size:13px; font-weight:700">1</text>
-            <text x="298" y="120" class="svg-muted mono" style="font-size:12px">2</text>
-            <text x="430" y="120" class="svg-muted mono" style="font-size:12px">3</text>
-            <text x="559" y="126" class="svg-accent mono" style="font-size:13px; font-weight:700">4</text>
-            <text x="694" y="120" class="svg-muted mono" style="font-size:12px">5</text>
-          </g>
-          <text x="14" y="152" class="svg-ink" style="font-size:12px">The indices are the cut points, not the boxes. Three boxes lie between cut 1 and cut 4.</text>
-          <text x="14" y="170" class="svg-muted" style="font-size:12px">Which is why acs_raw[1:] means "everything except the header" and never needs a length.</text>
+        <svg viewBox="0 0 720 300" role="img" aria-label="Joining ACS rows to walkability scores by GEOID, with unmatched rows on both sides.">
+          <text x="14" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">ACS COMMUTE ROWS</text>
+          <text x="470" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">WALKABILITY LOOKUP</text>
+
+          <rect class="svg-box" x="14" y="34" width="210" height="34" rx="6"/>
+          <text x="28" y="56" class="svg-ink mono" style="font-size:11.5px">…340110 3</text>
+          <rect class="svg-box" x="14" y="76" width="210" height="34" rx="6"/>
+          <text x="28" y="98" class="svg-ink mono" style="font-size:11.5px">…341700 3</text>
+          <rect class="svg-box" x="14" y="118" width="210" height="34" rx="6"/>
+          <text x="28" y="140" class="svg-ink mono" style="font-size:11.5px">…353500 1</text>
+          <rect x="14" y="160" width="210" height="34" rx="6" fill="var(--bad-wash)" stroke="var(--bad)"/>
+          <text x="28" y="182" class="svg-bad mono" style="font-size:11.5px">…310308 3</text>
+          <text x="28" y="212" class="svg-bad" style="font-size:11px">in the ACS, not in the EPA file</text>
+          <text x="28" y="228" class="svg-muted" style="font-size:11px">5 of these in the full data</text>
+
+          <rect class="svg-box" x="466" y="34" width="240" height="34" rx="6"/>
+          <text x="480" y="56" class="svg-ink mono" style="font-size:11.5px">…340110 3 → 14.5</text>
+          <rect class="svg-box" x="466" y="76" width="240" height="34" rx="6"/>
+          <text x="480" y="98" class="svg-ink mono" style="font-size:11.5px">…341700 3 → 11.8</text>
+          <rect class="svg-box" x="466" y="118" width="240" height="34" rx="6"/>
+          <text x="480" y="140" class="svg-ink mono" style="font-size:11.5px">…353500 1 → 15.7</text>
+          <rect x="466" y="160" width="240" height="34" rx="6" fill="var(--warn-wash)" stroke="var(--warn)"/>
+          <text x="480" y="182" class="svg-ink mono" style="font-size:11.5px">…320107 1 → 9.0</text>
+          <text x="480" y="212" style="font-size:11px" fill="var(--warn)">scored, but nobody asked for it</text>
+          <text x="480" y="228" class="svg-muted" style="font-size:11px">7 of these in the full data</text>
+
+          <path class="svg-line" d="M228 51 H462" stroke="var(--ok)" marker-end="url(#a6)"/>
+          <path class="svg-line" d="M228 93 H462" stroke="var(--ok)" marker-end="url(#a6)"/>
+          <path class="svg-line" d="M228 135 H462" stroke="var(--ok)" marker-end="url(#a6)"/>
+          <path class="svg-line" d="M228 177 h150" stroke="var(--bad)" stroke-dasharray="5 4"/>
+          <text x="384" y="181" class="svg-bad mono" style="font-size:15px">✕</text>
+          <defs><marker id="a6" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" fill="var(--ok)"/></marker></defs>
+
+          <line x1="14" y1="252" x2="706" y2="252" class="svg-line"/>
+          <text x="14" y="274" class="svg-ink" style="font-size:12px">A join is a question asked once per row on the left. The rows that get no answer are the finding.</text>
+          <text x="14" y="292" class="svg-muted" style="font-size:12px">Silently dropping them is how an analysis ends up describing a population that isn't the one you meant.</text>
         </svg>
-        <figcaption>The half-open convention pays for itself:
-        <code>rows[:k]</code> and <code>rows[k:]</code> partition a list with
-        no overlap and no gap, for any k.</figcaption>
+        <figcaption>Which side you iterate decides what you get: walking the
+        ACS rows gives you a left join and tells you about missing walkability
+        scores. Walking the walkability table tells you the opposite. Neither
+        is "the" join.</figcaption>
       </figure>
 
-      <h2>List or tuple?</h2>
-      <p>Both hold an ordered sequence. The difference is mutability, and the
-      convention that has grown around it:</p>
-      <ul>
-        <li>A <b>list</b> is a collection of things of the same kind, however
-        many there happen to be. Rows of data. Scores. You append to it, sort
-        it, filter it.</li>
-        <li>A <b>tuple</b> is one thing with several parts, and the number of
-        parts is fixed by what it means. <code>(geoid, walk_index)</code> is a
-        pairing, not a collection of two; there is no sensible way to append a
-        third item to it.</li>
-      </ul>
-<pre>scores = []                      <span class="c"># a list: it will grow</span>
-scores.append(("18097340110", 14.5))   <span class="c"># a tuple: a labelled pair</span>
-scores.sort()
-
-pair = scores[0]
-geoid, walk = pair               <span class="c"># unpacking: one name per part</span></pre>
-      <p>Tuples being immutable also makes them usable as dictionary keys,
-      which is the whole of step 6.</p>
-
-      <h2>Sorting by something other than the value</h2>
-      <p><code>sorted()</code> returns a new sorted list; <code>.sort()</code>
-      rearranges in place and returns <code>None</code> — assigning the result
-      of <code>.sort()</code> to a name is a classic first-week bug. The
-      <code>key=</code> argument takes a function that maps each element to the
-      thing you actually want to sort on:</p>
-<pre>rows = acs_raw[1:]
-by_workers = sorted(rows, key=lambda row: int(row[1]), reverse=True)</pre>
-      <p>A <code>lambda</code> is a small unnamed function. Everything it does
-      could be done by a <code>def</code>, which is step 9. Note the
-      <code>int()</code>: sorting the raw strings would put <code>"9"</code>
-      after <code>"1303"</code>, because text sorts alphabetically.</p>
-
-      <div class="note warn">
-        <h4>A sort that looks right and isn't</h4>
-        <p>String sorting of numeric text is one of those bugs that produces a
-        plausible-looking answer. <code>sorted(["9", "1303", "57"])</code> is
-        <code>['1303', '57', '9']</code>. If your "top 10 block groups" table
-        ever looks strange, check that you converted before sorting.</p>
+      <div class="note">
+        <h4>Composite keys</h4>
+        <p>Within one county you do not strictly need a 12-character string:
+        the tuple <code>(tract, block_group)</code> identifies a block group
+        just as well, and tuples are hashable so they work as keys directly.
+        Build the full GEOID anyway. The moment you add a second county — step
+        21, ticket A — a tract number alone stops being unique, and code that
+        assumed otherwise fails in a way that looks like a data problem rather
+        than a code problem.</p>
       </div>
 
-      <h2><code>range</code>, and when not to use it</h2>
-      <p><code>range(5)</code> is <code>0, 1, 2, 3, 4</code> — half-open again.
-      It is the right tool when you need the index itself. It is the wrong tool
-      for walking a list: write <code>for row in rows</code>, not
-      <code>for i in range(len(rows))</code>. When you need both, use
-      <code>enumerate</code>:</p>
-<pre>for i, row in enumerate(acs_raw[1:], start=1):
-    print(i, row[0])</pre>
+      <h2>Iterating a dictionary</h2>
+<pre>for geoid in lookup:              <span class="c"># keys</span>
+for score in lookup.values():     <span class="c"># values</span>
+for geoid, score in lookup.items():   <span class="c"># both, unpacked</span>
+"180973401103" in lookup          <span class="c"># membership — checks keys, and is fast</span></pre>
 
       <h2>Exercises</h2>
       <div id="ex1"></div>
@@ -116,34 +120,35 @@ by_workers = sorted(rows, key=lambda row: int(row[1]), reverse=True)</pre>
       <div id="ex3"></div>
 
       <div class="project">
-        <h4>Project work</h4>
-        <p>In your notebook, separate <code>acs_raw</code> into a header and a
-        list of data rows, and do the same for <code>walk_raw</code>. Build a
-        list of <code>(geoid, walk_index)</code> tuples and sort it to find the
-        most and least walkable block groups in the sample.</p>
-        <p style="margin-bottom:0">Then try to pair the two datasets by
-        position — <code>acs_rows[i]</code> with <code>walk_rows[i]</code> —
-        and print the two GEOIDs side by side. Most will differ. Positional
-        pairing is not a join, and step 6 does it properly.</p>
+        <h4>Take it further</h4>
+        <p>Convert both raw tables into lists of dictionaries. Build a lookup
+        from GEOID to walkability score. Then perform the join by hand — for
+        each ACS row, look up its walkability score — and report three numbers:
+        how many joined, how many ACS rows found no score, and how many
+        walkability rows nobody asked for.</p>
+        <p style="margin-bottom:0">Write those three numbers down somewhere. At
+        the level-up you will run the same code against all 632 block groups
+        and they will change; you want the sample's numbers recorded so you
+        can tell the difference between "more data" and "new bug".</p>
       </div>
 
       <details class="checkq">
-        <summary><span class="q">Why is <code>(geoid, walk_index)</code> a good tuple, but a row you intend to modify is better as a list?</span></summary>
+        <summary><span class="q">What happens when a GEOID exists in one dataset but not the other, and how does <code>.get()</code> change that?</span></summary>
         <div class="ans">
-          <p>Because the tuple's shape is part of its meaning. A
-          <code>(geoid, walk_index)</code> pair always has exactly two parts,
-          each with a fixed role, and unpacking it into two names is a
-          statement about what it is. If you appended a third element it would
-          no longer be that kind of pair.</p>
-          <p>A data row is the opposite: you want to add a computed column,
-          replace a sentinel with <code>None</code>, or drop a field. Those are
-          all mutations of a collection, and a list is the type that supports
-          them.</p>
-          <p style="margin-bottom:0">The immutability has a second payoff.
-          Because a tuple cannot change, it can be hashed, so it can be a
-          dictionary key — <code>(tract, block_group)</code> is a perfectly
-          good composite key, and that is how step 6 gets away without building
-          a GEOID string at all.</p>
+          <p>With square brackets, a missing GEOID raises <code>KeyError</code>
+          and stops the loop dead on the first unmatched row. That is loud and
+          unhelpful: you learn that one row failed, not how many.</p>
+          <p>With <code>.get()</code>, the lookup returns <code>None</code> and
+          the loop continues. Now the absence is a value you can hold onto —
+          count it, list it, look at a few and work out why. Roughly: brackets
+          for keys you believe in, <code>.get()</code> for keys the data is
+          allowed to withhold.</p>
+          <p style="margin-bottom:0">The mistake is the third option:
+          <code>.get(geoid, 0)</code>. A default of zero turns "we don't know
+          this block group's walkability" into "this block group has the lowest
+          possible walkability", and that is now in your correlation with no
+          trace that it was ever missing. Default to <code>None</code>, and
+          decide what to do about it deliberately.</p>
         </div>
       </details>
 
@@ -157,123 +162,139 @@ by_workers = sorted(rows, key=lambda row: int(row[1]), reverse=True)</pre>
 <script src="../assets/sample.js"></script>
 <script>
 COURSE.exercise("ex1", {
-  id: "s05-split", tag: "Exercise 1", title: "Header off, data through",
+  id: "s05-zip", tag: "Exercise 1", title: "Rows with names on them",
   prompt:
-    "<p>Split <code>acs_raw</code> into <code>header</code> (the first row) and " +
-    "<code>rows</code> (everything else), without writing any numbers except " +
-    "<code>0</code> and <code>1</code>.</p>" +
-    "<p>Then set <code>workers_col</code> to the position of " +
-    "<code>\"B08301_001E\"</code> in the header — look it up rather than " +
-    "counting by eye — and <code>first_workers</code> to that field from the " +
-    "first data row, as an <code>int</code>.</p>",
+    "<p>Turn both raw tables into lists of dictionaries — <code>acs_rows</code> " +
+    "and <code>walk_rows</code> — using the header row for the keys. Do not " +
+    "type the field names out; <code>zip</code> them.</p>" +
+    "<p>Then set <code>first_workers</code> to the worker count of the first " +
+    "ACS row, looked up <em>by name</em>, as an <code>int</code>.</p>",
   setup: SAMPLE,
   starter:
-    "header = \nrows = \n\n" +
-    "workers_col = \nfirst_workers = \n\n" +
-    "print(len(rows), workers_col, first_workers)",
+    "acs_rows = \nwalk_rows = \n\n" +
+    "first_workers = \n\n" +
+    "print(acs_rows[0][\"NAME\"])\nprint(first_workers)",
   checks: [
-    { label: "header is the first row",
-      code: "expect(expect_defined(globals(), 'header'), acs_raw[0])" },
-    { label: "rows holds every data row and no header",
-      code: "expect(expect_defined(globals(), 'rows'), acs_raw[1:])" },
-    { label: "workers_col was looked up, and is right",
-      code: "expect(expect_defined(globals(), 'workers_col'), 1)" },
-    { label: "first_workers is an int from the first data row",
+    { label: "acs_rows is a list of dicts, one per data row",
+      code: "expect(len(expect_defined(globals(), 'acs_rows')), len(acs_raw) - 1)\nexpect_type(acs_rows[0], dict)" },
+    { label: "the keys came from the header",
+      code: "expect(list(acs_rows[0].keys()), acs_raw[0])" },
+    { label: "the values are still the row's values, in order",
+      code: "expect([list(r.values()) for r in acs_rows], acs_raw[1:])" },
+    { label: "walk_rows was built the same way",
+      code: "expect(len(expect_defined(globals(), 'walk_rows')), len(walk_raw) - 1)\nexpect(list(walk_rows[0].keys()), walk_raw[0])" },
+    { label: "first_workers is an int looked up by field name",
       code: "expect(expect_defined(globals(), 'first_workers'), 401)" }
   ],
   solution:
-    "header = acs_raw[0]\n" +
-    "rows = acs_raw[1:]\n\n" +
-    "workers_col = header.index(\"B08301_001E\")   # .index() finds the position\n" +
-    "first_workers = int(rows[0][workers_col])\n\n" +
-    "print(len(rows), workers_col, first_workers)\n" +
-    "# Looking the column up by name means the code survives the API returning\n" +
-    "# fields in a different order -- which it is entitled to do."
+    "acs_rows = [dict(zip(acs_raw[0], row)) for row in acs_raw[1:]]\n" +
+    "walk_rows = [dict(zip(walk_raw[0], row)) for row in walk_raw[1:]]\n\n" +
+    "first_workers = int(acs_rows[0][\"B08301_001E\"])\n\n" +
+    "print(acs_rows[0][\"NAME\"])\n" +
+    "print(first_workers)\n" +
+    "# A plain for-loop with .append() is just as correct here. Step 7 is where\n" +
+    "# the bracketed form above stops looking like a trick."
 });
 
 COURSE.exercise("ex2", {
-  id: "s05-sort", tag: "Exercise 2", title: "The three most walkable",
+  id: "s05-lookup", tag: "Exercise 2", title: "A lookup keyed by GEOID",
   prompt:
-    "<p>From <code>walk_raw</code>, build <code>pairs</code>: a list of " +
-    "<code>(geoid, walk_index)</code> tuples, where the GEOID is the 12-character " +
-    "string and the index is a <code>float</code>.</p>" +
-    "<p>Then set <code>top3</code> to the three most walkable, highest first.</p>" +
-    "<p class='small'>Columns: 0 state, 1 county, 2 tract, 3 block group, 4 score.</p>",
+    "<p>Build <code>walk_lookup</code>: a dictionary mapping each " +
+    "12-character GEOID string to that block group's walkability score as a " +
+    "<code>float</code>.</p>" +
+    "<p>Then answer two questions with it: set <code>score_of</code> to the " +
+    "score for <code>\"180973401103\"</code>, and <code>has_310308_3</code> to " +
+    "whether GEOID <code>\"180973103083\"</code> is present at all.</p>",
   setup: SAMPLE,
   starter:
-    "pairs = []\nfor row in walk_raw[1:]:\n    pass\n\n" +
-    "top3 = \n\n" +
-    "for geoid, score in top3:\n    print(geoid, score)",
+    "walk_lookup = {}\n\n" +
+    "for row in walk_raw[1:]:\n    pass\n\n" +
+    "score_of = \nhas_310308_3 = \n\n" +
+    "print(len(walk_lookup), score_of, has_310308_3)",
   checks: [
-    { label: "pairs has one entry per walkability row",
-      code: "expect(len(expect_defined(globals(), 'pairs')), len(walk_raw) - 1)" },
-    { label: "each entry is a (str, float) tuple",
-      code: "expect_type(pairs[0], tuple); expect_type(pairs[0][0], str); expect_type(pairs[0][1], float)" },
-    { label: "the GEOIDs are 12 characters",
-      code: "expect(sorted({len(g) for g, s in pairs}), [12])" },
-    { label: "top3 holds the three highest scores, highest first",
-      code: "expect(expect_defined(globals(), 'top3'), sorted(pairs, key=lambda p: p[1], reverse=True)[:3])" },
-    { label: "the scores really are descending",
-      code: "expect([s for g, s in top3], sorted([s for g, s in top3], reverse=True))" }
+    { label: "walk_lookup has one entry per walkability row",
+      code: "expect(len(expect_defined(globals(), 'walk_lookup')), len(walk_raw) - 1)" },
+    { label: "keys are 12-character strings",
+      code: "expect(sorted({type(k).__name__ for k in walk_lookup}), ['str'])\nexpect(sorted({len(k) for k in walk_lookup}), [12])" },
+    { label: "values are floats",
+      code: "expect(sorted({type(v).__name__ for v in walk_lookup.values()}), ['float'])" },
+    { label: "the lookup returns the right score",
+      code: "expect_close(expect_defined(globals(), 'score_of'), 14.5, 1e-9)" },
+    { label: "the block group with no walkability score is correctly absent",
+      code: "expect(expect_defined(globals(), 'has_310308_3'), False)" }
   ],
   solution:
-    "pairs = []\n" +
+    "walk_lookup = {}\n\n" +
     "for row in walk_raw[1:]:\n" +
     "    geoid = row[0] + row[1] + row[2] + row[3]\n" +
-    "    pairs.append((geoid, float(row[4])))\n\n" +
-    "top3 = sorted(pairs, key=lambda pair: pair[1], reverse=True)[:3]\n\n" +
-    "for geoid, score in top3:\n" +
-    "    print(geoid, score)\n" +
-    "# sorted() returns a new list. pairs.sort() would rearrange pairs itself\n" +
-    "# and return None -- 'top3 = pairs.sort()' is the bug everyone writes once."
+    "    walk_lookup[geoid] = float(row[4])\n\n" +
+    "score_of = walk_lookup[\"180973401103\"]      # brackets: this key must exist\n" +
+    "has_310308_3 = \"180973103083\" in walk_lookup\n\n" +
+    "print(len(walk_lookup), score_of, has_310308_3)"
 });
 
 COURSE.exercise("ex3", {
-  id: "s05-unpack", tag: "Exercise 3", title: "Positional pairing is not a join",
+  id: "s05-join", tag: "Exercise 3", title: "The join, by hand",
   prompt:
-    "<p>Pair the two datasets by position: <code>acs_raw[i]</code> with " +
-    "<code>walk_raw[i]</code>. Build <code>mismatches</code>, a list of " +
-    "<code>(acs_geoid, walk_geoid)</code> tuples for the positions where the " +
-    "two GEOIDs are <em>not</em> the same block group.</p>" +
-    "<p>Then set <code>n_mismatched</code> to how many there were.</p>" +
-    "<p class='small'>In the ACS row, tract is index 8 and block group index 9; " +
-    "state and county are indices 6 and 7.</p>",
+    "<p>Walk the ACS rows and attach each one's walkability score. Produce:</p>" +
+    "<ul>" +
+    "<li><code>joined</code> — a list of dicts, one per ACS row, each with keys " +
+    "<code>\"geoid\"</code>, <code>\"workers\"</code> (int), <code>\"bike\"</code> " +
+    "(int) and <code>\"walk_index\"</code> (a float, or <code>None</code> if " +
+    "there was no match)</li>" +
+    "<li><code>n_matched</code> — how many got a score</li>" +
+    "<li><code>unmatched_geoids</code> — the GEOIDs that got none</li>" +
+    "<li><code>orphan_geoids</code> — walkability GEOIDs no ACS row asked for</li>" +
+    "</ul>" +
+    "<p class='small'>Leave the sentinel <code>-666666666</code> alone for now. " +
+    "Converting it is step 11's job, and pretending it's a real count until " +
+    "then is a useful discomfort.</p>",
   setup: SAMPLE,
   starter:
-    "mismatches = []\n\n" +
-    "for i in range(1, len(walk_raw)):\n" +
-    "    pass\n\n" +
-    "n_mismatched = \n\n" +
-    "for a, w in mismatches:\n    print(a, \"!=\", w)",
+    "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n\n" +
+    "joined = []\nfor row in acs_raw[1:]:\n    pass\n\n" +
+    "n_matched = \nunmatched_geoids = \norphan_geoids = \n\n" +
+    "print(n_matched, \"matched |\", unmatched_geoids, \"| orphans:\", orphan_geoids)",
   checks: [
-    { label: "mismatches holds (acs_geoid, walk_geoid) tuples",
-      code: "expect_type(expect_defined(globals(), 'mismatches'), list)\nexpect_type(mismatches[0], tuple)" },
-    { label: "every recorded pair really does disagree",
-      code: "expect([a == w for a, w in mismatches], [False] * len(mismatches))" },
-    { label: "the mismatches found are the right ones",
-      code: ("a = [r[6]+r[7]+r[8]+r[9] for r in acs_raw[1:]]\n"
-           + "w = [r[0]+r[1]+r[2]+r[3] for r in walk_raw[1:]]\n"
-           + "expect(sorted(mismatches), sorted([(x, y) for x, y in zip(a, w) if x != y]))") },
-    { label: "n_mismatched counts them",
-      code: "expect(expect_defined(globals(), 'n_mismatched'), len(mismatches))" },
-    { label: "at least one position disagrees — pairing by position is wrong",
-      code: "expect(n_mismatched > 0, True)" }
+    { label: "joined has one entry per ACS row",
+      code: "expect(len(expect_defined(globals(), 'joined')), len(acs_raw) - 1)" },
+    { label: "each entry has the four required keys",
+      code: "expect(sorted(joined[0].keys()), ['bike', 'geoid', 'walk_index', 'workers'])" },
+    { label: "workers and bike are ints",
+      code: "expect(sorted({type(r['workers']).__name__ for r in joined}), ['int'])\nexpect(sorted({type(r['bike']).__name__ for r in joined}), ['int'])" },
+    { label: "unmatched rows carry None, not a stand-in number",
+      code: ("miss = [r for r in joined if r['walk_index'] is None]\n"
+           + "expect(len(miss), 1)\n"
+           + "expect(0 in [r['walk_index'] for r in joined], False)") },
+    { label: "the matched scores are right",
+      code: ("lk = {r[0]+r[1]+r[2]+r[3]: float(r[4]) for r in walk_raw[1:]}\n"
+           + "expect([r['walk_index'] for r in joined], [lk.get(r['geoid']) for r in joined])") },
+    { label: "n_matched counts the rows that found a score",
+      code: "expect(expect_defined(globals(), 'n_matched'), sum(1 for r in joined if r['walk_index'] is not None))" },
+    { label: "unmatched_geoids names the ACS row with no score",
+      code: "expect(sorted(expect_defined(globals(), 'unmatched_geoids')), ['180973103083'])" },
+    { label: "orphan_geoids names the walkability row nobody asked for",
+      code: "expect(sorted(expect_defined(globals(), 'orphan_geoids')), ['180973201071'])" }
   ],
   solution:
-    "mismatches = []\n\n" +
-    "for i in range(1, len(walk_raw)):\n" +
-    "    a = acs_raw[i]\n" +
-    "    w = walk_raw[i]\n" +
-    "    acs_geoid = a[6] + a[7] + a[8] + a[9]\n" +
-    "    walk_geoid = w[0] + w[1] + w[2] + w[3]\n" +
-    "    if acs_geoid != walk_geoid:\n" +
-    "        mismatches.append((acs_geoid, walk_geoid))\n\n" +
-    "n_mismatched = len(mismatches)\n\n" +
-    "for a, w in mismatches:\n" +
-    "    print(a, \"!=\", w)\n" +
-    "# The two files are both sorted, the same length here, and still don't\n" +
-    "# correspond: one dataset has block groups the other lacks, and one\n" +
-    "# missing row shifts everything after it. Row order is never a key."
+    "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n\n" +
+    "joined = []\n" +
+    "for row in acs_raw[1:]:\n" +
+    "    geoid = row[6] + row[7] + row[8] + row[9]\n" +
+    "    joined.append({\n" +
+    "        \"geoid\": geoid,\n" +
+    "        \"workers\": int(row[1]),\n" +
+    "        \"bike\": int(row[2]),\n" +
+    "        \"walk_index\": walk_lookup.get(geoid),   # None when absent\n" +
+    "    })\n\n" +
+    "n_matched = sum(1 for r in joined if r[\"walk_index\"] is not None)\n" +
+    "unmatched_geoids = [r[\"geoid\"] for r in joined if r[\"walk_index\"] is None]\n" +
+    "asked_for = {r[\"geoid\"] for r in joined}\n" +
+    "orphan_geoids = [g for g in walk_lookup if g not in asked_for]\n\n" +
+    "print(n_matched, \"matched |\", unmatched_geoids, \"| orphans:\", orphan_geoids)\n" +
+    "# 10 of 11 matched. Both leftovers are real: one block group the EPA never\n" +
+    "# scored, one the EPA scored and the ACS didn't report. Step 7 finds these\n" +
+    "# with a single set operation instead of two loops."
 });
 </script>
 </body>

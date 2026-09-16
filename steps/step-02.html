@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Step 2 — Keywords, types, and syntax</title>
+<title>Step 2 — Primitives and assignment</title>
 <link rel="stylesheet" href="../assets/course.css">
 </head>
 <body>
@@ -14,120 +14,140 @@
     <div class="wrap">
 
       <p class="eyebrow">Unit 1 — Foundations · Step 2</p>
-      <h1>Keywords, types, and syntax</h1>
-      <p class="lede">The small fixed vocabulary Python reserves for itself,
-      the rule that indentation is grammar, and how to read the error you get
-      when you break it.</p>
+      <h1>Primitives and assignment</h1>
+      <p class="lede">Five basic types, what assignment actually does, and the
+      one conversion that will silently destroy this project if you let it.</p>
 
-      <h2>A very small reserved vocabulary</h2>
-      <p>Python has about 35 words you cannot use as names, and that is the
-      whole of the language's fixed vocabulary. Everything else —
-      <code>print</code>, <code>len</code>, <code>int</code> — is an ordinary
-      name that happens to come pre-assigned.</p>
-<pre>import keyword
-print(len(keyword.kwlist))   <span class="c"># 35</span>
-print(keyword.kwlist[:8])    <span class="c"># ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await']</span></pre>
-      <p>The practical consequence is a rule of thumb: if a name turns red in
-      your editor and assigning to it is a <code>SyntaxError</code>, it is a
-      keyword. If assigning to it works but something later breaks
-      mysteriously, you have shadowed a builtin — <code>list = [1, 2]</code> is
-      legal and then <code>list(...)</code> stops working for the rest of the
-      kernel's life.</p>
+      <h2>Five types you need today</h2>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>Type</th><th>Example</th><th>In this project</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">int</td><td class="mono">1303</td><td>Counts of workers, cyclists</td></tr>
+          <tr><td class="mono">float</td><td class="mono">15.333333</td><td>Walkability scores, shares</td></tr>
+          <tr><td class="mono">str</td><td class="mono">"310103"</td><td>Names, and every identifier</td></tr>
+          <tr><td class="mono">bool</td><td class="mono">True</td><td>Did this row join? Is it usable?</td></tr>
+          <tr><td class="mono">None</td><td class="mono">None</td><td>"No answer" — distinct from zero</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p><code>None</code> earns its place immediately. A block group with no
+      workers has no bike share — not a bike share of zero. Zero would drag an
+      average down; <code>None</code> can be excluded. Conflating the two is a
+      real analytical error, not a pedantic one.</p>
 
-      <h2>Indentation is syntax</h2>
-      <p>In most languages layout is a courtesy to the reader. In Python it is
-      the grammar itself: a colon opens a block, and the indented lines under
-      it <em>are</em> the block. There is no closing brace, which means a
-      misplaced indent is not a style problem, it is a different program.</p>
-<pre>total = 0
-for row in rows:
-    total = total + 1
-    print(total)      <span class="c"># inside the loop — prints once per row</span>
+      <h2>Assignment binds a name to a value</h2>
+      <p><code>workers = 1303</code> does not put 1303 into a box called
+      <code>workers</code>. It makes the name <code>workers</code> refer to the
+      value 1303. Rebinding it to something else is free and has no effect on
+      the old value:</p>
+<pre>workers = "1303"     <span class="c"># a string</span>
+workers = int(workers)   <span class="c"># now the name refers to an int; the string is gone</span></pre>
+      <p>Names have no declared type, so nothing stops a name from meaning a
+      string on line 1 and an integer on line 2. That flexibility is why the
+      next section is dangerous.</p>
 
-total = 0
-for row in rows:
-    total = total + 1
-print(total)          <span class="c"># outside the loop — prints once, at the end</span></pre>
-      <p>Both are valid. Only one is what you meant. Pick four spaces and never
-      think about it again.</p>
+      <h2>Three kinds of division</h2>
+<pre>1303 / 8     <span class="c"># 162.875   true division, always a float</span>
+1303 // 8    <span class="c"># 162       floor division, discards the remainder</span>
+1303 % 8     <span class="c"># 7         the remainder itself</span></pre>
+      <p>Use <code>/</code> for shares and rates. <code>//</code> and
+      <code>%</code> come up when you are chopping fixed-width identifiers
+      apart, which is exactly what a GEOID is.</p>
 
-      <h2>Expressions and statements</h2>
-      <p>An <b>expression</b> has a value: <code>21 / 1303</code>,
-      <code>len(rows)</code>, <code>bike &gt; 0</code>. A <b>statement</b> does
-      something: <code>bike = 21</code>, <code>import csv</code>,
-      <code>for ...:</code>. A notebook cell displays the value of its last
-      line if that line is an expression — which is why
-      <code>bike / workers</code> alone on the last line shows a number, but
-      <code>bike = 21</code> shows nothing. It has no value; it has an effect.</p>
-
-      <h2>Reading a SyntaxError</h2>
-      <p>A <code>SyntaxError</code> is raised before a single line of your code
-      runs — Python could not even parse it. Two things about the message
-      matter:</p>
-      <ul>
-        <li>The caret <code>^</code> points at where the parser gave up, which
-        is often <em>after</em> the real mistake. An unclosed bracket on line 4
-        reports an error on line 5.</li>
-        <li>So when the flagged line looks fine, look at the line above it.</li>
-      </ul>
-<pre><span class="o">  File "your code", line 3
-    for row in acs_raw
-                      ^
-SyntaxError: expected ':'</span></pre>
-
-      <div class="note warn">
-        <h4>Everything from the Census arrives as a string</h4>
-        <p>This is worth internalising now, because it causes bugs for the next
-        three steps. The ACS API returns JSON, and every value in it — counts,
-        codes, FIPS identifiers — is delivered as text. <code>"401"</code>, not
-        <code>401</code>. Nothing converts it for you.</p>
+      <div class="note">
+        <h4>Floats are approximate</h4>
+        <p><code>0.1 + 0.2</code> is <code>0.30000000000000004</code>. Binary
+        floating point cannot represent 0.1 exactly, any more than decimal can
+        represent 1/3. So never write <code>if share == 0.05</code>; write
+        <code>if abs(share - 0.05) &lt; 1e-9</code>. With a mathematical
+        background this will not surprise you, but it will bite you in step 6
+        when a walkability score lands exactly on a category boundary.</p>
       </div>
 
-      <h2>The sample data</h2>
-      <p>Every exercise from here to step 12 has these rows already loaded, in
-      exactly the shape the API hands them over: a list of lists, header row
-      first, all strings. They are also in <code>data/sample_rows.py</code> for
-      you to paste into your notebook.</p>
-<pre>acs_raw[0]   <span class="c"># ['NAME', 'B08301_001E', 'B08301_018E', ... ]</span>
-acs_raw[1]   <span class="c"># ['Block Group 2, Census Tract 3101.03, ...', '401', '-666666666', ...]</span>
-walk_raw[1]  <span class="c"># ['18', '097', '310103', '2', '3.666667', '7', '3', '5', '1', '931']</span></pre>
+      <h2>The trap this whole project turns on</h2>
+      <p>A GEOID is the Census Bureau's identifier for a geography. For a block
+      group it is twelve characters: state, county, tract, block group, glued
+      together. It looks like a number. It is not a number.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 250" role="img" aria-label="Converting a GEOID to an integer drops its leading zero and makes the join fail.">
+          <text x="14" y="24" class="svg-muted" style="font-size:11px; letter-spacing:.08em">A GEOID IS AN IDENTIFIER MADE OF DIGITS</text>
+
+          <rect class="svg-box" x="14" y="38" width="692" height="52" rx="8"/>
+          <text x="34" y="70" class="svg-ink mono" style="font-size:19px; letter-spacing:.14em">0 1 0 7 3 0 0 0 1 0 0 1</text>
+          <text x="34" y="86" class="svg-accent" style="font-size:10px">state 01</text>
+          <text x="104" y="86" class="svg-accent" style="font-size:10px">county 073</text>
+          <text x="196" y="86" class="svg-accent" style="font-size:10px">tract 000100</text>
+          <text x="330" y="86" class="svg-accent" style="font-size:10px">block group 1</text>
+          <text x="470" y="68" class="svg-muted" style="font-size:11px">Jefferson County, Alabama</text>
+
+          <path class="svg-line" d="M120 100 v26" marker-end="url(#a3)"/>
+          <path class="svg-line" d="M480 100 v26" marker-end="url(#a3)"/>
+          <defs><marker id="a3" markerWidth="8" markerHeight="8" refX="4" refY="7" orient="auto">
+            <path d="M0 0 L8 0 L4 8 z" class="svg-muted"/></marker></defs>
+
+          <rect class="svg-box" x="14" y="130" width="330" height="100" rx="8" stroke="var(--ok)"/>
+          <text x="34" y="154" class="svg-ok mono" style="font-size:11px">kept as str</text>
+          <text x="34" y="182" class="svg-ink mono" style="font-size:15px; letter-spacing:.1em">"010730001001"</text>
+          <text x="34" y="206" class="svg-muted" style="font-size:11px">12 characters</text>
+          <text x="34" y="222" class="svg-ok" style="font-size:11px">joins to the walkability table</text>
+
+          <rect class="svg-box" x="376" y="130" width="330" height="100" rx="8" stroke="var(--bad)"/>
+          <text x="396" y="154" class="svg-bad mono" style="font-size:11px">int(geoid)</text>
+          <text x="396" y="182" class="svg-ink mono" style="font-size:15px; letter-spacing:.1em">10730001001</text>
+          <text x="396" y="206" class="svg-muted" style="font-size:11px">11 characters — the leading zero is gone</text>
+          <text x="396" y="222" class="svg-bad" style="font-size:11px">matches nothing, silently</text>
+        </svg>
+        <figcaption>Every state with a FIPS code below 10 — Alabama, Alaska,
+        Arizona, Arkansas, California, Colorado, Connecticut, Delaware,
+        Washington DC — loses its leading zero the moment a GEOID becomes an
+        integer. Indiana is 18, so this bug is <em>invisible</em> in Marion
+        County and detonates the day you extend the analysis. That is ticket A
+        in step 19.</figcaption>
+      </figure>
+
+      <div class="note trap">
+        <h4>The rule</h4>
+        <p>If you will never do arithmetic on it, it is an identifier, and
+        identifiers stay <code>str</code>. Zip codes, FIPS codes, GEOIDs, phone
+        numbers, ISBNs. The test is not "does it look like a number" but "does
+        adding two of them together mean anything".</p>
+      </div>
 
       <h2>Exercises</h2>
       <div id="ex1"></div>
       <div id="ex2"></div>
+      <div id="ex3"></div>
 
       <div class="project">
-        <h4>Project work</h4>
-        <p>Paste <code>data/sample_rows.py</code> into a cell of your notebook
-        — this is the sample data cell the next ten steps build on.</p>
-        <p>Then run <code>type()</code> over a few values from
-        <code>acs_raw[1]</code> and convince yourself of the claim above: the
-        worker count, the bicycle count and the FIPS codes are all
-        <code>str</code>. Write a Markdown cell underneath saying so, because
-        in step 3 it becomes the source of the project's worst bug.</p>
-        <p style="margin-bottom:0">Also run <code>import keyword;
-        keyword.kwlist</code> once and read the list. It is shorter than you
-        expect.</p>
+        <h4>Take it further</h4>
+        <p>In any editor above, convert the counts from one ACS row to integers
+        and compute that block group's bike share by hand. Then demonstrate the
+        trap to yourself: take the string <code>"010730001001"</code>, convert
+        it with <code>int()</code>, convert it back with <code>str()</code>,
+        and compare lengths. Say the rule back in your own words before moving
+        on — you are going to need to have believed it.</p>
       </div>
 
       <details class="checkq">
-        <summary><span class="q">Given a line with a misplaced colon or bad indentation, can you locate the problem from the error message?</span></summary>
+        <summary><span class="q">Why is a GEOID a <code>str</code> when it looks like a number?</span></summary>
         <div class="ans">
-          <p>The procedure, in order:</p>
-          <ol>
-            <li>Read the last line of the message — it names the category
-            (<code>expected ':'</code>, <code>unexpected indent</code>,
-            <code>'(' was never closed</code>).</li>
-            <li>Look at the reported line. If it is obviously fine, look at the
-            line above — unclosed brackets and missing colons report late.</li>
-            <li>For indentation errors, check whether you have mixed tabs and
-            spaces. This is invisible on screen and is why everyone settles on
-            four spaces.</li>
-          </ol>
-          <p style="margin-bottom:0">A <code>SyntaxError</code> means nothing
-          ran at all. That's actually the friendly case: no half-finished
-          state, no partly-written file. Step 11 deals with the errors that
-          happen <em>while</em> running, which are messier.</p>
+          <p>Because its digits are positional labels, not a quantity. Three
+          consequences follow:</p>
+          <ul>
+            <li>Leading zeros are meaningful, and integers cannot carry
+            them.</li>
+            <li>Arithmetic on it is meaningless — no GEOID is "twice" another
+            one.</li>
+            <li>Joining two datasets is equality of labels, and
+            <code>"01073..."</code> is not equal to <code>1073...</code>.</li>
+          </ul>
+          <p style="margin-bottom:0">The reason this is worth a whole section
+          is the failure mode: nothing raises. Rows just quietly stop matching,
+          your sample shrinks, and your correlation changes for a reason that
+          has nothing to do with the world. Step 18 writes the test that pins
+          this down permanently.</p>
         </div>
       </details>
 
@@ -141,72 +161,112 @@ walk_raw[1]  <span class="c"># ['18', '097', '310103', '2', '3.666667', '7', '3'
 <script src="../assets/sample.js"></script>
 <script>
 COURSE.exercise("ex1", {
-  id: "s02-fix", tag: "Exercise 1", title: "Fix the syntax",
+  id: "s02-convert", tag: "Exercise 1", title: "Strings in, numbers out",
   prompt:
-    "<p>Four things are wrong with this cell: a missing colon, an indentation " +
-    "that puts a line in the wrong block, a keyword used as a variable name, " +
-    "and an unclosed bracket. Fix all four so that <code>counted</code> ends " +
-    "up as the number of sample rows whose worker count is not " +
-    "<code>\"0\"</code>.</p>" +
-    "<p class='small'>Run it as-is first and read the error you get — then fix " +
-    "one thing at a time. The error changes as you go, which is the point.</p>",
+    "<p>Row <code>acs_raw[6]</code> is a block group with a healthy number of " +
+    "cyclists. Pull out the total workers (index 1) and the bicycle count " +
+    "(index 2), convert both to <code>int</code>, and compute " +
+    "<code>share</code> as a <code>float</code> between 0 and 1.</p>" +
+    "<p>Then set <code>walk_index</code> to the walkability score from " +
+    "<code>walk_raw[6]</code> (index 4) as a <code>float</code>.</p>",
   setup: SAMPLE,
   starter:
-    "counted = 0\n" +
-    "for row in acs_raw[1:]\n" +
-    "class = row[1]\n" +
-    "    if class != \"0\":\n" +
-    "        counted = counted + 1\n" +
-    "        print(len(acs_raw[1:])\n",
+    "row = acs_raw[6]\n\n" +
+    "workers = \nbike = \nshare = \n\n" +
+    "walk_index = \n\n" +
+    "print(workers, bike, share, walk_index)",
   checks: [
-    { label: "the cell parses and runs at all",
-      code: "expect_defined(globals(), 'counted')" },
-    { label: "counted holds the number of sample rows with workers",
-      code: "expect(counted, sum(1 for r in acs_raw[1:] if r[1] != '0'))" },
-    { label: "the header row was not counted as data",
-      code: "expect(counted <= len(acs_raw) - 1, True)" }
+    { label: "workers is the count as an int",
+      code: "expect(expect_defined(globals(), 'workers'), 1303)" },
+    { label: "bike is the count as an int",
+      code: "expect(expect_defined(globals(), 'bike'), 21)" },
+    { label: "share is a float, not an int",
+      code: "expect_type(expect_defined(globals(), 'share'), float)" },
+    { label: "share is bike divided by workers",
+      code: "expect_close(share, 21 / 1303, 1e-12)" },
+    { label: "walk_index is the score as a float",
+      code: "expect_close(expect_defined(globals(), 'walk_index'), float(walk_raw[6][4]), 1e-9)" }
   ],
   solution:
-    "counted = 0\n" +
-    "for row in acs_raw[1:]:          # 1. the colon opens the block\n" +
-    "    workers = row[1]             # 2. indented in;  3. 'class' is a keyword\n" +
-    "    if workers != \"0\":\n" +
-    "        counted = counted + 1\n" +
-    "print(len(acs_raw[1:]))          # 4. bracket closed, and dedented so it\n" +
-    "                                 #    runs once rather than once per row"
+    "row = acs_raw[6]\n\n" +
+    "workers = int(row[1])\n" +
+    "bike = int(row[2])\n" +
+    "share = bike / workers        # '/' always gives a float -- '//' would give 0\n\n" +
+    "walk_index = float(walk_raw[6][4])\n\n" +
+    "print(workers, bike, share, walk_index)"
 });
 
 COURSE.exercise("ex2", {
-  id: "s02-types", tag: "Exercise 2", title: "What type is it, really?",
+  id: "s02-geoid", tag: "Exercise 2", title: "The leading-zero trap",
   prompt:
-    "<p>Take the first data row, <code>acs_raw[1]</code>. Build a list called " +
-    "<code>kinds</code> holding the <em>name</em> of each value's type, as " +
-    "strings — so <code>[\"str\", \"str\", ...]</code>. The expression " +
-    "<code>type(v).__name__</code> gives you the name.</p>" +
-    "<p>Then set <code>all_strings</code> to <code>True</code> or " +
-    "<code>False</code>: is every value in that row a string?</p>",
+    "<p>Show the bug rather than taking my word for it. Starting from the " +
+    "Alabama GEOID string, produce:</p><ul>" +
+    "<li><code>as_int</code> — the same GEOID passed through <code>int()</code></li>" +
+    "<li><code>round_tripped</code> — that integer converted back with <code>str()</code></li>" +
+    "<li><code>lost_characters</code> — how many characters were lost, as an <code>int</code></li>" +
+    "<li><code>still_matches</code> — whether <code>round_tripped</code> still equals the original</li>" +
+    "</ul>",
   setup: SAMPLE,
   starter:
-    "row = acs_raw[1]\n\n" +
-    "kinds = \nall_strings = \n\nprint(kinds)",
+    "geoid = \"010730001001\"\n\n" +
+    "as_int = \nround_tripped = \nlost_characters = \nstill_matches = \n\n" +
+    "print(geoid, \"->\", round_tripped, \"| lost:\", lost_characters)",
   checks: [
-    { label: "kinds has one entry per value in the row",
-      code: "expect(len(expect_defined(globals(), 'kinds')), len(acs_raw[1]))" },
-    { label: "each entry is the type's name as a string",
-      code: "expect(kinds, [type(v).__name__ for v in acs_raw[1]])" },
-    { label: "all_strings answers the question correctly",
-      code: "expect(expect_defined(globals(), 'all_strings'), True)" },
-    { label: "the count that looks like a number is text",
-      code: "expect_type(acs_raw[1][1], str)" }
+    { label: "as_int is the integer conversion",
+      code: "expect(expect_defined(globals(), 'as_int'), 10730001001)" },
+    { label: "round_tripped is that integer back as text",
+      code: "expect(expect_defined(globals(), 'round_tripped'), '10730001001')" },
+    { label: "lost_characters counts the damage",
+      code: "expect(expect_defined(globals(), 'lost_characters'), 1)" },
+    { label: "still_matches records that the join would now fail",
+      code: "expect(expect_defined(globals(), 'still_matches'), False)" },
+    { label: "the original was left alone as a string",
+      code: "expect(geoid, '010730001001'); expect_type(geoid, str)" }
   ],
   solution:
-    "row = acs_raw[1]\n\n" +
-    "kinds = [type(v).__name__ for v in row]   # a loop works too -- step 8 explains this form\n" +
-    "all_strings = set(kinds) == {\"str\"}\n\n" +
-    "print(kinds)\n" +
-    "# Every field is 'str'. The JSON the API returns contains no numbers at all,\n" +
-    "# so nothing arrives typed the way you'd want it. Step 3 converts them --\n" +
-    "# and shows which ones must never be converted."
+    "geoid = \"010730001001\"\n\n" +
+    "as_int = int(geoid)\n" +
+    "round_tripped = str(as_int)\n" +
+    "lost_characters = len(geoid) - len(round_tripped)\n" +
+    "still_matches = round_tripped == geoid\n\n" +
+    "print(geoid, \"->\", round_tripped, \"| lost:\", lost_characters)\n" +
+    "# One character. No exception, no warning. Every Alabama row silently\n" +
+    "# stops joining -- which is exactly the ticket you get handed in step 19."
+});
+
+COURSE.exercise("ex3", {
+  id: "s02-division", tag: "Exercise 3", title: "Which slash?",
+  prompt:
+    "<p>A tract code is six digits, and the last two are the decimal part: " +
+    "<code>\"310103\"</code> means tract 3101.03. Using the integer " +
+    "<code>code</code> and arithmetic only — no string methods this time — " +
+    "produce <code>whole</code> (the 3101 part) and <code>decimal</code> (the " +
+    "3 part), both as <code>int</code>.</p>" +
+    "<p>Then set <code>printable</code> to the tract number as a " +
+    "<code>float</code>: 3101.03.</p>",
+  setup: SAMPLE,
+  starter:
+    "code = 310103\n\n" +
+    "whole = \ndecimal = \nprintable = \n\n" +
+    "print(whole, decimal, printable)",
+  checks: [
+    { label: "whole is the part before the decimal point",
+      code: "expect(expect_defined(globals(), 'whole'), 3101)" },
+    { label: "decimal is the two-digit remainder",
+      code: "expect(expect_defined(globals(), 'decimal'), 3)" },
+    { label: "printable is a float",
+      code: "expect_type(expect_defined(globals(), 'printable'), float)" },
+    { label: "printable reads as the tract number",
+      code: "expect_close(printable, 3101.03, 1e-9)" },
+    { label: "it works for a tract with no decimal part too",
+      code: "expect(330600 // 100, 3306); expect(330600 % 100, 0)" }
+  ],
+  solution:
+    "code = 310103\n\n" +
+    "whole = code // 100      # floor division throws away the remainder\n" +
+    "decimal = code % 100     # the remainder is what it threw away\n" +
+    "printable = code / 100   # true division keeps both, as a float\n\n" +
+    "print(whole, decimal, printable)"
 });
 </script>
 </body>

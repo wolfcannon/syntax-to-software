@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Level up — Notebooks to scripts</title>
+<link rel="stylesheet" href="../assets/course.css">
+</head>
+<body>
+<div class="shell">
+  <div id="sidebar"></div>
+  <div class="main">
+    <div id="topbar"></div>
+    <div class="wrap">
+
+      <p class="eyebrow">Level up · Between Unit 3 and Unit 4</p>
+      <h1>Notebooks to scripts</h1>
+      <p class="lede">The second change of environment. The notebook got you an
+      answer; this gets you something that can produce that answer again
+      tomorrow, on another machine, without you in the room.</p>
+
+      <h2>Why here, and not earlier</h2>
+      <p>The same argument as the first level-up. A virtual environment solves
+      a problem you have to have had, and until Unit 3 you had installed
+      nothing. Now you have <code>pandas</code>, <code>matplotlib</code>,
+      <code>scipy</code> and <code>requests</code> in the mix, an API key in
+      your shell, and a notebook that quietly depends on all of it.</p>
+      <p>Three questions you cannot currently answer, and all three are about
+      to matter:</p>
+      <ul>
+        <li>Which versions of those packages does your analysis actually
+        need?</li>
+        <li>If someone clones this repo, what do they run?</li>
+        <li>If the answer changes, was it your code or was it a package that
+        updated underneath you?</li>
+      </ul>
+
+      <h2>Virtual environments</h2>
+      <p>A virtual environment is a directory containing its own Python and its
+      own installed packages. Activating it changes what <code>python</code> and
+      <code>pip</code> mean in that shell, and nothing else on the machine is
+      touched.</p>
+<pre>python3 -m venv .venv
+source .venv/bin/activate        <span class="c"># Windows: .venv\Scripts\activate</span>
+pip install pandas requests matplotlib scipy jupyter
+pip freeze &gt; requirements.txt</pre>
+      <p>This is why <code>.venv/</code> is in the repo's
+      <code>.gitignore</code> and <code>requirements.txt</code> is not. The
+      directory is a few hundred megabytes of rebuildable artefact; the file is
+      the twelve lines that describe it.</p>
+      <div class="note warn">
+        <h4>The one that catches everyone</h4>
+        <p>Jupyter runs whichever Python started it — not whichever one your
+        shell has activated. Start <code>jupyter lab</code> from inside the
+        activated environment, and if a notebook can't find a package you know
+        you installed, run <code>import sys; print(sys.executable)</code> in a
+        cell. It will be pointing somewhere you didn't expect, and that is the
+        whole diagnosis.</p>
+      </div>
+
+      <h2>One file becomes four</h2>
+      <p>Your module from step 13 has been growing. Split it along the line the
+      data travels, so each file has one reason to change:</p>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>File</th><th>Holds</th><th>Changes when</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">fetch.py</td><td>API calls, downloads, caching</td><td>the Census changes its API</td></tr>
+          <tr><td class="mono">clean.py</td><td>Parsing, GEOIDs, sentinels, joins</td><td>you learn something new about the data</td></tr>
+          <tr><td class="mono">analyze.py</td><td>Statistics, correlations, plots</td><td>the question changes</td></tr>
+          <tr><td class="mono">run.py</td><td>The order those happen in</td><td>the pipeline gains a stage</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p>The test of the split is whether <code>clean.py</code> can be imported
+      and used with no network and no API key. If it can't, something that
+      fetches has leaked into something that parses.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 230" role="img" aria-label="A notebook's mixed cells separated into fetch, clean, analyze and run modules.">
+          <text x="14" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">BEFORE — ONE NOTEBOOK, EVERYTHING INTERLEAVED</text>
+          <rect class="svg-box" x="14" y="34" width="300" height="180" rx="9"/>
+          <g class="mono" style="font-size:10.5px">
+            <rect x="28" y="48" width="272" height="22" rx="4" fill="var(--bad-wash)" stroke="var(--bad)"/>
+            <text x="38" y="63" class="svg-bad">requests.get(ACS_URL, ...)</text>
+            <rect x="28" y="76" width="272" height="22" rx="4" fill="var(--warn-wash)" stroke="var(--warn)"/>
+            <text x="38" y="91" class="svg-ink">build_geoid(...)</text>
+            <rect x="28" y="104" width="272" height="22" rx="4" fill="var(--accent-wash)" stroke="var(--accent)"/>
+            <text x="38" y="119" class="svg-accent">spearmanr(walk, share)</text>
+            <rect x="28" y="132" width="272" height="22" rx="4" fill="var(--bad-wash)" stroke="var(--bad)"/>
+            <text x="38" y="147" class="svg-bad">gpd.read_file("walkability")</text>
+            <rect x="28" y="160" width="272" height="22" rx="4" fill="var(--warn-wash)" stroke="var(--warn)"/>
+            <text x="38" y="175" class="svg-ink">drop sentinel rows</text>
+            <text x="38" y="199" class="svg-muted" style="font-size:10px">run order lives in your head</text>
+          </g>
+
+          <path class="svg-line" d="M322 124 h42" marker-end="url(#s1)"/>
+          <defs><marker id="s1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" class="svg-muted"/></marker></defs>
+
+          <text x="376" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">AFTER — FOUR FILES, ONE JOB EACH</text>
+          <rect x="376" y="34" width="330" height="34" rx="6" fill="var(--bad-wash)" stroke="var(--bad)"/>
+          <text x="392" y="55" class="svg-bad mono" style="font-size:11px">fetch.py</text>
+          <text x="500" y="55" class="svg-muted" style="font-size:10.5px">talks to the outside world</text>
+
+          <rect x="376" y="76" width="330" height="34" rx="6" fill="var(--warn-wash)" stroke="var(--warn)"/>
+          <text x="392" y="97" class="svg-ink mono" style="font-size:11px">clean.py</text>
+          <text x="500" y="97" class="svg-muted" style="font-size:10.5px">pure functions — testable offline</text>
+
+          <rect x="376" y="118" width="330" height="34" rx="6" fill="var(--accent-wash)" stroke="var(--accent)"/>
+          <text x="392" y="139" class="svg-accent mono" style="font-size:11px">analyze.py</text>
+          <text x="500" y="139" class="svg-muted" style="font-size:10.5px">statistics and figures</text>
+
+          <rect x="376" y="160" width="330" height="34" rx="6" fill="var(--ok-wash)" stroke="var(--ok)"/>
+          <text x="392" y="181" class="svg-ok mono" style="font-size:11px">run.py</text>
+          <text x="500" y="181" class="svg-muted" style="font-size:10.5px">the order, written down</text>
+          <text x="376" y="212" class="svg-muted" style="font-size:11px">notebooks/ keeps exploring — it just stops being the pipeline.</text>
+        </svg>
+        <figcaption>The notebook doesn't get deleted. It stops being load-bearing,
+        which is a different thing, and it becomes a much better notebook for
+        it.</figcaption>
+      </figure>
+
+      <h2>Running it from a terminal</h2>
+<pre>python run.py                <span class="c"># the whole pipeline, raw data to figures</span>
+python -m bikewalk.clean     <span class="c"># one module, if it has a __main__ block</span></pre>
+      <p>Each module ends with the guard you met in step 13:</p>
+<pre>if __name__ == "__main__":
+    main()</pre>
+      <p>Imported, <code>__name__</code> is the module's name and the block is
+      skipped. Run directly, <code>__name__</code> is <code>"__main__"</code>
+      and it fires. That one line is what lets a file be both a library and a
+      command.</p>
+
+      <h2>Exercises</h2>
+      <div id="ex1"></div>
+      <div id="ex2"></div>
+      <div id="ex3"></div>
+
+      <div class="project">
+        <h4>The level-up: make it run without you</h4>
+        <ol>
+          <li>Create and activate <code>.venv</code>, install what you need,
+          and write <code>requirements.txt</code>.</li>
+          <li>Split your module into <code>fetch.py</code>,
+          <code>clean.py</code> and <code>analyze.py</code>, and add
+          <code>run.py</code> that executes the pipeline end to end from raw
+          data to saved figures.</li>
+          <li>Make <code>run.py</code> print the numbers that matter as it
+          goes: rows in, rows joined, coverage, rows dropped and why. A
+          pipeline that prints nothing is a pipeline you cannot debug.</li>
+          <li>Move the API key out of every file and into
+          <code>os.environ</code>. Then grep your own repo for it and confirm
+          it is gone.</li>
+        </ol>
+        <p style="margin-bottom:0">Then the real test, and don't skip it:
+        <b>delete <code>.venv</code> entirely</b>, recreate it from
+        <code>requirements.txt</code>, and run <code>python run.py</code>. If
+        it works, you have a project. If it doesn't, you have just found out
+        what your analysis secretly depended on — which is exactly what the
+        next unit is for.</p>
+      </div>
+
+      <details class="checkq">
+        <summary><span class="q">You deleted the environment and rebuilt it — what usually breaks, and what does that tell you?</span></summary>
+        <div class="ans">
+          <p>Four things, in rough order of how often they happen:</p>
+          <ul>
+            <li><b>A package you never installed deliberately.</b> It came in
+            as someone else's dependency and you imported it anyway.
+            <code>pip freeze</code> caught it; a hand-written requirements list
+            would not have.</li>
+            <li><b>A file that isn't in the repo.</b> A CSV sitting in your
+            Downloads folder, referenced by absolute path. The fix is
+            <code>data/raw/</code> and a documented fetch step.</li>
+            <li><b>An environment variable.</b> Your API key is in your shell
+            profile, not in the project — correct, and worth stating in the
+            README rather than discovering.</li>
+            <li><b>Import order.</b> The notebook defined something before it
+            was used because of the order you ran cells in, and
+            <code>run.py</code> is stricter.</li>
+          </ul>
+          <p style="margin-bottom:0">Every one of those is the same failure as
+          the deleted-cell trap from the first level-up, one level up the
+          stack: something worked because of state that isn't written down.
+          Unit 4 is largely about removing the remaining places that can
+          hide.</p>
+        </div>
+      </details>
+
+      <div class="note">
+        <h4>From here on</h4>
+        <p>You have a project rather than a document. Unit 4 puts it under
+        version control, writes the tests that have been grading you all
+        along, runs two real tickets through the fix-and-commit cycle, and
+        then answers the research question.</p>
+      </div>
+
+      <div id="pager"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/nav.js"></script>
+<script src="../assets/runner.js"></script>
+<script>
+COURSE.exercise("ex1", {
+  id: "scr-layout", tag: "Exercise 1", title: "Which file does it belong in?",
+  prompt:
+    "<p>Sort each function into the module it belongs in, by filling in " +
+    "<code>layout</code>: a dict mapping each function name to " +
+    "<code>\"fetch\"</code>, <code>\"clean\"</code> or <code>\"analyze\"</code>.</p>" +
+    "<p>The rule from the table above: <b>fetch</b> talks to the outside world, " +
+    "<b>clean</b> is pure functions over data already in hand, <b>analyze</b> " +
+    "produces statistics and figures.</p>",
+  setup:
+    'functions = [\n' +
+    '    "build_geoid", "download_acs", "spearman_walk_bike", "drop_sentinels",\n' +
+    '    "scatter_plot", "read_epa_zip", "join_on_geoid", "coefficient_of_variation",\n' +
+    ']\n',
+  starter:
+    "# build_geoid              assemble a GEOID from its parts\n" +
+    "# download_acs             GET api.census.gov and return the JSON\n" +
+    "# spearman_walk_bike       rank correlation of the two columns\n" +
+    "# drop_sentinels           turn -666666666 into None\n" +
+    "# scatter_plot             save a PNG of walkability vs bike share\n" +
+    "# read_epa_zip             unpack the EPA download from data/raw\n" +
+    "# join_on_geoid            merge the two tables\n" +
+    "# coefficient_of_variation MOE / 1.645 / estimate\n\n" +
+    "layout = {\n" +
+    "}\n",
+  checks: [
+    { label: "every function was placed",
+      code: ("d = expect_defined(globals(), 'layout')\n"
+           + "expect(sorted(d.keys()), sorted(functions))") },
+    { label: "only the three module names were used",
+      code: "expect(set(layout.values()) <= {'fetch', 'clean', 'analyze'}, True)" },
+    { label: "anything touching the network or disk is in fetch",
+      code: ("for name in ('download_acs', 'read_epa_zip'):\n"
+           + "    expect(layout[name], 'fetch')") },
+    { label: "pure transformations of data in hand are in clean",
+      code: ("for name in ('build_geoid', 'drop_sentinels', 'join_on_geoid'):\n"
+           + "    expect(layout[name], 'clean')") },
+    { label: "statistics and figures are in analyze",
+      code: ("for name in ('spearman_walk_bike', 'scatter_plot', 'coefficient_of_variation'):\n"
+           + "    expect(layout[name], 'analyze')") },
+    { label: "clean.py could be imported with no network and no API key",
+      code: ("net = {'download_acs', 'read_epa_zip'}\n"
+           + "expect({n for n, m in layout.items() if m == 'clean'} & net, set())") }
+  ],
+  solution:
+    "layout = {\n" +
+    "    \"build_geoid\": \"clean\",\n" +
+    "    \"download_acs\": \"fetch\",\n" +
+    "    \"spearman_walk_bike\": \"analyze\",\n" +
+    "    \"drop_sentinels\": \"clean\",\n" +
+    "    \"scatter_plot\": \"analyze\",\n" +
+    "    \"read_epa_zip\": \"fetch\",\n" +
+    "    \"join_on_geoid\": \"clean\",\n" +
+    "    \"coefficient_of_variation\": \"analyze\",\n" +
+    "}\n\n" +
+    "# coefficient_of_variation is the arguable one: it is a pure function, so\n" +
+    "# clean.py would run. It goes in analyze.py because of what it is FOR --\n" +
+    "# it is a judgement about whether an estimate is reportable, which is the\n" +
+    "# analysis talking. Splitting by 'what changes this file' beats splitting\n" +
+    "# by 'what does this file technically do'."
+});
+
+COURSE.exercise("ex2", {
+  id: "scr-requirements", tag: "Exercise 2", title: "Read a requirements file",
+  prompt:
+    "<p>Write <code>parse_requirements(text)</code>, returning a dict of " +
+    "package name to pinned version.</p>" +
+    "<p>Real <code>requirements.txt</code> files are messier than the docs " +
+    "suggest: comments, blank lines, trailing whitespace, an editable install " +
+    "of the project itself, and the occasional package with no pin. Skip any " +
+    "line that isn't a <code>name==version</code> pin. Package names are " +
+    "case-insensitive — lowercase them.</p>",
+  setup:
+    'REQUIREMENTS = """\n' +
+    '# generated by pip freeze\n' +
+    'pandas==2.2.2\n' +
+    '  requests==2.32.3  \n' +
+    '\n' +
+    'SciPy==1.14.0\n' +
+    'matplotlib\n' +
+    '-e .\n' +
+    'jupyter==1.0.0  # pinned deliberately\n' +
+    '"""\n',
+  starter:
+    "def parse_requirements(text):\n" +
+    "    \n" +
+    "    \n\n" +
+    "pins = parse_requirements(REQUIREMENTS)\n" +
+    "for name, version in sorted(pins.items()):\n" +
+    "    print(f\"{name:<12} {version}\")",
+  checks: [
+    { label: "parse_requirements is defined and takes the text",
+      code: "f = expect_defined(globals(), 'parse_requirements')\nexpect(f.__code__.co_argcount, 1)" },
+    { label: "the four real pins are found",
+      code: ("got = parse_requirements(REQUIREMENTS)\n"
+           + "expect(got.get('pandas'), '2.2.2')\n"
+           + "expect(got.get('requests'), '2.32.3')\n"
+           + "expect(got.get('jupyter'), '1.0.0')") },
+    { label: "names are lowercased",
+      code: "expect(parse_requirements(REQUIREMENTS).get('scipy'), '1.14.0')" },
+    { label: "comments, blanks and the editable install are skipped",
+      code: ("got = parse_requirements(REQUIREMENTS)\n"
+           + "expect(len(got), 4)\n"
+           + "expect('matplotlib' in got, False)\n"
+           + "expect(any(k.startswith('-') or k.startswith('#') for k in got), False)") },
+    { label: "whitespace around a line doesn't leak into the name or version",
+      code: ("got = parse_requirements(REQUIREMENTS)\n"
+           + "expect([k for k in got if k != k.strip()], [])\n"
+           + "expect([v for v in got.values() if v != v.strip()], [])") },
+    { label: "an empty file gives an empty dict, not an error",
+      code: "expect(parse_requirements(''), {})" }
+  ],
+  solution:
+    "def parse_requirements(text):\n" +
+    "    \"\"\"Map package name to pinned version, ignoring anything unpinned.\"\"\"\n" +
+    "    pins = {}\n" +
+    "    for line in text.splitlines():\n" +
+    "        line = line.split(\"#\")[0].strip()      # drop comments first\n" +
+    "        if \"==\" not in line:\n" +
+    "            continue                            # blank, '-e .', or unpinned\n" +
+    "        name, version = line.split(\"==\", 1)\n" +
+    "        pins[name.strip().lower()] = version.strip()\n" +
+    "    return pins\n\n" +
+    "pins = parse_requirements(REQUIREMENTS)\n" +
+    "for name, version in sorted(pins.items()):\n" +
+    "    print(f\"{name:<12} {version}\")\n" +
+    "# Stripping the comment before testing for '==' is what makes the jupyter\n" +
+    "# line work. Doing it the other way round leaves '1.0.0  # pinned\n" +
+    "# deliberately' as the version, and nothing complains."
+});
+
+COURSE.exercise("ex3", {
+  id: "scr-order", tag: "Exercise 3", title: "What run.py is actually for",
+  prompt:
+    "<p>A notebook's run order lives in your head. <code>run.py</code> writes it " +
+    "down — and the order isn't a preference, it's forced by what each stage " +
+    "needs.</p>" +
+    "<p>Write <code>run_order(needs)</code>, taking a dict that maps each stage " +
+    "to the stages that must finish first, and returning a list of every stage " +
+    "in a runnable sequence.</p>" +
+    "<p class='small'>Repeatedly take any stage whose prerequisites have all " +
+    "run. Break ties however you like — several orders are valid and the checks " +
+    "accept any of them. Raise <code>ValueError</code> if no order exists.</p>",
+  setup:
+    'PIPELINE = {\n' +
+    '    "fetch_acs": [], "fetch_epa": [],\n' +
+    '    "clean_acs": ["fetch_acs"], "clean_epa": ["fetch_epa"],\n' +
+    '    "join": ["clean_acs", "clean_epa"],\n' +
+    '    "correlate": ["join"], "plot": ["join"],\n' +
+    '    "write_report": ["correlate", "plot"],\n' +
+    '}\n',
+  starter:
+    "def run_order(needs):\n" +
+    "    \n" +
+    "    \n\n" +
+    "print(\" -> \".join(run_order(PIPELINE)))",
+  checks: [
+    { label: "run_order is defined and takes the dependency map",
+      code: "f = expect_defined(globals(), 'run_order')\nexpect(f.__code__.co_argcount, 1)" },
+    { label: "every stage appears exactly once",
+      code: "expect(sorted(run_order(PIPELINE)), sorted(PIPELINE.keys()))" },
+    { label: "nothing runs before something it needs",
+      code: ("order = run_order(PIPELINE)\n"
+           + "pos = {name: i for i, name in enumerate(order)}\n"
+           + "for stage, prereqs in PIPELINE.items():\n"
+           + "    for p in prereqs:\n"
+           + "        if pos[p] >= pos[stage]:\n"
+           + "            raise CheckFailed(f'{stage} runs at {pos[stage]}, but needs '\n"
+           + "                              f'{p} which runs at {pos[p]}')") },
+    { label: "the report is last, because everything feeds it",
+      code: "expect(run_order(PIPELINE)[-1], 'write_report')" },
+    { label: "it works on a different pipeline, not just this one",
+      code: ("other = {'a': [], 'b': ['a'], 'c': ['a'], 'd': ['b', 'c']}\n"
+           + "out = run_order(other)\n"
+           + "expect(sorted(out), ['a', 'b', 'c', 'd'])\n"
+           + "pos = {n: i for i, n in enumerate(out)}\n"
+           + "expect(pos['a'] < pos['b'] and pos['c'] < pos['d'], True)") },
+    { label: "a single stage with no prerequisites is a valid pipeline",
+      code: "expect(run_order({'only': []}), ['only'])" },
+    { label: "a circular dependency raises ValueError rather than looping forever",
+      code: "expect_raises(ValueError, run_order, {'x': ['y'], 'y': ['x']})" }
+  ],
+  solution:
+    "def run_order(needs):\n" +
+    "    \"\"\"Stages in an order that satisfies every prerequisite.\n\n" +
+    "    Raises ValueError if the dependencies are circular.\n" +
+    "    \"\"\"\n" +
+    "    order, done = [], set()\n" +
+    "    while len(order) < len(needs):\n" +
+    "        ready = [s for s, prereqs in needs.items()\n" +
+    "                 if s not in done and all(p in done for p in prereqs)]\n" +
+    "        if not ready:\n" +
+    "            raise ValueError(\"circular dependency\")\n" +
+    "        for stage in sorted(ready):\n" +
+    "            order.append(stage)\n" +
+    "            done.add(stage)\n" +
+    "    return order\n\n" +
+    "print(\" -> \".join(run_order(PIPELINE)))\n" +
+    "# This is a topological sort, and it is what every build tool and workflow\n" +
+    "# runner does underneath. You are writing run.py by hand -- but noticing\n" +
+    "# that the order is derivable from the dependencies, rather than chosen,\n" +
+    "# is what makes a pipeline safe to extend."
+});
+</script>
+</body>
+</html>
