@@ -33,14 +33,72 @@
       <div class="kwgrid" id="kwgrid"></div>
       <div class="kw-about" id="kwabout"></div>
 
+      <h2>Blocks and scope</h2>
+      <p>Two words you need before the next section, because they are
+      constantly confused and Python treats them differently from most
+      languages.</p>
+
+      <p>A <b>block</b> is a run of consecutive lines that belong together and
+      are handled as one unit — run them all, run them ten times, run none of
+      them. Every language has blocks. Most mark them with braces; Python marks
+      them with indentation.</p>
+
+      <p>A block is always introduced by a line ending in a colon. That line
+      says what the block is for, and the lines indented beneath it are its
+      contents. Blocks nest, and the indentation is what tells you how
+      deeply.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 210" role="img" aria-label="A colon line introduces a block; the indented lines beneath it are its contents, and blocks nest inside one another.">
+          <rect x="14" y="30" width="692" height="128" rx="8" fill="var(--accent-wash)" stroke="var(--accent)"/>
+          <rect x="52" y="72" width="640" height="72" rx="6" fill="var(--warn-wash)" stroke="var(--warn)"/>
+
+          <g class="mono" style="font-size:13px">
+            <text x="28" y="56" class="svg-ink">for row in rows<tspan class="svg-accent" style="font-weight:700">:</tspan></text>
+            <text x="66" y="96" class="svg-ink">if row[1] != "0"<tspan style="font-weight:700" fill="var(--warn)">:</tspan></text>
+            <text x="104" y="132" class="svg-ink">counted = counted + 1</text>
+            <text x="28" y="180" class="svg-ink">print(counted)</text>
+          </g>
+
+          <text x="330" y="56" class="svg-accent" style="font-size:11px">the colon opens a block</text>
+          <text x="330" y="96" style="font-size:11px" fill="var(--warn)">and this one opens another, inside it</text>
+          <text x="330" y="132" class="svg-muted" style="font-size:11px">two levels deep — it belongs to both</text>
+          <text x="180" y="180" class="svg-muted" style="font-size:11px">back at the margin: outside both blocks, runs once</text>
+
+          <line x1="14" y1="196" x2="706" y2="196" class="svg-line"/>
+        </svg>
+        <figcaption>Nothing closes these blocks. They end where the
+        indentation stops, which is why the width of the gap on the left is
+        load-bearing information.</figcaption>
+      </figure>
+
+      <p><b>Scope</b> is a different idea, and the confusion between the two is
+      worth heading off now. A scope is the region of a program in which a name
+      means something. In C or Java every braced block is a scope; a variable
+      declared inside one does not exist outside it.</p>
+
+      <div class="note">
+        <h4>Python does not work that way</h4>
+        <p>A block is not automatically a scope. A name first assigned inside
+        an indented block is still there after the block ends — the block
+        controlled <em>whether and how often</em> those lines ran, not what
+        names survive them.</p>
+        <p style="margin-bottom:0">Only some blocks open a scope of their own,
+        and they are the ones introduced by <code>def</code> and
+        <code>class</code>. That is step 8's subject. Until then, every block
+        you meet shares one set of names.</p>
+      </div>
+
       <h2>Indentation is syntax</h2>
       <p>In most languages layout is a courtesy to the reader. In Python it is
       the grammar itself:</p>
       <ul>
         <li>A colon opens a block.</li>
         <li>The indented lines under it <em>are</em> the block.</li>
-        <li>There is no closing brace. A misplaced indent is not a style
-        problem — it is a different program.</li>
+        <li>There is no closing brace. Change a line's indentation and you have
+        moved it into a different block — it now runs at a different time, or a
+        different number of times. That is not a style problem. It is a
+        different program.</li>
       </ul>
 <pre>total = 0
 for row in rows:
