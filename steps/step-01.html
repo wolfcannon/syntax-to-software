@@ -15,24 +15,23 @@
 
       <p class="eyebrow">Unit 1 — Foundations · Step 1</p>
       <h1>Keywords, types, and syntax</h1>
-      <p class="lede">The small fixed vocabulary Python reserves for itself,
-      the rule that indentation is grammar, and how to read the error you get
-      when you break it.</p>
+      <ul class="lede-points">
+        <li>35 words Python keeps for itself.</li>
+        <li>Indentation is grammar, not style.</li>
+        <li>A <code>SyntaxError</code> means nothing ran at all.</li>
+      </ul>
 
       <h2>A very small reserved vocabulary</h2>
-      <p>Python has about 35 words you cannot use as names, and that is the
-      whole of the language's fixed vocabulary. Everything else —
-      <code>print</code>, <code>len</code>, <code>int</code> — is an ordinary
-      name that happens to come pre-assigned.</p>
-<pre>import keyword
-print(len(keyword.kwlist))   <span class="c"># 35</span>
-print(keyword.kwlist[:8])    <span class="c"># ['False', 'None', 'True', 'and', 'as', 'assert', 'async', 'await']</span></pre>
-      <p>The practical consequence is a rule of thumb: if a name turns red in
-      your editor and assigning to it is a <code>SyntaxError</code>, it is a
-      keyword. If assigning to it works but something later breaks
-      mysteriously, you have shadowed a builtin — <code>list = [1, 2]</code> is
-      legal and then <code>list(...)</code> stops working for the rest of the
-      kernel's life.</p>
+      <p>Python reserves 35 words. You cannot use any of them as a name, and
+      that is the whole of the language's fixed vocabulary — every other word
+      you will meet, including <code>print</code>, <code>len</code> and
+      <code>int</code>, is an ordinary name that happens to come
+      pre-assigned.</p>
+      <p>Pick one to see what it does. The faded ones are real keywords this
+      course never needs.</p>
+
+      <div class="kwgrid" id="kwgrid"></div>
+      <div class="kw-about" id="kwabout"></div>
 
       <h2>Indentation is syntax</h2>
       <p>In most languages layout is a courtesy to the reader. In Python it is
@@ -140,6 +139,77 @@ walk_raw[1]  <span class="c"># ['18', '097', '310103', '2', '3.666667', '7', '3'
 <script src="../assets/nav.js"></script>
 <script src="../assets/runner.js"></script>
 <script src="../assets/sample.js"></script>
+<script>
+/* Keyword explorer. Each entry: what it does, and where this course uses it —
+   `null` meaning the course never does, which is worth saying out loud. */
+(function () {
+  const KEYWORDS = [
+    ["False", "The boolean false value.", "Step 2"],
+    ["None", "No value at all — which is not the same as zero or empty.", "Step 2"],
+    ["True", "The boolean true value.", "Step 2"],
+    ["and", "True only when both sides are true.", "Step 6"],
+    ["as", "Gives the thing on its left a name.", "Steps 12 and 13"],
+    ["assert", "Stop unless a condition holds. How you check your own work.", "Steps 10 and 18"],
+    ["async", "Marks code that can pause while it waits for something.", null],
+    ["await", "Waits for that kind of code to finish.", null],
+    ["break", "Leave the loop entirely, right now.", "Step 6"],
+    ["class", "Define a new kind of object.", "Step 14"],
+    ["continue", "Skip to the next pass of the loop.", "Step 6"],
+    ["def", "Define a function.", "Step 8"],
+    ["del", "Remove a name, or an item from a collection.", null],
+    ["elif", "Try this condition only if the ones above it failed.", "Step 6"],
+    ["else", "What to do when nothing above matched.", "Step 6"],
+    ["except", "Handle an error that was raised.", "Step 11"],
+    ["finally", "Run this whether or not there was an error.", "Step 11"],
+    ["for", "Do something once per item in a sequence.", "Step 6"],
+    ["from", "Import one named thing out of a module.", "Step 13"],
+    ["global", "Let a function reassign a name defined outside it.", null],
+    ["if", "Do something only when a condition holds.", "Step 6"],
+    ["import", "Load a module so you can use what is in it.", "Step 13"],
+    ["in", "Membership: is this item in that collection?", "Steps 5 and 6"],
+    ["is", "Identity: are these two names the same object? Usually seen as <code>is None</code>.", "Step 6"],
+    ["lambda", "A small unnamed function, written where it is used.", "Step 4"],
+    ["nonlocal", "Like <code>global</code>, but for an enclosing function.", null],
+    ["not", "Flips a condition.", "Step 6"],
+    ["or", "True when either side is true.", "Step 6"],
+    ["pass", "Do nothing. A placeholder where the grammar needs a body.", "The starters below"],
+    ["raise", "Signal an error yourself.", "Step 11"],
+    ["return", "Hand a value back out of a function.", "Step 8"],
+    ["try", "Attempt something that might fail.", "Step 11"],
+    ["while", "Repeat for as long as a condition stays true.", "Step 6"],
+    ["with", "Use a resource and clean it up afterwards, even on failure.", "Step 12"],
+    ["yield", "Produce values one at a time instead of all at once.", null],
+  ];
+
+  const grid = document.getElementById("kwgrid");
+  const about = document.getElementById("kwabout");
+  if (!grid || !about) return;
+
+  function show(word, what, where) {
+    about.innerHTML =
+      `<p class="word">${word}</p><p class="what">${what}</p>` +
+      `<p class="where">${where ? "You meet it in: " + where
+                                : "Not used anywhere in this course."}</p>`;
+  }
+
+  KEYWORDS.forEach(([word, what, where], i) => {
+    const b = document.createElement("button");
+    b.className = "kw" + (where ? "" : " unused");
+    b.type = "button";
+    b.textContent = word;
+    b.setAttribute("aria-pressed", "false");
+    b.addEventListener("click", () => {
+      grid.querySelectorAll(".kw").forEach((o) => o.setAttribute("aria-pressed", "false"));
+      b.setAttribute("aria-pressed", "true");
+      show(word, what, where);
+    });
+    grid.appendChild(b);
+  });
+
+  // Start on something everyone already half-knows, so the panel is never empty.
+  grid.querySelectorAll(".kw")[KEYWORDS.findIndex((k) => k[0] === "if")].click();
+})();
+</script>
 <script>
 COURSE.exercise("ex1", {
   id: "s01-fix", tag: "Exercise 1", title: "Fix the syntax",

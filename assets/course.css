@@ -107,6 +107,42 @@ ul,ol{margin:0 0 14px; padding-left:22px}
 li{margin:4px 0}
 .small{font-size:13.5px; color:var(--muted)}
 
+/* ---------- lede as points ---------- */
+.lede-points{list-style:none; margin:0 0 8px; padding:0}
+.lede-points li{
+  font:400 17px/1.5 var(--serif); color:var(--ink-2);
+  padding:5px 0 5px 22px; position:relative; margin:0;
+}
+.lede-points li::before{
+  content:""; position:absolute; left:2px; top:14px;
+  width:9px; height:2px; background:var(--accent); border-radius:1px;
+}
+
+/* ---------- keyword explorer ---------- */
+.kwgrid{
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(96px, 1fr));
+  gap:6px; margin:0 0 14px;
+}
+.kw{
+  font:500 13px/1 var(--mono); padding:10px 6px; text-align:center;
+  border:1px solid var(--line); border-radius:7px;
+  background:var(--surface); color:var(--ink); cursor:pointer;
+}
+.kw:hover{border-color:var(--accent); background:var(--surface-2)}
+.kw[aria-pressed="true"]{
+  background:var(--accent); border-color:var(--accent); color:#fff;
+}
+.kw.unused{color:var(--muted); background:var(--bg)}
+.kw.unused[aria-pressed="true"]{color:#fff; background:var(--muted); border-color:var(--muted)}
+.kw-about{
+  border:1px solid var(--line); border-left:3px solid var(--accent);
+  border-radius:0 9px 9px 0; background:var(--surface);
+  padding:14px 16px; box-shadow:var(--shadow); min-height:92px;
+}
+.kw-about .word{font:600 16px/1.2 var(--mono); color:var(--accent-2); margin:0 0 6px}
+.kw-about .what{margin:0 0 6px}
+.kw-about .where{font-size:13px; color:var(--muted); margin:0}
+
 /* ---------- code ---------- */
 pre{
   background:var(--code-bg); border:1px solid var(--line); border-radius:9px;
