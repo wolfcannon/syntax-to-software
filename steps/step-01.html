@@ -92,6 +92,22 @@
         different number of times. That is not a style problem. It is a
         different program.</li>
       </ul>
+
+      <div class="note">
+        <h4>Two kinds of wrong</h4>
+        <p><b>A syntax error</b> means Python could not read your code as
+        Python. Nothing runs — not the broken line, not the lines above it. You
+        find out the moment you run it, and you are told roughly where.</p>
+        <p><b>A logic error</b> means your code read perfectly well and does
+        something other than what you meant. It runs, it produces an answer,
+        and nothing is reported, because from Python's side nothing went
+        wrong.</p>
+        <p style="margin-bottom:0">A misplaced indent can be either. Indent a
+        line that opens a block and you get a syntax error. Indent a line
+        <em>inside</em> a block and you usually get the second kind, which is
+        the expensive one — an analysis that produces a number nobody
+        questions.</p>
+      </div>
 <pre>total = 0
 for row in rows:
     total = total + 1
@@ -106,12 +122,13 @@ print(total)          <span class="c"># outside the loop — prints once, at the
 
       <h2>Expressions and statements</h2>
       <p>An <b>expression</b> has a value: <code>21 / 1303</code>,
-      <code>len(rows)</code>, <code>bike &gt; 0</code>. A <b>statement</b> does
-      something: <code>bike = 21</code>, <code>import csv</code>,
-      <code>for ...:</code>. A notebook cell displays the value of its last
-      line if that line is an expression — which is why
-      <code>bike / workers</code> alone on the last line shows a number, but
-      <code>bike = 21</code> shows nothing. It has no value; it has an effect.</p>
+      <code>len(rows)</code>, <code>bike &gt; 0</code>. Ask for one and
+      something comes back.</p>
+      <p>A <b>statement</b> does something instead:
+      <code>bike = 21</code> binds a name, <code>for ...:</code> opens a block.
+      It has an effect rather than a value, which is why writing
+      <code>bike = 21</code> on its own shows you nothing. To see a value you
+      have to ask for it — <code>print(bike / workers)</code>.</p>
 
       <h2>Reading a SyntaxError</h2>
       <p>A <code>SyntaxError</code> is raised before a single line of your code
@@ -268,7 +285,7 @@ walk_raw[1]  <span class="c"># ['18', '097', '310103', '2', '3.666667', '7', '3'
 COURSE.exercise("ex1", {
   id: "s01-fix", tag: "Exercise 1", title: "Fix the syntax",
   prompt:
-    "<p>Four things are wrong with this cell: a missing colon, an indentation " +
+    "<p>Four things are wrong with this code: a missing colon, an indentation " +
     "that puts a line in the wrong block, a keyword used as a variable name, " +
     "and an unclosed bracket. Fix all four so that <code>counted</code> ends " +
     "up as the number of sample rows whose worker count is not " +
@@ -284,7 +301,7 @@ COURSE.exercise("ex1", {
     "        counted = counted + 1\n" +
     "        print(len(acs_raw[1:])\n",
   checks: [
-    { label: "the cell parses and runs at all",
+    { label: "the code parses and runs at all",
       code: "expect_defined(globals(), 'counted')" },
     { label: "counted holds the number of sample rows with workers",
       code: "expect(counted, sum(1 for r in acs_raw[1:] if r[1] != '0'))" },

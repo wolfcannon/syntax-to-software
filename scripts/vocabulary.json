@@ -5,7 +5,8 @@
     "visible code before the step that teaches it. Prose may mention anything, as",
     "long as it signposts (the block says 'step N'), because forward signposting",
     "is orientation rather than assumed knowledge.",
-    "'position' is the course order: a step's own number, interludes in between."
+    "'position' is the course order: a step's own number, interludes in between.",
+    "'prose_terms' covers words rather than syntax: a page must not lean on 'kernel' or 'DataFrame' before the learner has one. A paragraph may still use the word if it signposts where it comes from (says 'step N' or 'level-up')."
   ],
   "positions": {
     "step-01": 1,
@@ -266,6 +267,96 @@
       "page": "step-05",
       "concept": "for loop",
       "why": "same box, carried forward; dictionaries are equally unusable without iteration"
+    }
+  ],
+  "prose_terms": [
+    {
+      "term": "notebook",
+      "position": 8.5,
+      "patterns": [
+        "\\bnotebooks?\\b"
+      ]
+    },
+    {
+      "term": "cell",
+      "position": 8.5,
+      "patterns": [
+        "\\bcells?\\b"
+      ]
+    },
+    {
+      "term": "kernel",
+      "position": 8.5,
+      "patterns": [
+        "\\bkernels?\\b"
+      ]
+    },
+    {
+      "term": "Jupyter",
+      "position": 8.5,
+      "patterns": [
+        "\\bJupyter\\b"
+      ]
+    },
+    {
+      "term": "exception",
+      "position": 11,
+      "patterns": [
+        "\\bexceptions?\\b"
+      ]
+    },
+    {
+      "term": "module",
+      "position": 13,
+      "patterns": [
+        "\\bmodules?\\b"
+      ]
+    },
+    {
+      "term": "dataframe",
+      "position": 15,
+      "patterns": [
+        "\\bdata ?frames?\\b"
+      ]
+    },
+    {
+      "term": "pandas",
+      "position": 15,
+      "patterns": [
+        "\\bpandas\\b"
+      ]
+    },
+    {
+      "term": "virtualenv",
+      "position": 16.5,
+      "patterns": [
+        "\\bvirtual environments?\\b",
+        "\\bvenv\\b"
+      ]
+    },
+    {
+      "term": "git",
+      "position": 17,
+      "patterns": [
+        "\\bgit\\b",
+        "\\bgit commit\\b",
+        "\\bversion control\\b"
+      ]
+    },
+    {
+      "term": "pytest",
+      "position": 18,
+      "patterns": [
+        "\\bpytest\\b",
+        "\\bunit tests?\\b"
+      ]
+    }
+  ],
+  "prose_exemptions": [
+    {
+      "page": "step-01",
+      "term": "exception",
+      "why": "SyntaxError is the page's subject; the word names the thing being read, not a technique"
     }
   ]
 }

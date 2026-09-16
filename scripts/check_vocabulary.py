@@ -24,6 +24,7 @@ LEDGER = json.loads((ROOT / "scripts/vocabulary.json").read_text())
 POSITIONS = LEDGER["positions"]
 CONCEPTS = LEDGER["concepts"]
 EXEMPT = {(e["page"], e["concept"]) for e in LEDGER["exemptions"]}
+PROSE_EXEMPT = {(e["page"], e["term"]) for e in LEDGER.get("prose_exemptions", [])}
 USED_EXEMPTIONS = set()   # an exemption that suppresses nothing has gone stale
 
 
@@ -69,6 +70,38 @@ def scan(label, block, position, page, problems):
             break
 
 
+def paragraphs(html):
+    """Learner-visible prose: the page body minus code, scripts and svg."""
+    body = re.sub(r"<script.*?</script>", "", html, flags=re.S)
+    body = re.sub(r"<svg.*?</svg>", "", body, flags=re.S)
+    body = re.sub(r"<pre>.*?</pre>", "", body, flags=re.S)
+    out = []
+    for m in re.finditer(r"<(p|li|h2|h3|h4|figcaption)[^>]*>(.*?)</\1>", body, re.S):
+        text = re.sub(r"<[^>]+>", " ", m.group(2))
+        text = (text.replace("&lt;", "<").replace("&gt;", ">")
+                    .replace("&amp;", "&").replace("&quot;", '"'))
+        out.append(re.sub(r"\s+", " ", text).strip())
+    return out
+
+
+def scan_prose(page, position, html, problems):
+    for para in paragraphs(html):
+        # A paragraph that says where the idea comes from is signposting,
+        # not assuming.
+        if re.search(r"\b[Ss]teps?\s+\d+\b|\bUnits?\s+\d+\b|level-up|Level up", para):
+            continue
+        for term in LEDGER.get("prose_terms", []):
+            if term["position"] <= position or (page, term["term"]) in PROSE_EXEMPT:
+                continue
+            for pattern in term["patterns"]:
+                if re.search(pattern, para, re.I):
+                    problems.append(
+                        f"{page} [prose] says {term['term']!r} "
+                        f"(not available until {term['position']}): "
+                        f"{para[:72]}…")
+                    break
+
+
 def main():
     verbose = "--verbose" in sys.argv
     exercises = json.loads(
@@ -87,6 +120,8 @@ def main():
         for i, block in enumerate(pre_blocks(html), 1):
             scanned += 1
             scan(f"pre {i}", block, position, page, problems)
+
+        scan_prose(page, position, html, problems)
 
         for ex in (e for e in exercises if e["file"] == path.name):
             for field in ("starter", "solution"):

@@ -16,8 +16,8 @@
       <p class="eyebrow">Unit 1 — Foundations · Step 8</p>
       <h1>Functions</h1>
       <p class="lede">Giving names to the three ideas you have now written out
-      by hand a dozen times — and turning a notebook into something that could
-      become software.</p>
+      by hand a dozen times — and the point where a pile of working code turns
+      into something that could become software.</p>
 
       <h2>Definition, arguments, return</h2>
 <pre>def bike_share(bike, workers):
@@ -37,8 +37,8 @@
       <h2>Pure functions</h2>
       <p>A <b>pure</b> function's answer depends only on its arguments, and it
       changes nothing outside itself. <code>bike_share(21, 1303)</code> is
-      0.0161 today, tomorrow, and in any notebook, regardless of what cells you
-      ran first.</p>
+      0.0161 today, tomorrow, and anywhere else you call it, regardless of what
+      ran before it.</p>
       <p>That is the property that makes the rest of this course possible. A
       pure function can be tested in isolation (step 18), swapped for an
       equivalent implementation and checked (step 9), and moved into another
@@ -57,10 +57,10 @@
 
       <h2>Scope</h2>
       <p>Names assigned inside a function are local to it and vanish when it
-      returns. A function can <em>read</em> names from the enclosing module,
-      which is convenient and is also how a notebook function ends up secretly
-      depending on a variable you defined in a cell you later deleted — a hazard
-      the Jupyter interlude takes seriously. If a function needs a value, take it as an argument.</p>
+      returns. A function can also <em>read</em> names from the surrounding
+      program, which is convenient and is also how a function ends up secretly
+      depending on a name defined somewhere else entirely — a hazard the
+      level-up takes seriously. If a function needs a value, take it as an argument.</p>
 
       <h2>What Unit 1 has actually built</h2>
       <p>Every piece of the pipeline exists now, scattered across nine steps.
@@ -122,7 +122,7 @@
         <code>build_geoid()</code>, <code>bike_share()</code>,
         <code>walk_category()</code> and <code>summarize()</code> somewhere
         you'll find them again — a scratch file, a note, anywhere. The very
-        next page has you paste them into a notebook of your own.</p>
+        level-up has you paste them into an environment of your own.</p>
         <p>Check them against the counts you kept in step 6: the same numbers
         should come out. If they don't, extracting the functions changed
         behaviour — and finding out which one did it is step 10.</p>
@@ -135,12 +135,12 @@
         <summary><span class="q">Can each function be called in isolation, with made-up arguments, and give the right answer?</span></summary>
         <div class="ans">
           <p>That is the whole test, and it is worth applying deliberately:
-          open a fresh cell, call <code>build_geoid("01", "073", "000100",
-          "1")</code> with nothing else loaded, and see whether it works.</p>
+          start from nothing, call <code>build_geoid("01", "073", "000100",
+          "1")</code> with no other code around it, and see whether it works.</p>
           <p>If it does, the function is self-contained. If it raises
           <code>NameError</code>, it was secretly reading something from the
-          notebook — a header list, a lookup dict, a column index — and that
-          dependency needs to become a parameter.</p>
+          surrounding code — a header list, a lookup dict, a column index —
+          and that dependency needs to become a parameter.</p>
           <p style="margin-bottom:0">Doing this by hand is tedious, which is
           the entire argument for step 18. A test file is just this check,
           written down once and run automatically forever. You have been on the
@@ -277,7 +277,7 @@ COURSE.exercise("ex3", {
     "<li><code>\"unmatched\"</code> — sorted list of ACS GEOIDs with no score</li>" +
     "</ul>" +
     "<p>Take both tables as arguments. Reading them from the surrounding " +
-    "notebook is the habit this step exists to break.</p>",
+    "surrounding code is the habit this step exists to break.</p>",
   setup: SAMPLE + "\n" +
     "def build_geoid(state, county, tract, block_group):\n" +
     "    \"\"\"Return the 12-character block group GEOID as a string.\"\"\"\n" +
@@ -370,9 +370,9 @@ COURSE.exercise("ex3", {
     "result = summarize(acs_raw, walk_raw)\n" +
     "for key, value in result.items():\n" +
     "    print(f\"{key:>12}: {value}\")\n" +
-    "# Everything the notebook does, as one call taking its data as arguments.\n" +
-    "# That is what makes it movable into a module in step 13 -- and testable\n" +
-    "# in step 18 without a notebook anywhere in sight."
+    "# The whole pipeline as one call, taking its data as arguments rather\n" +
+    "# than reaching for it. That is what makes it movable in step 13 -- and\n" +
+    "# testable in step 18 with nothing else loaded at all."
 });
 </script>
 </body>

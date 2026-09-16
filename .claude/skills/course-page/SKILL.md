@@ -25,9 +25,18 @@ without walking it — **build it in**: show the shape in two lines, say which
 step teaches it properly, then use it. Do not apologise for it in passing and
 carry on. Step 4's "Two shapes you need now" box is the pattern.
 
+This applies to vocabulary as much as syntax. A page before the first level-up
+may not say "cell", "kernel" or "notebook" — the learner is in a browser and
+has none of those. Watch for prose that describes an environment the reader is
+not in; it is the easiest thing in the course to get wrong, because the author
+knows what the finished project looks like and the reader does not.
+
 This is enforced. `scripts/vocabulary.json` records which step first shows each
-piece of Python; `scripts/check_vocabulary.py` scans every `<pre>` block and
-every exercise `starter` and `solution` and fails on a forward use. A forward
+piece of Python and each piece of vocabulary; `scripts/check_vocabulary.py`
+scans every `<pre>` block, every exercise `starter` and `solution`, and every
+paragraph, and fails on a forward use. Prose signposts by naming where the idea
+comes from — "step 12", "Unit 4", "the level-up" — and a paragraph that does is
+left alone. A forward
 use passes only if the block signposts it (says "step N" for the introducing
 step) or the ledger carries an exemption with a written reason. **An exemption
 must describe something the page actually does** — if you exempt a concept,
