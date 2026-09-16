@@ -34,15 +34,11 @@
       <div class="kw-about" id="kwabout"></div>
 
       <h2>Blocks and scope</h2>
-      <p>Two words you need before the next section, because they are
-      constantly confused and Python treats them differently from most
-      languages.</p>
 
-      <p>A <b>block</b> is a run of consecutive lines that belong together and
-      are handled as one unit — run them all, run them ten times, run none of
-      them. Every language has blocks. Most mark them with braces; Python marks
-      them with indentation.</p>
-
+      <h3>Block</h3>
+      <p>A run of consecutive lines that belong together and are handled as one
+      unit — run them all, run them ten times, run none of them. Python marks a
+      block with indentation.</p>
       <p>A block is always introduced by a line ending in a colon. That line
       says what the block is for, and the lines indented beneath it are its
       contents. Blocks nest, and the indentation is what tells you how
@@ -72,30 +68,26 @@
         load-bearing information.</figcaption>
       </figure>
 
-      <p><b>Scope</b> is a different idea, and the confusion between the two is
-      worth heading off now. A scope is the region of a program in which a name
-      means something. In C or Java every braced block is a scope; a variable
-      declared inside one does not exist outside it.</p>
+      <h3>Scope</h3>
+      <p>The region of a program in which a name means something.</p>
 
       <div class="note">
-        <h4>Python does not work that way</h4>
-        <p>A block is not automatically a scope. A name first assigned inside
-        an indented block is still there after the block ends — the block
-        controlled <em>whether and how often</em> those lines ran, not what
-        names survive them.</p>
-        <p style="margin-bottom:0">Only some blocks open a scope of their own,
-        and they are the ones introduced by <code>def</code> and
-        <code>class</code>. That is step 8's subject. Until then, every block
-        you meet shares one set of names.</p>
+        <h4>A block is not a scope</h4>
+        <p>A name first assigned inside an indented block is still there after
+        the block ends. The block controlled <em>whether and how often</em>
+        those lines ran, not which names survive them.</p>
+        <p style="margin-bottom:0">Only some blocks open a scope of their own:
+        the ones introduced by <code>def</code> and <code>class</code>. That is
+        step 8's subject. Until then, every block you meet shares one set of
+        names.</p>
       </div>
 
       <h2>Indentation is syntax</h2>
-      <p>In most languages layout is a courtesy to the reader. In Python it is
-      the grammar itself:</p>
+      <p>Indentation is not presentation. It is grammar:</p>
       <ul>
         <li>A colon opens a block.</li>
         <li>The indented lines under it <em>are</em> the block.</li>
-        <li>There is no closing brace. Change a line's indentation and you have
+        <li>Nothing closes a block. Change a line's indentation and you have
         moved it into a different block — it now runs at a different time, or a
         different number of times. That is not a style problem. It is a
         different program.</li>

@@ -98,6 +98,12 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
   where a plausible-looking answer is wrong — a `.get(geoid, 0)` that turns a
   missing score into the lowest score, a string sort that puts `"9"` after
   `"1303"`. Hunt for those.
+- **No comparisons to other languages.** Not "unlike C", not "most languages
+  use braces", not "if you know Java". The reader may not know them, and if
+  they do it is still a detour. Say what Python does. This extends to borrowed
+  vocabulary: prefer "nothing closes a block" over "there is no closing brace".
+- Define a term with a subheading and a sentence, not a lead-in explaining that
+  you are about to define it.
 - British spelling, Oxford comma off, em dashes fine.
 - Never flatter the learner and never say "simply", "just", or "obviously".
 - Every example uses the project's real data. No `foo`, no animals, no shapes.
