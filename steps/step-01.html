@@ -121,14 +121,24 @@ print(total)          <span class="c"># outside the loop — prints once, at the
       author intended, the other will produce a logic error.</p>
 
       <h2>Expressions and statements</h2>
-      <p>An <b>expression</b> has a value: <code>21 / 1303</code>,
-      <code>len(rows)</code>, <code>bike &gt; 0</code>. Ask for one and
-      something comes back.</p>
-      <p>A <b>statement</b> does something instead:
-      <code>bike = 21</code> binds a name, <code>for ...:</code> opens a block.
-      It has an effect rather than a value, which is why writing
-      <code>bike = 21</code> on its own shows you nothing. To see a value you
-      have to ask for it — <code>print(bike / workers)</code>.</p>
+
+      <h3>Expression</h3>
+      <p>Something that has a value. Ask for one and something comes back:
+      <code>21 / 1303</code>, <code>len(rows)</code>,
+      <code>bike &gt; 0</code>.</p>
+
+      <h3>Statement</h3>
+      <p>Something that has an effect. <code>bike = 21</code> binds a name;
+      <code>for ...:</code> opens a block. It changes the state of the program
+      rather than producing a value.</p>
+
+      <div class="note">
+        <h4>Nothing is shown unless you ask</h4>
+        <p>Writing <code>bike = 21</code> displays nothing, because there is no
+        value to display. Writing <code>bike / workers</code> on its own
+        displays nothing either — the value is computed and then thrown away.
+        To see it, ask: <code>print(bike / workers)</code>.</p>
+      </div>
 
       <h2>Reading a SyntaxError</h2>
       <p>A <code>SyntaxError</code> is raised before a single line of your code
