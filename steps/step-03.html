@@ -133,20 +133,6 @@ TypeError: str.upper() takes no arguments (1 given)</span></pre>
       <div id="q1"></div>
       <div id="ex0"></div>
 
-      <h2>Indexing and slicing</h2>
-      <p>A string is a sequence of characters, indexed from zero. A slice
-      <code>s[a:b]</code> takes from <code>a</code> up to but <em>not
-      including</em> <code>b</code>, so the length of the slice is always
-      <code>b - a</code>. That half-open convention is the same one that makes
-      <code>range</code> and array slicing behave, and it is worth accepting
-      early rather than fighting.</p>
-<pre>geoid = "180973401103"
-geoid[0:2]    <span class="c"># '18'      state</span>
-geoid[2:5]    <span class="c"># '097'     county</span>
-geoid[5:11]   <span class="c"># '340110'  tract</span>
-geoid[11:]    <span class="c"># '3'       block group</span>
-geoid[-1]     <span class="c"># '3'       negative indices count from the end</span></pre>
-
       <h2>Methods worth knowing now</h2>
       <div class="tablewrap">
       <table>
@@ -165,11 +151,40 @@ geoid[-1]     <span class="c"># '3'       negative indices count from the end</s
       and changes nothing. <code>name.strip()</code> on its own line does
       precisely nothing useful — you have to assign the result.</p>
 
-      <h2>f-strings</h2>
-      <p>An <code>f</code> before the quotes makes every <code>{...}</code> an
-      expression to evaluate and insert. After a colon comes a <b>format
-      spec</b>, which is a tiny language of its own and the reason f-strings
-      replace everything that came before them.</p>
+      <h2>Putting values into text</h2>
+      <p>Sooner or later you have some values and you want a piece of text with
+      those values in it — a label, a line of output, an identifier built from
+      its parts.</p>
+      <p>The direct way is to join pieces together with <code>+</code>:</p>
+<pre>name = "Meridian-Kessler"
+score = 14.5
+
+"Walkability of " + name + " is " + str(score)
+<span class="c"># 'Walkability of Meridian-Kessler is 14.5'</span></pre>
+      <p>That works, and it is unpleasant. You are counting quotes and spaces,
+      the sentence is broken into five pieces, and every value that is not
+      already text needs <code>str()</code> around it. Forget one and you get:</p>
+<pre><span class="o">TypeError: can only concatenate str (not "float") to str</span></pre>
+
+      <h3>String interpolation</h3>
+      <p>Writing out the text you want, with gaps in it, and letting values
+      fill the gaps when the line runs. The template stays readable because it
+      is the shape of the answer.</p>
+
+      <h3>f-string</h3>
+      <p>Python's way of doing that. An <code>f</code> before the opening quote,
+      and an expression inside each pair of braces.</p>
+<pre>f"Walkability of {name} is {score}"
+<span class="c"># 'Walkability of Meridian-Kessler is 14.5'</span></pre>
+      <p>Three things come free. The line now looks like what it produces, so
+      you can check it by reading it. Values are converted for you, so
+      <code>str()</code> disappears. And anything can go in the braces, because
+      what is in there is an expression:</p>
+<pre>f"{bike} of {workers} cycle"
+f"{bike / workers}"
+f"{name.upper()}"</pre>
+      <p>After a colon comes a <b>format spec</b>, which controls how the value
+      is written out rather than what it is.</p>
 
       <figure>
         <svg viewBox="0 0 720 220" role="img" aria-label="Anatomy of an f-string format spec.">
@@ -217,6 +232,20 @@ f"{'3101.03':&lt;10}|"   <span class="c"># '3101.03   |'  left-aligned, for tabl
         and value together. It is the fastest print-debugging tool in the
         language and you will use it in step 12 more than you expect.</p>
       </div>
+
+      <h2>Indexing and slicing</h2>
+      <p>A string is a sequence of characters, indexed from zero. A slice
+      <code>s[a:b]</code> takes from <code>a</code> up to but <em>not
+      including</em> <code>b</code>, so the length of the slice is always
+      <code>b - a</code>. That half-open convention is the same one that makes
+      <code>range</code> and array slicing behave, and it is worth accepting
+      early rather than fighting.</p>
+<pre>geoid = "180973401103"
+geoid[0:2]    <span class="c"># '18'      state</span>
+geoid[2:5]    <span class="c"># '097'     county</span>
+geoid[5:11]   <span class="c"># '340110'  tract</span>
+geoid[11:]    <span class="c"># '3'       block group</span>
+geoid[-1]     <span class="c"># '3'       negative indices count from the end</span></pre>
 
       <h2>Exercises</h2>
       <div id="ex1"></div>
