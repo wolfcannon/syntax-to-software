@@ -29,12 +29,22 @@
 "WALKABLE".lower()   <span class="c"># 'walkable'</span></pre>
       <p>Three parts, left to right: the value being asked, the name of
       something it knows how to do, and a pair of brackets.</p>
-      <p>Whatever the method needs goes inside the brackets. Some need nothing,
-      some need one thing, some need more — and the brackets are there either
-      way.</p>
-<pre>"walkable".upper()                   <span class="c"># 'WALKABLE'   nothing needed</span>
-"walkable".count("a")                <span class="c"># 2            how many a's?</span>
-"walkable".replace("walk", "bike")   <span class="c"># 'bikeable'   this, for that</span></pre>
+      <h3>Argument</h3>
+      <p>A value handed to a method so it can do its work. Arguments go inside
+      the brackets, separated by commas.</p>
+      <p>How many a method needs depends on how much it cannot work out for
+      itself:</p>
+<pre>"walkable".upper()                   <span class="c"># 'WALKABLE'   needs nothing — the value is enough</span>
+"walkable".count("a")                <span class="c"># 2            needs to know what to count</span>
+"walkable".replace("walk", "bike")   <span class="c"># 'bikeable'   needs what to replace, and what with</span></pre>
+      <p>Where a method takes more than one, their order is what says which is
+      which. Swap them and you have asked a different question — one that here
+      quietly does nothing at all:</p>
+<pre>"walkable".replace("bike", "walk")   <span class="c"># 'walkable'   there is no "bike" in it to replace</span></pre>
+      <p>Give a method the wrong number of arguments and it says so
+      immediately:</p>
+<pre><span class="o">"walkable".upper("x")
+TypeError: str.upper() takes no arguments (1 given)</span></pre>
 
       <div class="note trap">
         <h4>Leaving the brackets off</h4>
