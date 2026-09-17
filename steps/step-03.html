@@ -31,48 +31,28 @@
       something it knows how to do, and a pair of brackets.</p>
 
       <figure>
-        <svg viewBox="0 0 720 245" role="img" aria-label="A dot looks a method name up in the set belonging to the value's type. Text has upper and replace; a whole number has a different set, with no upper in it.">
-          <text x="14" y="20" class="svg-muted" style="font-size:11px; letter-spacing:.08em">THE VALUE</text>
-          <text x="214" y="20" class="svg-muted" style="font-size:11px; letter-spacing:.08em">WHAT ITS TYPE CAN DO</text>
+        <svg viewBox="0 0 720 200" role="img" aria-label="A method call in three parts: the value, then the method name after a dot, then the arguments in brackets.">
+          <rect class="svg-box" x="14" y="26" width="692" height="56" rx="8"/>
 
-          <rect class="svg-box" x="14" y="30" width="150" height="54" rx="7"/>
-          <text x="32" y="54" class="svg-ink mono" style="font-size:14px">"walkable"</text>
-          <text x="32" y="72" class="svg-muted" style="font-size:10.5px">str</text>
-          <path class="svg-line" d="M170 57 h36" marker-end="url(#d1)"/>
-          <defs><marker id="d1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-            <path d="M0 0 L8 4 L0 8 z" class="svg-muted"/></marker></defs>
+          <rect x="36" y="38" width="122" height="32" rx="5" fill="var(--accent-wash)" stroke="var(--accent)"/>
+          <rect x="158" y="38" width="91" height="32" rx="5" fill="var(--warn-wash)" stroke="var(--warn)"/>
+          <rect x="249" y="38" width="186" height="32" rx="5" fill="var(--ok-wash)" stroke="var(--ok)"/>
+          <text x="40" y="61" class="svg-ink mono" style="font-size:19px">"walkable".replace("walk", "bike")</text>
 
-          <rect x="214" y="30" width="492" height="54" rx="7" fill="var(--accent-wash)" stroke="var(--accent)"/>
-          <g class="svg-accent mono" style="font-size:12px">
-            <text x="232" y="52">.upper()</text>
-            <text x="322" y="52">.lower()</text>
-            <text x="412" y="52">.count()</text>
-            <text x="502" y="52">.replace()</text>
-            <text x="608" y="52">.strip()</text>
-          </g>
-          <text x="232" y="72" class="svg-muted" style="font-size:10.5px">…and forty more, the same for every piece of text</text>
+          <text x="40" y="108" class="svg-accent" style="font-size:12px; font-weight:600">the value</text>
+          <text x="40" y="126" class="svg-muted" style="font-size:11px">what you are asking</text>
 
-          <rect class="svg-box" x="14" y="104" width="150" height="54" rx="7"/>
-          <text x="32" y="128" class="svg-ink mono" style="font-size:14px">18</text>
-          <text x="32" y="146" class="svg-muted" style="font-size:10.5px">int</text>
-          <path class="svg-line" d="M170 131 h36" marker-end="url(#d1)"/>
+          <text x="162" y="108" style="font-size:12px; font-weight:600" fill="var(--warn)">the method</text>
+          <text x="162" y="126" class="svg-muted" style="font-size:11px">what to do to it</text>
 
-          <rect x="214" y="104" width="492" height="54" rx="7" fill="var(--surface-2)" stroke="var(--line-2)"/>
-          <g class="svg-ink mono" style="font-size:12px">
-            <text x="232" y="126">.bit_length()</text>
-            <text x="346" y="126">.to_bytes()</text>
-            <text x="452" y="126">.conjugate()</text>
-          </g>
-          <text x="578" y="126" class="svg-bad mono" style="font-size:12px; text-decoration:line-through">.upper()</text>
-          <text x="232" y="146" class="svg-muted" style="font-size:10.5px">a different set — no .upper() anywhere in it</text>
+          <text x="253" y="108" class="svg-ok" style="font-size:12px; font-weight:600">the arguments</text>
+          <text x="253" y="126" class="svg-muted" style="font-size:11px">what it needs in order to do it</text>
 
-          <line x1="14" y1="180" x2="706" y2="180" class="svg-line"/>
-          <text x="14" y="202" class="svg-ink" style="font-size:12px">The dot looks the name up in the set belonging to the value's type.</text>
-          <text x="14" y="222" class="svg-muted" style="font-size:12px">Not there, and you get an AttributeError — which is really a complaint about the type, not the name.</text>
+          <line x1="14" y1="150" x2="706" y2="150" class="svg-line"/>
+          <text x="14" y="172" class="svg-ink" style="font-size:12px">The dot joins the first two. The brackets are always there, even when nothing goes inside them.</text>
         </svg>
-        <figcaption>The methods do not belong to
-        <code>"walkable"</code>. They belong to <code>str</code>, so every piece
-        of text in your program has exactly the same ones.</figcaption>
+        <figcaption>Read left to right and it is a sentence: take this value,
+        do this to it, using these.</figcaption>
       </figure>
       <h3>Argument</h3>
       <p>A value handed to a method so it can do its work. Arguments go inside
