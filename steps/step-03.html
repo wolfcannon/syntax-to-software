@@ -28,9 +28,13 @@
 <pre>"walkable".upper()   <span class="c"># 'WALKABLE'</span>
 "WALKABLE".lower()   <span class="c"># 'walkable'</span></pre>
       <p>Three parts, left to right: the value being asked, the name of
-      something it knows how to do, and a pair of brackets. Whatever the method
-      needs goes inside them — and the brackets are not optional, even when
-      there is nothing to put in.</p>
+      something it knows how to do, and a pair of brackets.</p>
+      <p>Whatever the method needs goes inside the brackets. Some need nothing,
+      some need one thing, some need more — and the brackets are there either
+      way.</p>
+<pre>"walkable".upper()                   <span class="c"># 'WALKABLE'   nothing needed</span>
+"walkable".count("a")                <span class="c"># 2            how many a's?</span>
+"walkable".replace("walk", "bike")   <span class="c"># 'bikeable'   this, for that</span></pre>
 
       <div class="note trap">
         <h4>Leaving the brackets off</h4>
