@@ -15,75 +15,52 @@
 
       <p class="eyebrow">21 steps and two level-ups</p>
       <h1>From Syntax to Software</h1>
-      <p class="lede">Learning Python by building one real thing: an analysis of
-      whether neighbourhood walkability predicts bike commuting — and what
-      explains the places that don't fit the trend.</p>
+      <ul class="lede-points">
+        <li>One question for the whole course: does neighbourhood walkability
+        predict bike commuting, and what explains the places that don't fit?</li>
+        <li>Every exercise runs in your browser. Nothing to install.</li>
+        <li>Real data, with the failures left in.</li>
+      </ul>
 
-      <p>This is a course for someone with a strong mathematical background and
-      no Python experience, aimed at data work. Every step teaches one layer of
-      the language or of the development process, and every step advances the
-      same project. There are no toy exercises about animals and shapes; by
-      step 3 you are building Census block group identifiers, and by step 7 you
-      are diagnosing why 12 of them failed to join.</p>
+      <p>For someone with a strong mathematical background and no Python
+      experience, aimed at data work. Each step teaches one layer of the
+      language or of the development process and advances the same project: by
+      step 3 you are building census block group identifiers, by step 7 working
+      out why 12 of them refuse to join.</p>
 
-      <p>Between the units sit two <b>level-ups</b>. These are the points where
-      the work moves outward — first into a notebook on your own machine, then
-      out of the notebook into a project that runs from a terminal. Each comes
-      when you have something worth putting there, which is later than courses
-      usually put them, and is the point.</p>
-
-      <div class="note">
-        <h4>The research question</h4>
-        <p>Does neighbourhood walkability predict bike commuting, and what
-        explains the places that don't fit the trend?</p>
-        <p class="small" style="margin-bottom:0">Scope: Marion County, Indiana
-        (state FIPS <code>18</code>, county FIPS <code>097</code>) — 632 census
-        block groups, already in this repo. The capstone scales it up.</p>
-      </div>
-
-      <h2>How the course works</h2>
-      <p>Two halves that do different jobs:</p>
+      <h2>How it works</h2>
       <ul>
-        <li><b>These pages</b> explain the ideas and check your work. The
-        exercises run Python in your browser — nothing is uploaded, nothing is
-        installed, and there is no account. Your answers and progress are
-        remembered locally on this machine.</li>
-        <li><b>Your own machine</b> is where the project ends up. The first
-        level-up, straight after Unit 1, is where you install Jupyter and run
-        what you have written against all 632 block groups instead of eleven.
-        After that the browser keeps explaining and keeps checking small
-        things, but the analysis is yours — because installing packages,
-        reading files, calling an API, using git and running tests <em>is</em>
-        the subject matter from there on.</li>
+        <li><b>These pages</b> explain the ideas and check your work. Your
+        answers and your progress stay in this browser.</li>
+        <li><b>Your own machine</b> is where the project ends up. Two
+        <b>level-ups</b> move it there — into a notebook after Unit 1, then
+        into a project that runs from a terminal. Each arrives once you have
+        something worth putting in it.</li>
       </ul>
 
       <div class="note">
         <h4>About the hidden checks</h4>
-        <p>Each exercise runs your code and then runs a handful of assertions
-        you don't see. That is deliberate. In <b>step 18</b> we stop hiding
-        them — the harness that has been grading you all along turns out to be
-        a few dozen lines of <code>pytest</code>, and you start writing your
-        own.</p>
+        <p>Each exercise runs your code, then runs a handful of assertions you
+        don't see. In <b>step 18</b> we stop hiding them: the harness that has
+        been grading you turns out to be a few dozen lines of
+        <code>pytest</code>, and you start writing your own.</p>
       </div>
 
       <h2>Getting started</h2>
-      <p>The exercises need the page served over HTTP rather than opened
-      straight off the disk, which takes one command you already have:</p>
+      <p>The pages need serving over HTTP rather than opening off the disk:</p>
 <pre>git clone &lt;this repo&gt;
 cd syntax-to-software
 python3 -m http.server 8000
 <span class="c"># then open http://localhost:8000</span></pre>
       <p class="small">The first exercise you run downloads the Python runtime
       (<a href="https://pyodide.org">Pyodide</a>, about 10&nbsp;MB) from a CDN,
-      so step&nbsp;1 needs an internet connection. After that the browser caches
-      it. Nothing else phones home.</p>
+      so step&nbsp;1 needs an internet connection. Nothing else phones home.</p>
 
       <h2>The data</h2>
-      <p>Both datasets are already in <code>data/</code>, so Unit 1 needs no
-      downloads and no API key.</p>
+      <p>Both datasets are in <code>data/</code>. Nothing to download.</p>
       <div class="tablewrap">
       <table>
-        <thead><tr><th>Source</th><th>What it provides</th><th>Geography</th></tr></thead>
+        <thead><tr><th>Source</th><th>What it provides</th><th>Rows</th></tr></thead>
         <tbody>
           <tr><td>EPA National Walkability Index</td>
               <td>Walkability score 1–20 plus its four ranked inputs</td>
@@ -93,69 +70,58 @@ python3 -m http.server 8000
               <td class="mono">630 block groups</td></tr>
           <tr><td>PeopleForBikes City Ratings</td>
               <td>Bike network quality, 0–100 <span class="small">(capstone only)</span></td>
-              <td class="mono">city</td></tr>
+              <td class="mono">by city</td></tr>
         </tbody>
       </table>
       </div>
+      <p>They do not line up. 7 block groups have a walkability score and no
+      commute data, 5 have commute data and no score, 14 have no workers at
+      all, and 9 carry the census "estimate unavailable" sentinel
+      <code>-666666666</code>. You meet all four in Unit 1.</p>
+
       <div class="note warn">
         <h4>One honest caveat</h4>
-        <p>The walkability data is real, pulled from the EPA. The commute data
-        is currently <b>synthetic</b> — shaped exactly like the real API
-        response, with a plausible relationship to the real walkability scores,
-        but generated rather than measured. Everything you learn from Units 1–3
-        is unaffected; the capstone's <em>findings</em> are not meaningful until
-        it is replaced. <code>README.md</code> has the three commands that
-        replace it, and they need a free Census API key.</p>
+        <p>The walkability data is real. The commute data is
+        <b>synthetic</b> — shaped like the real thing and plausibly related to
+        the real scores, but generated. Units 1–3 are unaffected; the
+        capstone's findings are not meaningful until it is replaced.
+        <code>README.md</code> has the three commands.</p>
       </div>
 
-      <p>They do not line up perfectly, and that is the point: 7 block groups
-      have a walkability score and no commute data, 5 have commute data and no
-      walkability score, 14 have no workers at all, and 9 carry the Census
-      "estimate unavailable" sentinel <code>-666666666</code>. You meet all four
-      of those in Unit 1.</p>
-
-      <h2 id="roadmap">The shape of it</h2>
+      <h2>The shape of it</h2>
 
       <h3>Unit 1 — Foundations <span class="small">(steps 1–8 · available now)</span></h3>
-      <p>Read, represent, and transform the project data using only the core
-      language. No third-party packages, no files, nothing to install — the
-      data arrives as a literal you can read with your eyes, and every exercise
-      runs in this browser.</p>
+      <p>Read, represent and transform the project's data with nothing but the
+      core language. No packages, no files.</p>
 
       <h3>↑ Level up: Jupyter notebooks <span class="small">(available now)</span></h3>
       <p>Install Jupyter, learn the one genuinely tricky thing about notebooks
-      — that they remember more than they show — and run your Unit 1 pipeline
-      against all 632 block groups. The first real evidence about the research
-      question.</p>
+      — they remember more than they show — and run what you have written
+      against all 632 block groups instead of eleven.</p>
 
       <h3>Unit 2 — Correctness <span class="small">(steps 9–12)</span></h3>
-      <p>Equivalent forms of the same computation; reading tracebacks;
-      refactoring while proving the output didn't change; exceptions and the
-      failure modes this data actually has; and finally real files, which
-      retires the sample cell for good.</p>
+      <p>Equivalent forms of one computation; reading tracebacks; refactoring
+      while proving the output did not change; the failure modes this data
+      actually has; and real files, which retire the pasted-in sample for
+      good.</p>
 
       <h3>Unit 3 — Structure and the ecosystem <span class="small">(steps 13–16)</span></h3>
-      <p>Modules, classes and dataclasses, choosing third-party packages
-      (pandas, matplotlib, scipy — and rebuilding the hand-written join to check
-      it), and talking to the Census API yourself.</p>
+      <p>Modules, classes, and choosing third-party packages — pandas,
+      matplotlib, scipy — then rebuilding the hand-written join to check it
+      against one. Step 16 has you fetch the commute data yourself, which needs
+      a free key from
+      <a href="https://api.census.gov/data/key_signup.html">api.census.gov</a>.</p>
 
       <h3>↑ Level up: Notebooks to scripts <span class="small">(available now)</span></h3>
-      <p>Virtual environments, dependency pinning, and splitting the notebook
+      <p>Virtual environments, pinned dependencies, and splitting the notebook
       into <code>fetch</code> / <code>clean</code> / <code>analyze</code> /
       <code>run</code>. The test is deleting the environment, rebuilding it
       from a file, and finding out what your analysis secretly depended on.</p>
 
       <h3>Unit 4 — Development practice <span class="small">(steps 17–21)</span></h3>
-      <p>Git, pytest, the reproduce&rarr;test&rarr;fix&rarr;commit cycle run
+      <p>Git, pytest, the reproduce&rarr;test&rarr;fix&rarr;commit cycle
       against two realistic tickets, project layout, and a capstone that
-      answers the research question honestly — margins of error included.</p>
-
-      <div class="note warn">
-        <h4>Needed later, not now</h4>
-        <p>Step 16 has you call the Census API yourself, which needs a free key
-        from <a href="https://api.census.gov/data/key_signup.html">api.census.gov</a>.
-        Nothing before it does, and neither level-up does.</p>
-      </div>
+      answers the question honestly — margins of error included.</p>
 
       <h2>Texts</h2>
       <ul>
