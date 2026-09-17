@@ -171,6 +171,21 @@ pre .g{color:var(--ok)}
 .note.warn h4{color:var(--warn)} .note.trap h4{color:var(--bad)}
 .note :last-child{margin-bottom:0}
 
+/* ---------- colour-coded parts list ---------- */
+.parts{list-style:none; margin:0 0 18px; padding:0; display:grid; gap:8px}
+.parts li{display:flex; gap:12px; align-items:baseline; font-size:14.5px}
+.parts .k{
+  flex:0 0 92px; font:700 13px/1.5 var(--mono); letter-spacing:.01em;
+}
+.parts .k.v{color:var(--accent)}
+.parts .k.d{color:var(--bad)}
+.parts .k.m{color:var(--warn)}
+.parts .k.a{color:var(--ok)}
+@media (max-width:520px){
+  .parts li{display:block}
+  .parts .k{display:block; margin-bottom:1px}
+}
+
 /* ---------- premise block ---------- */
 .premise{
   border-left:3px solid var(--accent); padding:4px 0 4px 18px;

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Step 3 — Strings and formatting</title>
-<link rel="stylesheet" href="../assets/course.css?v=90b252d8">
+<link rel="stylesheet" href="../assets/course.css?v=05c68d00">
 </head>
 <body>
 <div class="shell">
@@ -25,36 +25,36 @@
       <p>In step 2 you met five primitive types. One thing every type has in
       common is the ability to carry <b>methods</b>: things a value of that type
       knows how to do. Methods are accessed with a dot.</p>
-<pre>"walkable".upper()   <span class="c"># 'WALKABLE'</span>
-"WALKABLE".lower()   <span class="c"># 'walkable'</span></pre>
-      <p>Three parts, left to right: the value being asked, the name of
-      something it knows how to do, and a pair of brackets.</p>
 
       <figure>
-        <svg viewBox="0 0 720 190" role="img" aria-label="A method call in three parts, marked underneath: the value, then the method name, then the arguments in brackets, with the joining dot picked out between the first two.">
-          <rect class="svg-box" x="14" y="22" width="692" height="52" rx="8"/>
-          <text x="40" y="55" class="svg-ink mono" style="font-size:19px">"walkable"<tspan fill="var(--bad)" style="font-weight:700">.</tspan>replace("walk", "bike")</text>
+        <svg viewBox="0 0 720 118" role="img" aria-label="A method call marked underneath in three parts: the value, then the method name, then the arguments in brackets, with the joining dot picked out between the first two.">
+          <rect class="svg-box" x="14" y="16" width="692" height="52" rx="8"/>
+          <text x="40" y="49" class="svg-ink mono" style="font-size:19px">"walkable"<tspan fill="var(--bad)" style="font-weight:700">.</tspan>replace("walk", "bike")</text>
 
-          <path d="M41 74 V82 H152 V74" fill="none" stroke="var(--accent)"/>
-          <path d="M168 74 V82 H243 V74" fill="none" stroke="var(--warn)"/>
-          <path d="M248 74 V82 H426 V74" fill="none" stroke="var(--ok)"/>
-          <line x1="155" y1="78" x2="165" y2="78" stroke="var(--bad)" stroke-width="2"/>
+          <path d="M41 68 V76 H152 V68" fill="none" stroke="var(--accent)"/>
+          <path d="M168 68 V76 H243 V68" fill="none" stroke="var(--warn)"/>
+          <path d="M248 68 V76 H426 V68" fill="none" stroke="var(--ok)"/>
+          <line x1="155" y1="72" x2="165" y2="72" stroke="var(--bad)" stroke-width="2"/>
 
-          <text x="41" y="102" class="svg-accent" style="font-size:12px; font-weight:600">the value</text>
-          <text x="41" y="119" class="svg-muted" style="font-size:11px">what you are asking</text>
-
-          <text x="168" y="102" style="font-size:12px; font-weight:600" fill="var(--warn)">the method</text>
-          <text x="168" y="119" class="svg-muted" style="font-size:11px">what to do to it</text>
-
-          <text x="248" y="102" class="svg-ok" style="font-size:12px; font-weight:600">the arguments</text>
-          <text x="248" y="119" class="svg-muted" style="font-size:11px">what it needs in order to do it</text>
-
-          <line x1="14" y1="142" x2="706" y2="142" class="svg-line"/>
-          <text x="14" y="164" class="svg-ink" style="font-size:12px"><tspan fill="var(--bad)" style="font-weight:700">The dot</tspan> joins the value to the method. The brackets are always there, even when nothing goes inside them.</text>
+          <text x="41" y="102" class="svg-accent" style="font-size:15px; font-weight:600">value</text>
+          <text x="168" y="102" style="font-size:15px; font-weight:600" fill="var(--warn)">method</text>
+          <text x="248" y="102" class="svg-ok" style="font-size:15px; font-weight:600">arguments</text>
         </svg>
         <figcaption>Read left to right and it is a sentence: take this value,
         do this to it, using these.</figcaption>
       </figure>
+
+      <ul class="parts">
+        <li><span class="k v">value</span><span>what you are asking</span></li>
+        <li><span class="k d">dot</span><span>joins the value to the method</span></li>
+        <li><span class="k m">method</span><span>what to do to it</span></li>
+        <li><span class="k a">arguments</span><span>what it needs in order to do it</span></li>
+      </ul>
+
+      <p>The brackets are always there, even when nothing goes inside them:</p>
+<pre>"walkable".upper()   <span class="c"># 'WALKABLE'</span>
+"WALKABLE".lower()   <span class="c"># 'walkable'</span></pre>
+
       <h3>Argument</h3>
       <p>A value handed to a method so it can do its work. Arguments go inside
       the brackets, separated by commas.</p>
