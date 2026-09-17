@@ -27,7 +27,7 @@
       knows how to do. Methods are accessed with a dot.</p>
 
       <figure>
-        <svg viewBox="0 0 720 118" role="img" aria-label="A method call marked underneath in three parts: the value, then the method name, then the arguments in parentheses, with the joining dot picked out between the first two.">
+        <svg viewBox="0 0 720 200" role="img" aria-label="A method call marked underneath in three parts — the value, the method name, the arguments in parentheses — with the joining dot picked out, and an arrow down to the value the call returns.">
           <rect class="svg-box" x="14" y="16" width="692" height="52" rx="8"/>
           <text x="40" y="49" class="svg-ink mono" style="font-size:19px">"walkable"<tspan fill="var(--bad)" style="font-weight:700">.</tspan>replace("walk", "bike")</text>
 
@@ -36,9 +36,18 @@
           <path d="M248 68 V76 H426 V68" fill="none" stroke="var(--ok)"/>
           <line x1="155" y1="72" x2="165" y2="72" stroke="var(--bad)" stroke-width="2"/>
 
-          <text x="41" y="102" class="svg-accent" style="font-size:15px; font-weight:600">value</text>
-          <text x="168" y="102" style="font-size:15px; font-weight:600" fill="var(--warn)">method</text>
-          <text x="248" y="102" class="svg-ok" style="font-size:15px; font-weight:600">arguments</text>
+          <text x="41" y="100" class="svg-accent" style="font-size:15px; font-weight:600">value</text>
+          <text x="168" y="100" style="font-size:15px; font-weight:600" fill="var(--warn)">method</text>
+          <text x="248" y="100" class="svg-ok" style="font-size:15px; font-weight:600">arguments</text>
+
+          <path class="svg-line" d="M234 118 V142" marker-end="url(#r1)"/>
+          <defs><marker id="r1" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+            <path d="M0 0 L9 4.5 L0 9 z" class="svg-muted"/></marker></defs>
+
+          <rect x="150" y="148" width="170" height="38" rx="7" fill="var(--surface-2)" stroke="var(--line-2)"/>
+          <text x="170" y="173" class="svg-ink mono" style="font-size:15px">'bikeable'</text>
+          <text x="338" y="166" style="font-size:13px; font-weight:600" fill="var(--ink-2)">return value</text>
+          <text x="338" y="182" class="svg-muted" style="font-size:11px">what the call becomes, once it has run</text>
         </svg>
       </figure>
 
@@ -49,10 +58,17 @@
         <li><span class="k a">arguments</span><span>what it needs in order to do it</span></li>
       </ul>
 
+      <p>Almost every method hands something back. That is the call's
+      <b>return value</b>, and the call <em>becomes</em> it — in the same way
+      that <code>2 + 2</code> is <code>4</code>, the call above is
+      <code>'bikeable'</code>. A method call is an expression, as step 1 uses
+      the word.</p>
+
       <div class="note">
         <h4>Tip 💡: read it left to right</h4>
         <p style="margin-bottom:0">A method call is a sentence in that order:
-        take this value, do this to it, using these.</p>
+        take this value, do this to it, using these — and hand back the
+        result.</p>
       </div>
 
       <p>The parentheses surrounding the argument list are not decoration. The
