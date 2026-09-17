@@ -153,6 +153,9 @@ pre .c{color:var(--muted); font-style:italic}
 pre .o{color:var(--bad)}
 pre .g{color:var(--ok)}
 
+.tight{margin:0 0 20px; padding-left:19px}
+.tight li{margin:2px 0; font-size:14.5px}
+
 /* ---------- callouts ---------- */
 .note{
   border:1px solid var(--line); border-left:3px solid var(--accent);
