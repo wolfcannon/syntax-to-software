@@ -239,6 +239,7 @@ other way round. Exercises should meet them rather than route around them.
 ## Verification — run all three, every time
 
 ```sh
+python3 scripts/stamp_assets.py        # after ANY edit under assets/
 python3 scripts/check_vocabulary.py    # nothing used before it is taught
 python3 scripts/verify_exercises.py    # checks pass on solutions, starters don't,
                                        # nav.js ids match the pages
@@ -249,5 +250,12 @@ python3 -m http.server 8000            # then read the page
 the interpreter the browser actually loads, `npm install pyodide@0.26.4` and
 drive `_run_exercise` the same way — worth doing before calling a unit done.
 
-A page is finished when all three are green **and** you have read it start to
+`python3 -m http.server` sends no cache headers, so a browser will happily keep
+serving an old `course.css` after you have edited it — which looks exactly like
+a CSS bug and has already cost one round of review. `stamp_assets.py` puts a
+content hash in every asset URL so there is nothing stale to reuse;
+`verify_exercises.py` fails if any stamp is out of date. If a page looks wrong,
+run it before believing what you see.
+
+A page is finished when all of them are green **and** you have read it start to
 finish in a browser, because neither script can tell you the prose is any good.

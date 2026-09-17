@@ -91,10 +91,16 @@ directly if you're working by hand.
 Three checks, all of which must be green before a page is done:
 
 ```sh
+python3 scripts/stamp_assets.py       # after editing anything in assets/
 python3 scripts/check_vocabulary.py   # nothing used before the step that teaches it
-python3 scripts/verify_exercises.py   # solutions pass, starters don't, nav ids match
+python3 scripts/verify_exercises.py   # solutions pass, starters don't, nav ids match,
+                                      # quizzes are answerable, asset stamps current
 python3 -m http.server 8000           # then actually read it
 ```
+
+Asset links carry a content hash (`course.css?v=7cf7e96b`) because
+`http.server` sends no cache headers and a browser will otherwise keep serving
+a stale stylesheet after you edit it.
 
 `scripts/vocabulary.json` is the ledger of which step first shows each piece of
 Python, plus written exemptions where a page deliberately builds something in

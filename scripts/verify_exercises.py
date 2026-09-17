@@ -9,7 +9,7 @@ so this runs the same harness the browser runs:
 Run from the repo root:  node scripts/extract_exercises.mjs > /tmp/exercises.json
                          python3 scripts/verify_exercises.py
 """
-import json, pathlib, re, subprocess, sys
+import hashlib, json, pathlib, re, subprocess, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -21,6 +21,26 @@ def harness_source():
     if not m:
         sys.exit("could not find HARNESS in assets/runner.js")
     return m.group(1).replace("\\`", "`").replace("\\$", "$")
+
+
+def check_stamps():
+    """Every asset link must carry the current content hash of its file."""
+    link = re.compile(r'(?:href|src)="(?:\.\./)?assets/([\w.-]+)\?v=([0-9a-f]+)"')
+    bare = re.compile(r'(?:href|src)="(?:\.\./)?assets/([\w.-]+)"')
+    want = {p.name: hashlib.sha256(p.read_bytes()).hexdigest()[:8]
+            for p in (ROOT / "assets").glob("*")}
+    problems = []
+    for page in [ROOT / "index.html", *sorted((ROOT / "steps").glob("*.html"))]:
+        text = page.read_text()
+        name = page.name
+        for asset in bare.findall(text):
+            problems.append((name, f"{asset} is linked with no ?v= stamp",
+                             "run python3 scripts/stamp_assets.py"))
+        for asset, got in link.findall(text):
+            if want.get(asset) and got != want[asset]:
+                problems.append((name, f"{asset} stamp is stale ({got} != {want[asset]})",
+                                 "run python3 scripts/stamp_assets.py"))
+    return problems
 
 
 def check_quizzes(quizzes):
@@ -101,6 +121,7 @@ def main():
 
     failures += check_nav(exercises)
     failures += check_quizzes(quizzes)
+    failures += check_stamps()
 
     print(f"{len(exercises)} exercises, {n_checks} checks, {len(quizzes)} quizzes")
     for ident, what, detail in failures:
