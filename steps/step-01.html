@@ -17,7 +17,7 @@
       <h1>Keywords, types, and syntax</h1>
       <ul class="lede-points">
         <li>35 words Python keeps for itself.</li>
-        <li>Indentation is grammar, not style.</li>
+        <li>Indentation is syntax, not style.</li>
         <li>A <code>SyntaxError</code> means nothing ran at all.</li>
       </ul>
 
@@ -32,6 +32,20 @@
 
       <div class="kwgrid" id="kwgrid"></div>
       <div class="kw-about" id="kwabout"></div>
+
+      <h2>Syntax</h2>
+      <p>The rules that decide whether a piece of text is Python at all.</p>
+
+      <p>Syntax is about arrangement: which characters may follow which, where
+      a colon is required, what has to be indented, what has to be closed. It
+      is checked before anything runs, and it is checked completely — Python
+      reads the whole thing first and refuses to start if any part of it does
+      not fit the rules.</p>
+
+      <p>Syntax says nothing about whether a program is any good. Text that
+      obeys every rule can still compute the wrong number, and text that
+      breaks one is not a program yet. Those are separate failures, and telling
+      them apart is most of what this page is for.</p>
 
       <h2>Blocks and scope</h2>
 
@@ -83,7 +97,7 @@
       </div>
 
       <h2>Indentation is syntax</h2>
-      <p>Indentation is not presentation. It is grammar:</p>
+      <p>Indentation is not presentation:</p>
       <ul>
         <li>A colon opens a block.</li>
         <li>The indented lines under it <em>are</em> the block.</li>
@@ -253,7 +267,7 @@ walk_raw[1]  <span class="c"># ['18', '097', '310103', '2', '3.666667', '7', '3'
     ["nonlocal", "Like <code>global</code>, but for an enclosing function.", null],
     ["not", "Flips a condition.", "Step 6"],
     ["or", "True when either side is true.", "Step 6"],
-    ["pass", "Do nothing. A placeholder where the grammar needs a body.", "The starters below"],
+    ["pass", "Do nothing. A placeholder where the syntax requires a body.", "The starters below"],
     ["raise", "Signal an error yourself.", "Step 11"],
     ["return", "Hand a value back out of a function.", "Step 8"],
     ["try", "Attempt something that might fail.", "Step 11"],
