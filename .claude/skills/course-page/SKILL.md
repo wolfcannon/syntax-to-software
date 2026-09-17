@@ -252,6 +252,11 @@ Rules, each of which has already caught a real bug:
 - **Put given data in `setup`, not the starter**, and show it in the prompt if
   they need to see it. The editor is for their work.
 - Comment the solution with *why*, especially the trap it avoids.
+- **Rewriting a starter is safe.** Drafts are keyed by a hash of the starter
+  they were typed against, so changing one shows the new code instead of
+  restoring somebody's draft of the old, and the exercise's passed badge is
+  cleared with it. If an edit ever seems not to reach the browser, check this
+  and `stamp_assets.py` before anything else — both have caused it once.
 - **Checks can see the code, not just its results.** The namespace carries
   `__source__` (what the learner typed) and `__stdout__` (what it printed), so
   an exercise can be about the shape of the code — "is this line indented",

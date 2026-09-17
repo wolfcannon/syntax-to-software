@@ -24,8 +24,47 @@ const COURSE = (function () {
     if (ok) d[id] = true; else delete d[id];
     writeDone(d); paintProgress();
   }
-  const saveCode = (id, src) => { try { localStorage.setItem(LS_CODE + id, src); } catch {} };
-  const loadCode = (id) => { try { return localStorage.getItem(LS_CODE + id); } catch { return null; } };
+  /* A draft belongs to the starter it was typed against. Key it by a hash of
+     that starter, so rewriting an exercise shows the new code instead of
+     silently restoring a draft of the old one — and an exercise that has
+     changed is no longer reported as already passed. */
+  function hash(text) {
+    let h = 2166136261;
+    for (let i = 0; i < text.length; i++) {
+      h ^= text.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return (h >>> 0).toString(36);
+  }
+
+  function draftKey(id, starter) { return LS_CODE + id + ":" + hash(starter || ""); }
+
+  function saveCode(id, starter, src) {
+    try { localStorage.setItem(draftKey(id, starter), src); } catch {}
+  }
+  function loadCode(id, starter) {
+    try { return localStorage.getItem(draftKey(id, starter)); } catch { return null; }
+  }
+
+  /* Drop drafts of earlier versions of this exercise, and the legacy
+     unversioned key, so storage does not accumulate dead copies. */
+  function dropStaleDrafts(id, starter) {
+    const keep = draftKey(id, starter);
+    const prefix = LS_CODE + id;
+    try {
+      const doomed = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k !== keep &&
+            (k === prefix || k.startsWith(prefix + ":"))) doomed.push(k);
+      }
+      if (doomed.length) {
+        doomed.forEach((k) => localStorage.removeItem(k));
+        // The exercise has changed since it was last passed.
+        markDone(id, false);
+      }
+    } catch {}
+  }
 
   /* ---------- pyodide, loaded once, on first Run ------------------------- */
   let pyodidePromise = null;
@@ -163,7 +202,8 @@ def _run_exercise(setup_src, user_src, checks_json):
 
     const ta = el("textarea");
     ta.spellcheck = false;
-    ta.value = loadCode(id) ?? (spec.starter || "");
+    dropStaleDrafts(id, spec.starter || "");
+    ta.value = loadCode(id, spec.starter || "") ?? (spec.starter || "");
     ta.rows = Math.max(4, ta.value.split("\n").length + 1);
     body.append(ta);
 
@@ -190,7 +230,7 @@ def _run_exercise(setup_src, user_src, checks_json):
 
     if (readDone()[id]) { card.classList.add("passed"); state.textContent = "passed"; }
 
-    ta.addEventListener("input", () => saveCode(id, ta.value));
+    ta.addEventListener("input", () => saveCode(id, spec.starter || "", ta.value));
     ta.addEventListener("keydown", (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key === "Enter") { e.preventDefault(); go(); }
       if (e.key === "Tab") {
@@ -201,7 +241,7 @@ def _run_exercise(setup_src, user_src, checks_json):
       }
     });
     reset.addEventListener("click", () => {
-      ta.value = spec.starter || ""; saveCode(id, ta.value);
+      ta.value = spec.starter || ""; saveCode(id, spec.starter || "", ta.value);
       out.className = "out"; out.innerHTML = "";
     });
     run.addEventListener("click", go);

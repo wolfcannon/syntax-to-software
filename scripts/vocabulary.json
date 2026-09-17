@@ -240,11 +240,6 @@
   "exemptions": [
     {
       "page": "step-01",
-      "concept": "for loop",
-      "why": "the indentation demo in the block diagram uses one; the loop is scenery for block structure, never iterated over"
-    },
-    {
-      "page": "step-01",
       "concept": "if statement",
       "why": "the indentation quiz is ABOUT block structure \u2014 the if is scenery, and the learner predicts output rather than writing a condition"
     },
