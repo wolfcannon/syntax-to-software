@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Step 1 — Keywords, types, and syntax</title>
-<link rel="stylesheet" href="../assets/course.css?v=7cf7e96b">
+<link rel="stylesheet" href="../assets/course.css?v=a787085c">
 </head>
 <body>
 <div class="shell">
@@ -245,7 +245,7 @@ walk_raw[1]  <span class="c"># ['18', '097', '310103', '2', '3.666667', '7', '3'
 </div>
 
 <script src="../assets/nav.js?v=d771c06c"></script>
-<script src="../assets/runner.js?v=5ebfc0d1"></script>
+<script src="../assets/runner.js?v=f7de4f67"></script>
 <script src="../assets/sample.js?v=3b94601e"></script>
 <script>
 COURSE.quiz("q1", {
@@ -258,42 +258,28 @@ COURSE.quiz("q1", {
     {
       label: "A",
       code: "<pre>score = 14.5\nlabel = \"walkable\"\nif score &lt;= 5.75:\n    label = \"not walkable\"\n    print(label)</pre>",
-      annotated:
-        "<pre>score = 14.5                  <span class='c'># a walkability score</span>\n" +
-        "label = \"walkable\"            <span class='c'># label is set here, before the if</span>\n" +
-        "if score &lt;= 5.75:             <span class='c'># 14.5 is not &lt;= 5.75, so the block is skipped</span>\n" +
-        "    label = \"not walkable\"    <span class='c'># indented: inside the block</span>\n" +
-        "    print(label)              <span class='c'># indented: inside the block too</span></pre>",
+      highlighted: "<pre><span class='ln'>score = 14.5</span><span class='ln'>label = \"walkable\"</span><span class='ln hl'>if score &lt;= 5.75:</span><span class='ln'>    label = \"not walkable\"</span><span class='ln hl'>    print(label)</span></pre>",
       question: "What does A print?",
       options: [
-        { html: "Nothing at all", correct: true },
-        { html: "<code>walkable</code>",
-          why: "<p>That is B. Here the <code>print</code> is indented into the " +
-               "block, and the block never runs.</p>" },
-        { html: "<code>not walkable</code>",
-          why: "<p><code>label</code> is only reassigned inside the block, and " +
-               "that block never runs — so it is never <code>not walkable</code>.</p>" }
+        { html: "Nothing at all", correct: true,
+          why: "The <code>print</code> is indented, so it is inside the block — " +
+               "and the block never runs." },
+        { html: "<code>walkable</code>" },
+        { html: "<code>not walkable</code>" }
       ]
     },
     {
       label: "B",
       code: "<pre>score = 14.5\nlabel = \"walkable\"\nif score &lt;= 5.75:\n    label = \"not walkable\"\nprint(label)</pre>",
-      annotated:
-        "<pre>score = 14.5                  <span class='c'># a walkability score</span>\n" +
-        "label = \"walkable\"            <span class='c'># label is set here, before the if</span>\n" +
-        "if score &lt;= 5.75:             <span class='c'># 14.5 is not &lt;= 5.75, so the block is skipped</span>\n" +
-        "    label = \"not walkable\"    <span class='c'># indented: inside the block</span>\n" +
-        "print(label)                  <span class='c'># at the margin: outside the block</span></pre>",
+      highlighted: "<pre><span class='ln'>score = 14.5</span><span class='ln'>label = \"walkable\"</span><span class='ln hl'>if score &lt;= 5.75:</span><span class='ln'>    label = \"not walkable\"</span><span class='ln hl'>print(label)</span></pre>",
       question: "What does B print?",
       options: [
-        { html: "Nothing at all",
-          why: "<p>That is A. Here <code>print</code> is back at the margin, " +
-               "outside the block, so it runs whatever the score is.</p>" },
-        { html: "<code>walkable</code>", correct: true },
-        { html: "<code>not walkable</code>",
-          why: "<p>The line that would have changed <code>label</code> is inside " +
-               "the block, and the block never runs. <code>label</code> is still " +
-               "what it was set to on line 2.</p>" }
+        { html: "Nothing at all" },
+        { html: "<code>walkable</code>", correct: true,
+          why: "The <code>print</code> is back at the margin, outside the block, " +
+               "so it runs whatever the score is — and <code>label</code> is " +
+               "still what line 2 set it to." },
+        { html: "<code>not walkable</code>" }
       ]
     }
   ],

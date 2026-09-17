@@ -131,12 +131,26 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
    });
    ```
 
-   `annotated` is the hint. Get a part wrong and its code is replaced by the
-   same code with a comment on every line, and the learner is told to read them
-   and try again. Two rules for writing those comments: say what each line
-   **does**, never what the program **prints** — the reader must still assemble
-   the answer — and annotate only the part they got wrong, which the component
-   handles, so a comparison is never spoiled by a hint on the half they read
+   Feedback comes in three stages, and the component handles all of it:
+
+   | | What the learner gets |
+   | --- | --- |
+   | Right | **Correct!**, a green outline on the card, and `why` |
+   | Wrong once | "Read the code carefully and try again. Pay attention to the indentation." Nothing else — no explanation, no hint about which part of it they misread. |
+   | Wrong twice | The answer, the correct option's `why`, and `highlighted` swapped in for `code` |
+
+   Stage two is deliberately bare. A reader who is one glance from seeing it
+   should get another glance, not an explanation that does the seeing for them.
+
+   `highlighted` is the same snippet with the deciding lines marked — wrap every
+   line in `<span class="ln">` and add `hl` to the ones that matter, with no
+   newlines between them. Mark the two or three lines the answer turns on, not
+   the whole block: the highlight is the teaching, so highlighting everything
+   teaches nothing.
+
+   The correct option's `why` is required, because it is what gets revealed.
+   Wrong options need nothing. Each part tracks its own attempts, so a
+   comparison is never spoiled by a reveal on the half the learner read
    correctly.
 
    One submit rather than two is the point: the learner has to commit to a

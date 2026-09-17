@@ -256,20 +256,24 @@ def _run_exercise(setup_src, user_src, checks_json):
   }
 
   /* ---------- inline quiz ------------------------------------------------
-     A question the learner answers by clicking, with no Python behind it —
-     instant, and it does not pull down the runtime. Two shapes:
+     A question answered by clicking, with no Python behind it — instant, and
+     it does not pull down the runtime. Two shapes:
 
-       options: [...]   one question, answered on click
-       parts:   [...]   several questions, answered together on one submit
+       options: [...]   one question, graded on click
+       parts:   [...]   several questions, graded together on one submit
 
-     A wrong answer is the best teaching moment on a page, so every wrong
-     option carries its own explanation rather than a bare "try again". */
+     Feedback comes in three stages, so a reader who is close gets to stay in
+     the problem: right answer -> Correct! and the explanation; first wrong
+     answer -> a nudge and nothing else; second wrong answer -> the answer,
+     with the lines that decide it highlighted in the code. */
+  const RETRY = "Read the code carefully and try again. " +
+                "Pay attention to the indentation.";
+
   function quiz(mountId, spec) {
     const mount = document.getElementById(mountId);
     if (!mount) return;
     const id = spec.id || mountId;
-    const parts = spec.parts ||
-      [{ options: spec.options, single: true }];
+    const parts = spec.parts || [{ options: spec.options, single: true }];
 
     const card = el("section", "quiz");
     const head = el("div", "quiz-head");
@@ -280,15 +284,17 @@ def _run_exercise(setup_src, user_src, checks_json):
     why.hidden = true;
 
     const chosen = new Array(parts.length).fill(null);
+    const wrongCount = new Array(parts.length).fill(0);
+    const revealed = new Array(parts.length).fill(false);
+
     const rendered = parts.map((part, pi) => {
       const wrap = el("div", "quiz-part");
       if (part.label) wrap.append(el("p", "lab", part.label));
       if (part.code) wrap.insertAdjacentHTML("beforeend", part.code);
-      const codeEl = wrap.querySelector("pre");
       if (part.question) wrap.append(el("p", "ask", part.question));
       const opts = el("div", "quiz-opts");
-      const partWhy = el("div", "part-why");
-      partWhy.hidden = true;
+      const note = el("div", "part-note");
+      note.hidden = true;
       const buttons = (part.options || []).map((opt, i) => {
         const b = el("button", "quiz-opt");
         b.type = "button";
@@ -299,8 +305,8 @@ def _run_exercise(setup_src, user_src, checks_json):
         opts.append(b);
         return b;
       });
-      wrap.append(opts, partWhy);
-      return { wrap, buttons, partWhy, codeEl, annotated: false };
+      wrap.append(opts, note);
+      return { wrap, buttons, note };
     });
 
     if (parts.length > 1) {
@@ -311,76 +317,94 @@ def _run_exercise(setup_src, user_src, checks_json):
       rendered.forEach((r) => body.append(r.wrap));
     }
 
-    let submit = null;
+    let submit = null, hint = null;
     if (!parts[0].single) {
       const bar = el("div", "quiz-bar");
-      submit = el("button", "primary", "Check both");
+      submit = el("button", "primary", parts.length > 1 ? "Check both" : "Check");
       submit.type = "button";
       submit.disabled = true;
-      const hint = el("span", "hint", "answer both, then check");
+      hint = el("span", "hint", "answer both, then check");
       bar.append(submit, hint);
-      submit.addEventListener("click", () => grade(hint));
+      submit.addEventListener("click", grade);
       body.append(bar);
     }
     body.append(why);
     card.append(head, body);
     mount.replaceWith(card);
 
-    if (readDone()[id]) restore();
+    if (readDone()[id]) settle(readDone()[id] === "correct");
 
     function pick(pi, oi) {
-      if (card.classList.contains("answered")) return;
+      if (card.classList.contains("done") || revealed[pi]) return;
       chosen[pi] = oi;
-      const r = rendered[pi];
-      r.buttons.forEach((b, i) => {
+      rendered[pi].buttons.forEach((b, i) => {
         b.setAttribute("aria-pressed", String(i === oi));
         b.classList.remove("wrong", "right", "faded");
       });
-      r.partWhy.hidden = true;
-      if (submit) {
-        submit.disabled = chosen.some((c) => c === null);
-      } else {
-        grade();
-      }
+      rendered[pi].note.hidden = true;
+      if (submit) submit.disabled = chosen.some((c) => c === null);
+      else grade();
     }
 
-    function grade(hint) {
-      let allRight = true;
+    function reveal(pi) {
+      const part = parts[pi];
+      const r = rendered[pi];
+      const ci = part.options.findIndex((o) => o.correct);
+      revealed[pi] = true;
+      if (part.highlighted) {
+        const pre = r.wrap.querySelector("pre");
+        if (pre) { pre.insertAdjacentHTML("afterend", part.highlighted); pre.remove(); }
+      }
+      r.buttons.forEach((b, i) => {
+        b.disabled = true;
+        if (i === ci) b.classList.add("right");
+        else if (!b.classList.contains("wrong")) b.classList.add("faded");
+      });
+      r.note.className = "part-note answer";
+      // Name the answer by its text, not its letter: in a two-part quiz the
+      // option letters collide with the part labels.
+      r.note.innerHTML =
+        "<p><b>The answer:</b> " + part.options[ci].html + ".</p>" +
+        (part.options[ci].why ? "<p>" + part.options[ci].why + "</p>" : "");
+      r.note.hidden = false;
+    }
+
+    function grade() {
+      let allRight = true, anyRevealed = false;
       parts.forEach((part, pi) => {
+        if (revealed[pi]) { anyRevealed = true; return; }
         const opt = part.options[chosen[pi]];
         const r = rendered[pi];
         if (opt && opt.correct) {
           r.buttons[chosen[pi]].classList.add("right");
-          r.partWhy.hidden = true;
+          r.note.hidden = true;
+          return;
+        }
+        allRight = false;
+        r.buttons[chosen[pi]].classList.add("wrong");
+        wrongCount[pi] += 1;
+        if (wrongCount[pi] >= 2) {
+          reveal(pi);
+          anyRevealed = true;
         } else {
-          allRight = false;
-          if (opt) {
-            r.buttons[chosen[pi]].classList.add("wrong");
-            r.partWhy.innerHTML = opt.why || "<p>Not that one.</p>";
-            r.partWhy.hidden = false;
-            // Wrong once: annotate the code line by line. It explains what
-            // each line does without saying what the whole thing prints, so
-            // there is still something left to work out.
-            if (part.annotated && r.codeEl && !r.annotated) {
-              r.codeEl.insertAdjacentHTML("afterend", part.annotated);
-              r.codeEl.remove();
-              r.codeEl = r.wrap.querySelector("pre");
-              r.annotated = true;
-            }
-          }
+          r.note.className = "part-note nudge";
+          r.note.innerHTML = "<p>" + RETRY + "</p>";
+          r.note.hidden = false;
         }
       });
-      if (!allRight) {
-        if (hint) hint.textContent =
-          "Not quite. Read the comments on the code, then try again.";
+
+      const settled = parts.every((p, pi) =>
+        revealed[pi] || (p.options[chosen[pi]] || {}).correct);
+      if (!settled) {
+        if (hint) hint.textContent = "";
         return;
       }
       if (hint) hint.textContent = "";
-      settle();
-      markDone(id, true);
+      settle(allRight && !anyRevealed);
+      markDone(id, allRight && !anyRevealed ? "correct" : "revealed");
     }
 
-    function settle() {
+    function settle(correct) {
       rendered.forEach((r, pi) => {
         r.buttons.forEach((b, i) => {
           b.disabled = true;
@@ -389,12 +413,12 @@ def _run_exercise(setup_src, user_src, checks_json):
         });
       });
       if (submit) submit.disabled = true;
-      card.classList.add("answered");
+      card.classList.add("done");
+      card.classList.toggle("correct", !!correct);
       why.hidden = false;
-      why.innerHTML = spec.why || "";
+      why.innerHTML = (correct ? '<p class="verdict">Correct!</p>' : "") +
+                      (spec.why || "");
     }
-
-    function restore() { settle(); }
   }
 
   function escapeHtml(s) {

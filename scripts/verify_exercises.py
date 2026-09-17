@@ -58,9 +58,13 @@ def check_quizzes(quizzes):
                 problems.append(
                     (where, f"has {len(right)} correct options, expected 1", ""))
             for o in options:
-                if not o.get("correct") and not o.get("why"):
-                    problems.append((where, "a wrong option explains nothing",
-                                     o.get("html", "")[:60]))
+                if o.get("correct") and not o.get("why"):
+                    problems.append(
+                        (where, "the correct option has no explanation — it is "
+                                "what gets shown when the answer is revealed", ""))
+            if part.get("code") and not part.get("highlighted"):
+                problems.append(
+                    (where, "has code but no highlighted version to reveal", ""))
         if not q.get("why"):
             problems.append((q.get("id"), "no explanation after the right answer", ""))
     return problems
