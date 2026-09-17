@@ -24,11 +24,56 @@
       <h2>Dot notation</h2>
       <p>In step 2 you met five primitive types. One thing every type has in
       common is the ability to carry <b>methods</b>: things a value of that type
-      knows how to do. A dot is how you reach them.</p>
+      knows how to do. Methods are accessed with a dot.</p>
 <pre>"walkable".upper()   <span class="c"># 'WALKABLE'</span>
 "WALKABLE".lower()   <span class="c"># 'walkable'</span></pre>
       <p>Three parts, left to right: the value being asked, the name of
       something it knows how to do, and a pair of brackets.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 245" role="img" aria-label="A dot looks a method name up in the set belonging to the value's type. Text has upper and replace; a whole number has a different set, with no upper in it.">
+          <text x="14" y="20" class="svg-muted" style="font-size:11px; letter-spacing:.08em">THE VALUE</text>
+          <text x="214" y="20" class="svg-muted" style="font-size:11px; letter-spacing:.08em">WHAT ITS TYPE CAN DO</text>
+
+          <rect class="svg-box" x="14" y="30" width="150" height="54" rx="7"/>
+          <text x="32" y="54" class="svg-ink mono" style="font-size:14px">"walkable"</text>
+          <text x="32" y="72" class="svg-muted" style="font-size:10.5px">str</text>
+          <path class="svg-line" d="M170 57 h36" marker-end="url(#d1)"/>
+          <defs><marker id="d1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" class="svg-muted"/></marker></defs>
+
+          <rect x="214" y="30" width="492" height="54" rx="7" fill="var(--accent-wash)" stroke="var(--accent)"/>
+          <g class="svg-accent mono" style="font-size:12px">
+            <text x="232" y="52">.upper()</text>
+            <text x="322" y="52">.lower()</text>
+            <text x="412" y="52">.count()</text>
+            <text x="502" y="52">.replace()</text>
+            <text x="608" y="52">.strip()</text>
+          </g>
+          <text x="232" y="72" class="svg-muted" style="font-size:10.5px">…and forty more, the same for every piece of text</text>
+
+          <rect class="svg-box" x="14" y="104" width="150" height="54" rx="7"/>
+          <text x="32" y="128" class="svg-ink mono" style="font-size:14px">18</text>
+          <text x="32" y="146" class="svg-muted" style="font-size:10.5px">int</text>
+          <path class="svg-line" d="M170 131 h36" marker-end="url(#d1)"/>
+
+          <rect x="214" y="104" width="492" height="54" rx="7" fill="var(--surface-2)" stroke="var(--line-2)"/>
+          <g class="svg-ink mono" style="font-size:12px">
+            <text x="232" y="126">.bit_length()</text>
+            <text x="346" y="126">.to_bytes()</text>
+            <text x="452" y="126">.conjugate()</text>
+          </g>
+          <text x="578" y="126" class="svg-bad mono" style="font-size:12px; text-decoration:line-through">.upper()</text>
+          <text x="232" y="146" class="svg-muted" style="font-size:10.5px">a different set — no .upper() anywhere in it</text>
+
+          <line x1="14" y1="180" x2="706" y2="180" class="svg-line"/>
+          <text x="14" y="202" class="svg-ink" style="font-size:12px">The dot looks the name up in the set belonging to the value's type.</text>
+          <text x="14" y="222" class="svg-muted" style="font-size:12px">Not there, and you get an AttributeError — which is really a complaint about the type, not the name.</text>
+        </svg>
+        <figcaption>The methods do not belong to
+        <code>"walkable"</code>. They belong to <code>str</code>, so every piece
+        of text in your program has exactly the same ones.</figcaption>
+      </figure>
       <h3>Argument</h3>
       <p>A value handed to a method so it can do its work. Arguments go inside
       the brackets, separated by commas.</p>
