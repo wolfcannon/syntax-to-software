@@ -90,12 +90,15 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
    pieces — three separate claims the page will make good on.
 2. **Sections that build.** Each `<h2>` introduces one idea and then uses it.
 3. **One diagram** where a picture shows something prose can't — see below.
-4. **One callout naming a real failure.** `.note.trap` for a bug this causes
+4. **Never state what an exercise is there to discover.** If the learner is
+   going to find out that every value is text by running `type()`, the prose
+   must not announce it first. Set the question up; let the exercise answer it.
+5. **One callout naming a real failure.** `.note.trap` for a bug this causes
    in *this* project, `.note.warn` for a sharp edge. Not general advice.
-5. **Two or three exercises.**
-6. **A "Take it further" box** — extensions in the exercise editors for Unit 1,
+6. **Two or three exercises.**
+7. **A "Take it further" box** — extensions in the exercise editors for Unit 1,
    notebook or project work after the first interlude.
-7. **The step's Check question** as a `<details class="checkq">`, answered
+8. **The step's Check question** as a `<details class="checkq">`, answered
    properly. The answer is a teaching slot, not a footnote.
 
 ## Voice

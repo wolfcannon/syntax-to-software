@@ -186,20 +186,26 @@ print(total)          <span class="c"># outside the loop — prints once, at the
                       ^
 SyntaxError: expected ':'</span></pre>
 
-      <div class="note warn">
-        <h4>Everything from the Census arrives as a string</h4>
-        <p>This is worth internalising now, because it causes bugs for the next
-        three steps. The ACS API returns JSON, and every value in it — counts,
-        codes, FIPS identifiers — is delivered as text. <code>"401"</code>, not
-        <code>401</code>. Nothing converts it for you.</p>
-      </div>
+      <h2>Type</h2>
+      <p>Every value has a type: what kind of thing it is.
+      <code>type()</code> reports it.</p>
+<pre>type(1303)     <span class="c"># int — a whole number</span>
+type(3.5)      <span class="c"># float — a number with a fractional part</span>
+type("1303")   <span class="c"># str — text</span></pre>
+      <p><code>1303</code> and <code>"1303"</code> are different values. The
+      quotes are what make the second one text: a run of characters that
+      happens to contain digits. You cannot do arithmetic with it.</p>
+      <p>A value that looks like a number need not be one, and nothing on
+      screen will tell you which you have. <code>type()</code> will.</p>
 
       <h2>The sample data</h2>
-      <p>Every exercise from here to step 11 has these rows already loaded, in
-      exactly the shape the API hands them over: a list of lists, header row
-      first, all strings. They are also in <code>data/sample_rows.py</code>,
-      which is where they come from when the project moves onto your own
-      machine at the level-up.</p>
+      <p>Every exercise on this page has two sets of rows already loaded:
+      <code>acs_raw</code>, how people travel to work in each neighbourhood of
+      Marion County, Indiana, and <code>walk_raw</code>, how walkable each of
+      those neighbourhoods is.</p>
+      <p><code>acs_raw[0]</code> is its first row and <code>acs_raw[1]</code>
+      the second. That is all the notation you need today; step 4 covers it
+      properly.</p>
 <pre>acs_raw[0]   <span class="c"># ['NAME', 'B08301_001E', 'B08301_018E', ... ]</span>
 acs_raw[1]   <span class="c"># ['Block Group 2, Census Tract 3101.03, ...', '401', '-666666666', ...]</span>
 walk_raw[1]  <span class="c"># ['18', '097', '310103', '2', '3.666667', '7', '3', '5', '1', '931']</span></pre>
@@ -362,34 +368,42 @@ COURSE.exercise("ex1", {
 COURSE.exercise("ex2", {
   id: "s01-types", tag: "Exercise 2", title: "What type is it, really?",
   prompt:
-    "<p>Take the first data row, <code>acs_raw[1]</code>. Build a list called " +
-    "<code>kinds</code> holding the <em>name</em> of each value's type, as " +
-    "strings — so <code>[\"str\", \"str\", ...]</code>. The expression " +
-    "<code>type(v).__name__</code> gives you the name.</p>" +
-    "<p>Then set <code>all_strings</code> to <code>True</code> or " +
-    "<code>False</code>: is every value in that row a string?</p>",
-  setup: SAMPLE,
+    "<p>Three values have been pulled out of one row for you: " +
+    "<code>name</code>, <code>workers</code> and <code>bike</code>. Two of " +
+    "them read like numbers.</p>" +
+    "<p>Set <code>name_type</code>, <code>workers_type</code> and " +
+    "<code>bike_type</code> to the name of each value's type. " +
+    "<code>type(workers).__name__</code> gives you that name as text.</p>" +
+    "<p>Then set <code>all_text</code>: are all three text?</p>",
+  setup: SAMPLE +
+    "\nname = acs_raw[1][0]\nworkers = acs_raw[1][1]\nbike = acs_raw[1][2]\n",
   starter:
-    "row = acs_raw[1]\n\n" +
-    "kinds = \nall_strings = \n\nprint(kinds)",
+    "print(name)\nprint(workers)\nprint(bike)\n\n" +
+    "name_type = \nworkers_type = \nbike_type = \nall_text = \n",
   checks: [
-    { label: "kinds has one entry per value in the row",
-      code: "expect(len(expect_defined(globals(), 'kinds')), len(acs_raw[1]))" },
-    { label: "each entry is the type's name as a string",
-      code: "expect(kinds, [type(v).__name__ for v in acs_raw[1]])" },
-    { label: "all_strings answers the question correctly",
-      code: "expect(expect_defined(globals(), 'all_strings'), True)" },
-    { label: "the count that looks like a number is text",
-      code: "expect_type(acs_raw[1][1], str)" }
+    { label: "name_type is the type's name, as text",
+      code: "expect(expect_defined(globals(), 'name_type'), 'str')" },
+    { label: "the worker count is text, though it reads as a number",
+      code: "expect(expect_defined(globals(), 'workers_type'), 'str')" },
+    { label: "so is the bicycle count",
+      code: "expect(expect_defined(globals(), 'bike_type'), 'str')" },
+    { label: "all three are the same kind of thing",
+      code: "expect(expect_defined(globals(), 'all_text'), True)" },
+    { label: "you read the types rather than typing the answer in",
+      code: ("expect(name_type, type(name).__name__)\n"
+           + "expect(workers_type, type(workers).__name__)") },
+    { label: "the values themselves were left alone",
+      code: "expect(workers, '401')\nexpect_type(workers, str)" }
   ],
   solution:
-    "row = acs_raw[1]\n\n" +
-    "kinds = [type(v).__name__ for v in row]   # a loop works too -- step 7 explains this form\n" +
-    "all_strings = set(kinds) == {\"str\"}\n\n" +
-    "print(kinds)\n" +
-    "# Every field is 'str'. The JSON the API returns contains no numbers at all,\n" +
-    "# so nothing arrives typed the way you'd want it. Step 2 converts them --\n" +
-    "# and shows which ones must never be converted."
+    "name_type = type(name).__name__\n" +
+    "workers_type = type(workers).__name__\n" +
+    "bike_type = type(bike).__name__\n" +
+    "all_text = name_type == workers_type == bike_type == \"str\"\n\n" +
+    "print(name_type, workers_type, bike_type, all_text)\n" +
+    "# workers is \"401\", not 401. Every value in this data is text, including\n" +
+    "# the counts and the codes. Step 2 is about which of them to turn into\n" +
+    "# numbers, and which must stay exactly as they are."
 });
 </script>
 </body>
