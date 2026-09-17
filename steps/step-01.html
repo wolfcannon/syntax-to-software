@@ -52,9 +52,29 @@
       <h3>Expression</h3>
       <p>A piece of code that has a value: <code>21 / 1303</code>,
       <code>len(rows)</code>, <code>bike &gt; 0</code>.</p>
-      <p>Expressions are what statements are built from. In
-      <code>share = bike / workers</code>, the assignment is the statement and
-      <code>bike / workers</code> is the expression.</p>
+      <p>Expressions are what statements are built from.</p>
+
+      <figure>
+        <svg viewBox="0 0 720 200" role="img" aria-label="Two assignment statements, each with the expression inside it marked: the literal 1303, and the division bike divided by workers.">
+          <rect x="14" y="34" width="430" height="48" rx="7" fill="var(--accent-wash)" stroke="var(--accent)"/>
+          <rect x="118" y="45" width="44" height="26" rx="4" fill="var(--warn-wash)" stroke="var(--warn)"/>
+          <text x="32" y="65" class="svg-ink mono" style="font-size:15px">workers = 1303</text>
+          <text x="470" y="54" class="svg-accent" style="font-size:11px">a statement: binds the name</text>
+          <text x="470" y="72" style="font-size:11px" fill="var(--warn)">an expression: a literal has a value</text>
+
+          <rect x="14" y="98" width="430" height="48" rx="7" fill="var(--accent-wash)" stroke="var(--accent)"/>
+          <rect x="100" y="109" width="134" height="26" rx="4" fill="var(--warn-wash)" stroke="var(--warn)"/>
+          <text x="32" y="129" class="svg-ink mono" style="font-size:15px">share = bike / workers</text>
+          <text x="470" y="118" class="svg-accent" style="font-size:11px">the same statement shape</text>
+          <text x="470" y="136" style="font-size:11px" fill="var(--warn)">an expression: computed, then stored</text>
+
+          <line x1="14" y1="164" x2="706" y2="164" class="svg-line"/>
+          <text x="14" y="186" class="svg-muted" style="font-size:12px">The statement is the instruction. The expression is the value it works with.</text>
+        </svg>
+        <figcaption>An expression can be as small as a literal or as large as
+        you like. What makes it an expression is that it has a value; what
+        makes the line a statement is that it does something with it.</figcaption>
+      </figure>
 
       <div class="note">
         <h4>Nothing is shown unless you ask</h4>
