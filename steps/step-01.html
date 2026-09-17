@@ -33,26 +33,49 @@
       <div class="kwgrid" id="kwgrid"></div>
       <div class="kw-about" id="kwabout"></div>
 
-      <h2>Syntax</h2>
-      <p>The rules that decide whether a piece of text is Python at all.</p>
+      <h2>Syntax, statements, and expressions</h2>
 
+      <h3>Syntax</h3>
+      <p>The rules that decide whether a piece of text is Python at all.</p>
       <p>Syntax is about arrangement: which characters may follow which, where
       a colon is required, what has to be indented, what has to be closed. It
       is checked before anything runs, and it is checked completely — Python
       reads the whole thing first and refuses to start if any part of it does
       not fit the rules.</p>
-
       <p>Syntax says nothing about whether a program is any good. Text that
       obeys every rule can still compute the wrong number, and text that
       breaks one is not a program yet. Those are separate failures, and telling
       them apart is most of what this page is for.</p>
 
+      <h3>Statement</h3>
+      <p>One complete instruction. A program is a sequence of them, and Python
+      carries them out in order.</p>
+      <p>The one you will write most is an assignment, which binds a name to a
+      value: <code>bike = 21</code>. It produces nothing. Its whole purpose is
+      the effect it leaves behind.</p>
+
+      <h3>Expression</h3>
+      <p>A piece of code that has a value. Ask for one and something comes
+      back: <code>21 / 1303</code>, <code>len(rows)</code>,
+      <code>bike &gt; 0</code>.</p>
+      <p>Expressions are the parts statements are built from. In
+      <code>share = bike / workers</code>, the assignment is the statement and
+      <code>bike / workers</code> is the expression it stores.</p>
+
+      <div class="note">
+        <h4>Nothing is shown unless you ask</h4>
+        <p>Writing <code>bike = 21</code> displays nothing, because a statement
+        has no value to display. Writing <code>bike / workers</code> on its own
+        displays nothing either — the value is computed and then thrown away.
+        To see it, ask: <code>print(bike / workers)</code>.</p>
+      </div>
+
       <h2>Blocks and scope</h2>
 
       <h3>Block</h3>
-      <p>A run of consecutive lines that belong together and are handled as one
-      unit — run them all, run them ten times, run none of them. Python marks a
-      block with indentation.</p>
+      <p>A run of consecutive statements that belong together and are handled
+      as one unit — run them all, run them ten times, run none of them. Python
+      marks a block with indentation.</p>
       <p>A block is always introduced by a line ending in a colon. That line
       says what the block is for, and the lines indented beneath it are its
       contents. Blocks nest, and the indentation is what tells you how
@@ -133,26 +156,6 @@ for row in rows:
 print(total)          <span class="c"># outside the loop — prints once, at the end</span></pre>
       <p>Both are valid, but they are not equivalent. Only one will do what the
       author intended, the other will produce a logic error.</p>
-
-      <h2>Expressions and statements</h2>
-
-      <h3>Expression</h3>
-      <p>Something that has a value. Ask for one and something comes back:
-      <code>21 / 1303</code>, <code>len(rows)</code>,
-      <code>bike &gt; 0</code>.</p>
-
-      <h3>Statement</h3>
-      <p>Something that has an effect. <code>bike = 21</code> binds a name;
-      <code>for ...:</code> opens a block. It changes the state of the program
-      rather than producing a value.</p>
-
-      <div class="note">
-        <h4>Nothing is shown unless you ask</h4>
-        <p>Writing <code>bike = 21</code> displays nothing, because there is no
-        value to display. Writing <code>bike / workers</code> on its own
-        displays nothing either — the value is computed and then thrown away.
-        To see it, ask: <code>print(bike / workers)</code>.</p>
-      </div>
 
       <h2>Reading a SyntaxError</h2>
       <p>A <code>SyntaxError</code> is raised before a single line of your code
