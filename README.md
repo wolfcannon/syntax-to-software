@@ -48,8 +48,10 @@ python3 -m http.server 8000
 
 Nothing is installed, no account is needed, and nothing you type leaves the
 machine. Progress and your answers are kept in the browser's `localStorage`.
-The first exercise run downloads the Python runtime (~10 MB) from a CDN, so
-that one moment needs an internet connection.
+
+The first exercise you run downloads the Python runtime (~10 MB) from the
+Pyodide CDN, so step 1 needs an internet connection. After that the browser
+caches it, and nothing else phones home.
 
 ## What's here
 

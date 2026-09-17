@@ -23,12 +23,6 @@
         <li>No programming experience, and no maths beyond arithmetic.</li>
       </ul>
 
-      <p>One question runs through all 21 steps: does neighbourhood walkability
-      predict bike commuting, and what explains the places that don't fit? Each
-      step teaches one layer of the language or of the development process and
-      advances that project — by step 3 you are building census block group
-      identifiers, by step 7 working out why 12 of them refuse to join.</p>
-
       <p>Most courses stop once the language is covered, which is the point
       where a working analysis and a project someone else can run are still
       very far apart. This one keeps going: the last unit is version control,
@@ -54,15 +48,25 @@
         <code>pytest</code>, and you start writing your own.</p>
       </div>
 
-      <h2>Getting started</h2>
-      <p>The pages need serving over HTTP rather than opening off the disk:</p>
-<pre>git clone &lt;this repo&gt;
-cd syntax-to-software
-python3 -m http.server 8000
-<span class="c"># then open http://localhost:8000</span></pre>
-      <p class="small">The first exercise you run downloads the Python runtime
-      (<a href="https://pyodide.org">Pyodide</a>, about 10&nbsp;MB) from a CDN,
-      so step&nbsp;1 needs an internet connection. Nothing else phones home.</p>
+      <h2>The question</h2>
+      <p>A walkable neighbourhood is one where things are close together and
+      the streets connect. The claim worth testing is that people in such
+      places travel under their own power more often — so if walkability
+      predicts anything, it should predict cycling to work.</p>
+      <p>Two public datasets can answer that, because both describe the same
+      unit of geography: a census block group, a few hundred households. The
+      <b>EPA's National Walkability Index</b> scores every block group in the
+      country from 1 to 20. The <b>Census Bureau's commute survey</b> counts how
+      people in that block group get to work. Join them on the block group and
+      the question becomes arithmetic.</p>
+      <p>The course tests it on Marion County, Indiana — 632 block groups — and
+      spends as much time on the places that break the pattern as on the
+      pattern. A neighbourhood that scores 18 and cycles nothing is telling you
+      something the correlation is not.</p>
+      <p>Each step advances that project. By step 3 you are building census
+      block group identifiers, by step 7 working out why 12 of them refuse to
+      join, and by the capstone you are reporting a correlation alongside how
+      much of it could be noise.</p>
 
       <h2>The data</h2>
       <p>Both datasets are in <code>data/</code>. Nothing to download.</p>
