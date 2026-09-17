@@ -1,10 +1,15 @@
 # From Syntax to Software
 
-A Python course for someone with a strong mathematical background and no Python
-experience, aimed at data work — 21 steps and two level-ups. Every step teaches
-one layer of the language or of the development process, and every step advances
-the same project: **does neighbourhood walkability predict bike commuting, and
-what explains the places that don't fit the trend?**
+A Python course that starts at what a statement is and ends with a tested
+project under version control — 21 steps and two level-ups. It assumes no
+programming experience and no maths beyond arithmetic. Every step teaches one
+layer of the language or of the development process, and advances the same
+project: **does neighbourhood walkability predict bike commuting, and what
+explains the places that don't fit the trend?**
+
+The last unit is the part most courses leave out: git, pytest, two real bug
+reports worked end to end, project layout, and a capstone that reports its own
+uncertainty.
 
 ### Shape
 

@@ -60,9 +60,9 @@ workers = int(workers)   <span class="c"># now the name refers to an int; the st
         <p><code>0.1 + 0.2</code> is <code>0.30000000000000004</code>. Binary
         floating point cannot represent 0.1 exactly, any more than decimal can
         represent 1/3. So never write <code>if share == 0.05</code>; write
-        <code>if abs(share - 0.05) &lt; 1e-9</code>. With a mathematical
-        background this will not surprise you, but it will bite you in step 6
-        when a walkability score lands exactly on a category boundary.</p>
+        <code>if abs(share - 0.05) &lt; 1e-9</code> — near enough,
+        rather than exactly equal. This bites in step 6, when a walkability
+        score lands right on a category boundary.</p>
       </div>
 
       <h2>The trap this whole project turns on</h2>

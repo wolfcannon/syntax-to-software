@@ -5,9 +5,15 @@ description: Write or revise a step or interlude page for the "From Syntax to So
 
 # Building a course page
 
-This course teaches Python to someone with strong mathematics and no
-programming, through one running project: does neighbourhood walkability
-predict bike commuting in Marion County, Indiana?
+This course teaches Python from nothing — no programming experience, no maths
+beyond arithmetic — through one running project: does neighbourhood walkability
+predict bike commuting in Marion County, Indiana? It runs from what a statement
+is all the way to a tested project under version control.
+
+**Assume no background.** Never explain something with something the reader is
+less likely to know, and never write "as you already know", "obviously", or
+"this will be familiar". If a step needs a statistic, the step teaches the
+statistic.
 
 Everything below exists because a page that ignores it reads like a different
 course. Follow it, then run the checks — they are not optional and they catch
