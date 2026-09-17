@@ -164,8 +164,11 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
    themselves and leave the rest live, so the learner converges rather than
    guessing blind. `verify_exercises.py` enforces exactly one correct option
    and an explanation on every other.
-7. **A "Take it further" box** — extensions in the exercise editors for Unit 1,
-   notebook or project work after the first interlude.
+7. **A "Take it further" box** where there is real work to hand off —
+   extensions in the exercise editors for Unit 1, notebook or project work
+   after the first interlude. Omit it rather than inventing one. An early step
+   often has nothing to extend yet, and a box that reaches for the next
+   unit's tools to fill itself is worse than no box.
 8. **The step's Check question** as a `<details class="checkq">`, answered
    properly. The answer is a teaching slot, not a footnote.
 
@@ -243,6 +246,13 @@ Rules, each of which has already caught a real bug:
 - **Put given data in `setup`, not the starter**, and show it in the prompt if
   they need to see it. The editor is for their work.
 - Comment the solution with *why*, especially the trap it avoids.
+- **Checks can see the code, not just its results.** The namespace carries
+  `__source__` (what the learner typed) and `__stdout__` (what it printed), so
+  an exercise can be about the shape of the code — "is this line indented",
+  "did anything print at all", "are the quotes gone". Strip comments before
+  searching `__source__`: a learner is allowed to write a note mentioning the
+  thing you are looking for, and it caught its own solution doing exactly
+  that.
 
 These checks are read later: **step 18 reveals the harness** and the learner
 starts writing them as pytest. Write them as something you would be happy to

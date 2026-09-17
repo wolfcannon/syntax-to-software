@@ -117,6 +117,12 @@ def _run_exercise(setup_src, user_src, checks_json):
     finally:
         sys.stdout = real
 
+    # Some exercises are about the shape of the code rather than the values it
+    # leaves behind — "is this line indented", "did anything print at all" —
+    # so checks can see both.
+    ns["__source__"] = user_src
+    ns["__stdout__"] = buf.getvalue()
+
     results = []
     for chk in json.loads(checks_json):
         out = {"label": chk["label"]}

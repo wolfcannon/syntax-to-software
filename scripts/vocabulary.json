@@ -241,17 +241,12 @@
     {
       "page": "step-01",
       "concept": "for loop",
-      "why": "the broken-syntax exercise exists to be repaired; the loop is punctuation practice, not iteration"
+      "why": "the indentation demo in the block diagram uses one; the loop is scenery for block structure, never iterated over"
     },
     {
       "page": "step-01",
       "concept": "if statement",
       "why": "the indentation quiz is ABOUT block structure \u2014 the if is scenery, and the learner predicts output rather than writing a condition"
-    },
-    {
-      "page": "step-01",
-      "concept": "slice",
-      "why": "acs_raw[1:] is scenery in the broken-syntax exercise; the learner repairs punctuation around it and never has to reason about the slice"
     },
     {
       "page": "step-04",

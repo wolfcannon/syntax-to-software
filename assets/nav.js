@@ -8,7 +8,7 @@
 (function () {
   const ITEMS = [
     { unit: "Unit 1 — Foundations", n: 1, file: "steps/step-01.html",
-      title: "Keywords, types, and syntax", ex: ["s01-fix", "s01-types"] },
+      title: "Keywords, types, and syntax", ex: ["s01-move", "s01-number"] },
     { n: 2, file: "steps/step-02.html", title: "Primitives and assignment",
       ex: ["s02-convert", "s02-geoid", "s02-division"] },
     { n: 3, file: "steps/step-03.html", title: "Strings and formatting",
