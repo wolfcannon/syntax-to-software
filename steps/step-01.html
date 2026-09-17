@@ -196,26 +196,21 @@ type("1303")   <span class="c"># str — text</span></pre>
       <div id="ex2"></div>
       <div id="ex3"></div>
 
-      <details class="checkq">
-        <summary><span class="q">Given a line with a misplaced colon or bad indentation, can you locate the problem from the error message?</span></summary>
-        <div class="ans">
-          <p>The procedure, in order:</p>
-          <ol>
-            <li>Read the last line of the message — it names the category
-            (<code>expected ':'</code>, <code>unexpected indent</code>,
-            <code>'(' was never closed</code>).</li>
-            <li>Look at the reported line. If it is obviously fine, look at the
-            line above — unclosed brackets and missing colons report late.</li>
-            <li>For indentation errors, check whether you have mixed tabs and
-            spaces. This is invisible on screen and is why everyone settles on
-            four spaces.</li>
-          </ol>
-          <p style="margin-bottom:0">A <code>SyntaxError</code> means nothing
-          ran at all. That's actually the friendly case: no half-finished
-          state, no partly-written file. Step 10 deals with the errors that
-          happen <em>while</em> running, which are messier.</p>
-        </div>
-      </details>
+      <div class="note">
+        <h4>Tip: finding the line that is actually wrong</h4>
+        <ol>
+          <li>Read the last line of the message. It names the problem —
+          <code>expected ':'</code>, <code>unexpected indent</code>,
+          <code>unterminated string literal</code>.</li>
+          <li>Look at the line it points to. If that line looks fine, look at
+          the line above: an unclosed quote or bracket is only noticed
+          later.</li>
+          <li>If an indent looks correct and Python disagrees, you have mixed
+          tabs and spaces. They are invisible on screen. Use spaces.</li>
+        </ol>
+        <p style="margin-bottom:0">Fix one thing and run again. The error
+        changes as you go, and each new one is progress.</p>
+      </div>
 
       <div id="pager"></div>
     </div>

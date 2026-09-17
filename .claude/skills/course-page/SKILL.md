@@ -175,8 +175,12 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
    after the first interlude. Omit it rather than inventing one. An early step
    often has nothing to extend yet, and a box that reaches for the next
    unit's tools to fill itself is worse than no box.
-8. **The step's Check question** as a `<details class="checkq">`, answered
-   properly. The answer is a teaching slot, not a footnote.
+8. **A closing tip box** that leaves the reader with something to do next
+   time. The syllabus states each step's takeaway as a question to the learner
+   ("can you locate the problem from the error message?"); on the page it works
+   better as the answer, given plainly — a short numbered procedure they can
+   apply on the next error. Use `<details class="checkq">` only when the point
+   genuinely is a question worth sitting with before the answer.
 
 ## Voice
 
