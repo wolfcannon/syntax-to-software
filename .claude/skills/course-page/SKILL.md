@@ -95,7 +95,29 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
    must not announce it first. Set the question up; let the exercise answer it.
 5. **One callout naming a real failure.** `.note.trap` for a bug this causes
    in *this* project, `.note.warn` for a sharp edge. Not general advice.
-6. **Two or three exercises.**
+6. **Two or three exercises**, and an inline quiz wherever a page runs more
+   than two screens without asking the reader for anything. A quiz costs them
+   one click, needs no Python runtime, and is the cheapest way to turn reading
+   into doing:
+
+   ```js
+   COURSE.quiz("q1", {
+     id: "sNN-slug",              // unique; remembers that it was answered
+     tag: "Your turn", title: "…",
+     question: "<p>…</p>",        // may contain <pre>, or .quiz-cols for two side by side
+     options: [
+       { html: "…", correct: true },
+       { html: "…", why: "<p>why this one is tempting and wrong</p>" },
+     ],
+     why: "<p>shown once they get it right</p>",
+   });
+   ```
+
+   Every wrong option must explain itself — a wrong answer is the best teaching
+   moment on the page, and "try again" wastes it. Wrong answers disable
+   themselves and leave the rest live, so the learner converges rather than
+   guessing blind. `verify_exercises.py` enforces exactly one correct option
+   and an explanation on every other.
 7. **A "Take it further" box** — extensions in the exercise editors for Unit 1,
    notebook or project work after the first interlude.
 8. **The step's Check question** as a `<details class="checkq">`, answered

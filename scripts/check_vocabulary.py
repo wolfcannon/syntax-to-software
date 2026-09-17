@@ -123,7 +123,20 @@ def main():
 
         scan_prose(page, position, html, problems)
 
-        for ex in (e for e in exercises if e["file"] == path.name):
+        for q in (e for e in exercises
+                  if e["file"] == path.name and e.get("kind") == "quiz"):
+            text = re.sub(r"<[^>]+>", " ",
+                          (q.get("question", "") + " "
+                           + " ".join(o.get("html", "") + " " + o.get("why", "")
+                                      for o in q.get("options", []))
+                           + " " + q.get("why", "")))
+            text = (text.replace("&lt;", "<").replace("&gt;", ">")
+                        .replace("&amp;", "&").replace("&quot;", '"'))
+            scanned += 1
+            scan(f"quiz {q.get('id')}", text, position, page, problems)
+
+        for ex in (e for e in exercises
+                   if e["file"] == path.name and e.get("kind") != "quiz"):
             for field in ("starter", "solution"):
                 if ex.get(field):
                     scanned += 1

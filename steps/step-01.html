@@ -159,17 +159,7 @@
         the expensive one — an analysis that produces a number nobody
         questions.</p>
       </div>
-<pre>total = 0
-for row in rows:
-    total = total + 1
-    print(total)      <span class="c"># inside the loop — prints once per row</span>
-
-total = 0
-for row in rows:
-    total = total + 1
-print(total)          <span class="c"># outside the loop — prints once, at the end</span></pre>
-      <p>Both are valid, but they are not equivalent. Only one will do what the
-      author intended, the other will produce a logic error.</p>
+      <div id="q1"></div>
 
       <h2>Reading a SyntaxError</h2>
       <p>A <code>SyntaxError</code> is raised before a single line of your code
@@ -257,6 +247,38 @@ walk_raw[1]  <span class="c"># ['18', '097', '310103', '2', '3.666667', '7', '3'
 <script src="../assets/nav.js"></script>
 <script src="../assets/runner.js"></script>
 <script src="../assets/sample.js"></script>
+<script>
+COURSE.quiz("q1", {
+  id: "s01-indent", tag: "Your turn", title: "One line, moved one level",
+  question:
+    "<p>These two are the same four statements. The only difference is how far " +
+    "the last one is indented.</p>" +
+    "<div class='quiz-cols'>" +
+      "<div><p class='lab'>A</p><pre>score = 14.5\nlabel = \"walkable\"\nif score &lt;= 5.75:\n    label = \"not walkable\"\n    print(label)</pre></div>" +
+      "<div><p class='lab'>B</p><pre>score = 14.5\nlabel = \"walkable\"\nif score &lt;= 5.75:\n    label = \"not walkable\"\nprint(label)</pre></div>" +
+    "</div>" +
+    "<p>A score of 14.5 is not below 5.75, so the block does not run. What does " +
+    "each one print?</p>",
+  options: [
+    { html: "A prints nothing. B prints <code>walkable</code>.", correct: true },
+    { html: "A prints <code>walkable</code>. B prints nothing.",
+      why: "<p>The other way round. In A the <code>print</code> is inside the " +
+           "block, and the block never runs — so A is the silent one.</p>" },
+    { html: "Both print <code>walkable</code>.",
+      why: "<p>B does. A cannot: its <code>print</code> is indented into a " +
+           "block that never runs.</p>" },
+    { html: "Both print <code>not walkable</code>.",
+      why: "<p>Neither does. <code>label</code> is only reassigned inside the " +
+           "block, and 14.5 is not below 5.75, so that line never runs.</p>" }
+  ],
+  why:
+    "<p>Both are valid, but they are not equivalent. Only one will do what the " +
+    "author intended, the other will produce a logic error.</p>" +
+    "<p>Nothing announces it. A reports nothing at all, and if you were " +
+    "expecting a label for every score you would have to notice its absence " +
+    "yourself.</p>"
+});
+</script>
 <script>
 /* Keyword explorer. Each entry: what it does, and where this course uses it —
    `null` meaning the course never does, which is worth saying out loud. */

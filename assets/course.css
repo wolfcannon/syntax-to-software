@@ -249,6 +249,52 @@ button:disabled{opacity:.5; cursor:default}
   color:var(--ink-2); margin-top:4px; white-space:pre-wrap; word-break:break-word;
 }
 
+/* ---------- inline quiz ---------- */
+.quiz{
+  border:1px solid var(--line-2); border-radius:12px; background:var(--surface);
+  margin:0 0 22px; overflow:hidden; box-shadow:var(--shadow);
+}
+.quiz.answered{border-color:var(--ok)}
+.quiz-head{
+  display:flex; align-items:center; gap:10px; padding:12px 16px;
+  background:var(--surface-2); border-bottom:1px solid var(--line);
+}
+.quiz-head .tag{
+  font:700 10.5px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
+  color:var(--accent-2); background:var(--accent-wash);
+  padding:5px 7px; border-radius:5px; border:1px solid var(--line);
+}
+.quiz-head .ttl{font-weight:600; font-size:14.5px}
+.quiz-body{padding:14px 16px}
+.quiz-body>p:first-child{margin-top:0}
+.quiz-body pre{margin:0 0 12px}
+.quiz-cols{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:0 0 14px}
+.quiz-cols pre{margin:0}
+.quiz-cols .lab{
+  font:700 10.5px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
+  color:var(--muted); margin:0 0 5px;
+}
+.quiz-opts{display:grid; gap:8px; margin:0}
+.quiz-opt{
+  text-align:left; padding:11px 14px; font:400 14px/1.45 var(--sans);
+  border:1px solid var(--line-2); border-radius:8px;
+  background:var(--surface); color:var(--ink); cursor:pointer; width:100%;
+}
+.quiz-opt:hover:not(:disabled){border-color:var(--accent); background:var(--surface-2)}
+.quiz-opt .mark{font-family:var(--mono); font-weight:700; margin-right:8px}
+.quiz-opt.right{background:var(--ok-wash); border-color:var(--ok)}
+.quiz-opt.right .mark{color:var(--ok)}
+.quiz-opt.wrong{background:var(--bad-wash); border-color:var(--bad)}
+.quiz-opt.wrong .mark{color:var(--bad)}
+.quiz-opt:disabled{cursor:default; opacity:1}
+.quiz-opt.faded:disabled{opacity:.45}
+.quiz-why{
+  margin:12px 0 0; padding:12px 14px; border-radius:8px;
+  background:var(--surface-2); border:1px solid var(--line); font-size:14px;
+}
+.quiz-why :last-child{margin-bottom:0}
+@media (max-width:640px){ .quiz-cols{grid-template-columns:1fr} }
+
 /* ---------- diagrams ---------- */
 figure{margin:0 0 22px}
 figure svg{

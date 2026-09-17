@@ -23,6 +23,23 @@ def harness_source():
     return m.group(1).replace("\\`", "`").replace("\\$", "$")
 
 
+def check_quizzes(quizzes):
+    """A quiz with no correct answer, or two, is a broken quiz."""
+    problems = []
+    for q in quizzes:
+        right = [o for o in q.get("options", []) if o.get("correct")]
+        if len(right) != 1:
+            problems.append((q.get("id", q.get("mount")),
+                             f"has {len(right)} correct options, expected 1", ""))
+        for o in q.get("options", []):
+            if not o.get("correct") and not o.get("why"):
+                problems.append((q.get("id"), "a wrong option explains nothing",
+                                 o.get("html", "")[:60]))
+        if not q.get("why"):
+            problems.append((q.get("id"), "no explanation after the right answer", ""))
+    return problems
+
+
 def check_nav(exercises):
     """The progress dots are driven by ids listed in nav.js. If a page renames
     an exercise and nav.js isn't updated, the dot silently never lights up --
@@ -48,9 +65,11 @@ def check_nav(exercises):
 
 
 def main():
-    exercises = json.loads(
+    everything = json.loads(
         subprocess.run(["node", "scripts/extract_exercises.mjs"], cwd=ROOT,
                        capture_output=True, text=True, check=True).stdout)
+    exercises = [e for e in everything if e.get("kind") != "quiz"]
+    quizzes = [q for q in everything if q.get("kind") == "quiz"]
 
     ns = {}
     exec(harness_source(), ns)
@@ -75,8 +94,9 @@ def main():
             failures.append((ex["id"], "starter already passes every check", ""))
 
     failures += check_nav(exercises)
+    failures += check_quizzes(quizzes)
 
-    print(f"{len(exercises)} exercises, {n_checks} checks")
+    print(f"{len(exercises)} exercises, {n_checks} checks, {len(quizzes)} quizzes")
     for ident, what, detail in failures:
         print(f"  FAIL  {ident}: {what}")
         if detail:

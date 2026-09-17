@@ -255,6 +255,65 @@ def _run_exercise(setup_src, user_src, checks_json):
     }
   }
 
+  /* ---------- inline quiz ------------------------------------------------
+     A question the learner answers by clicking, with no Python behind it —
+     instant, and it does not pull down the runtime. Wrong answers explain
+     themselves and let you try again; the right one locks and explains why. */
+  function quiz(mountId, spec) {
+    const mount = document.getElementById(mountId);
+    if (!mount) return;
+    const id = spec.id || mountId;
+
+    const card = el("section", "quiz");
+    const head = el("div", "quiz-head");
+    head.append(el("span", "tag", spec.tag || "Your turn"),
+                el("span", "ttl", spec.title || ""));
+    const body = el("div", "quiz-body", spec.question || "");
+    const opts = el("div", "quiz-opts");
+    const why = el("div", "quiz-why");
+    why.hidden = true;
+
+    const buttons = (spec.options || []).map((opt, i) => {
+      const b = el("button", "quiz-opt");
+      b.type = "button";
+      b.innerHTML = '<span class="mark">' + String.fromCharCode(65 + i) +
+                    "</span>" + opt.html;
+      b.addEventListener("click", () => choose(b, opt));
+      opts.append(b);
+      return b;
+    });
+
+    body.append(opts, why);
+    card.append(head, body);
+    mount.replaceWith(card);
+
+    if (readDone()[id]) settle();
+
+    function choose(button, opt) {
+      if (opt.correct) {
+        settle();
+        markDone(id, true);
+      } else {
+        button.classList.add("wrong");
+        button.disabled = true;
+        why.hidden = false;
+        why.innerHTML = opt.why || "<p>Not that one — try again.</p>";
+      }
+    }
+
+    function settle() {
+      buttons.forEach((b, i) => {
+        b.disabled = true;
+        const opt = spec.options[i];
+        if (opt.correct) b.classList.add("right");
+        else if (!b.classList.contains("wrong")) b.classList.add("faded");
+      });
+      card.classList.add("answered");
+      why.hidden = false;
+      why.innerHTML = spec.why || "";
+    }
+  }
+
   function escapeHtml(s) {
     return String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
   }
@@ -293,5 +352,5 @@ def _run_exercise(setup_src, user_src, checks_json):
   }
   document.addEventListener("DOMContentLoaded", initChrome);
 
-  return { exercise, paintProgress, readDone };
+  return { exercise, quiz, paintProgress, readDone };
 })();
