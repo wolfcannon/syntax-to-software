@@ -45,6 +45,13 @@
       ]
     },
     {
+      "name": "method call",
+      "step": 3,
+      "patterns": [
+        "[\\w\"')\\]]\\.\\w+\\("
+      ]
+    },
+    {
       "name": "str method",
       "step": 3,
       "patterns": [

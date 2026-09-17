@@ -15,9 +15,43 @@
 
       <p class="eyebrow">Unit 1 — Foundations · Step 3</p>
       <h1>Strings and formatting</h1>
-      <p class="lede">Now that identifiers must stay text, you need to be good
-      at text: slicing it, padding it, and printing numbers so a human can read
-      them.</p>
+      <ul class="lede-points">
+        <li>Values can do things to themselves. That is what a dot means.</li>
+        <li>Text can be cut apart by position.</li>
+        <li>Numbers can be printed the way a person would write them.</li>
+      </ul>
+
+      <h2>Dot notation</h2>
+      <p>Asking a value to do something to itself. This is the first of them
+      you will meet, and the shape turns up everywhere after.</p>
+<pre>"18".zfill(2)</pre>
+      <p>Three parts, left to right:</p>
+      <ul>
+        <li><code>"18"</code> — the value being asked</li>
+        <li><code>.zfill</code> — the name of something that value knows how to
+        do</li>
+        <li><code>(2)</code> — whatever that thing needs in order to do it</li>
+      </ul>
+      <p>Something named this way is called a <b>method</b>. Methods belong to
+      a type: every piece of text has the same set of them, and it is a
+      different set from the one a number has.</p>
+<pre>"18".zfill(2)    <span class="c"># '18'</span>
+(18).zfill(2)    <span class="c"># AttributeError: 'int' object has no attribute 'zfill'</span></pre>
+      <p>That error is worth recognising early. It does not mean you typed the
+      name wrong — it usually means the value is not the type you thought it
+      was, which is step 2's trap wearing a different coat.</p>
+
+      <div class="note">
+        <h4>Two shapes that do similar jobs</h4>
+        <p><code>len("18")</code> is a function, handed a value. <code>"18"
+        .zfill(2)</code> is a method, belonging to one. Both take an input and
+        give something back; they differ only in whether the value comes before
+        the brackets or inside them.</p>
+        <p style="margin-bottom:0">There is no rule you can derive about which
+        is which. <code>len</code> is a function and <code>zfill</code> is a
+        method because that is how Python is arranged. You learn them as you
+        meet them.</p>
+      </div>
 
       <h2>Indexing and slicing</h2>
       <p>A string is a sequence of characters, indexed from zero. A slice
