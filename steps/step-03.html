@@ -22,35 +22,58 @@
       </ul>
 
       <h2>Dot notation</h2>
-      <p>Asking a value to do something to itself. This is the first of them
-      you will meet, and the shape turns up everywhere after.</p>
-<pre>"18".zfill(2)</pre>
-      <p>Three parts, left to right:</p>
-      <ul>
-        <li><code>"18"</code> — the value being asked</li>
-        <li><code>.zfill</code> — the name of something that value knows how to
-        do</li>
-        <li><code>(2)</code> — whatever that thing needs in order to do it</li>
-      </ul>
-      <p>Something named this way is called a <b>method</b>. Methods belong to
-      a type: every piece of text has the same set of them, and it is a
-      different set from the one a number has.</p>
+      <p>In step 2 you met five primitive types. One thing every type has in
+      common is the ability to carry <b>properties</b> and <b>methods</b>. A dot
+      is how you reach either of them.</p>
+
+      <h3>Property</h3>
+      <p>A value that belongs to another value. Reach it with a dot and no
+      brackets.</p>
+<pre>(7).numerator     <span class="c"># 7</span>
+(7).denominator   <span class="c"># 1   — every whole number is a fraction over one</span></pre>
+      <p>Primitive types carry few properties worth using. They matter far more
+      once values start describing things rather than counting them, which is
+      step 16.</p>
+
+      <h3>Method</h3>
+      <p>Something a value knows how to do. Reach it the same way, then call it
+      with brackets — and the brackets are not optional, even when there is
+      nothing to put in them.</p>
+<pre>"18".zfill(2)        <span class="c"># '18'    pad to two characters</span>
+"3.5".split(".")     <span class="c"># ['3', '5']   cut on a character</span>
+(2.5).is_integer()   <span class="c"># False   is this number whole?</span></pre>
+      <p>Whatever the method needs goes inside the brackets. Some need nothing,
+      and are still called with an empty pair.</p>
+
+      <div class="note trap">
+        <h4>Leaving the brackets off</h4>
+<pre>(2.5).is_integer     <span class="c"># &lt;built-in method is_integer of float object&gt;</span>
+(2.5).is_integer()   <span class="c"># False</span></pre>
+        <p style="margin-bottom:0">Without brackets you asked for the method
+        itself rather than for it to run, and Python handed it over without
+        complaint. If a value prints as something about a "method", this is
+        what happened.</p>
+      </div>
+
+      <h2>Which properties and methods exist</h2>
+      <p>They belong to the type, not to the value. Every piece of text has the
+      same set; a number has a different set.</p>
 <pre>"18".zfill(2)    <span class="c"># '18'</span>
 (18).zfill(2)    <span class="c"># AttributeError: 'int' object has no attribute 'zfill'</span></pre>
-      <p>That error is worth recognising early. It does not mean you typed the
-      name wrong — it usually means the value is not the type you thought it
-      was, which is step 2's trap wearing a different coat.</p>
+      <p>That error is worth recognising early. It rarely means you typed the
+      name wrong. It usually means the value is not the type you thought it was,
+      which is step 2's trap wearing a different coat.</p>
 
       <div class="note">
         <h4>Two shapes that do similar jobs</h4>
-        <p><code>len("18")</code> is a function, handed a value. <code>"18"
-        .zfill(2)</code> is a method, belonging to one. Both take an input and
-        give something back; they differ only in whether the value comes before
-        the brackets or inside them.</p>
-        <p style="margin-bottom:0">There is no rule you can derive about which
-        is which. <code>len</code> is a function and <code>zfill</code> is a
-        method because that is how Python is arranged. You learn them as you
-        meet them.</p>
+        <p><code>len("18")</code> is a function, handed a value.
+        <code>"18".zfill(2)</code> is a method, belonging to one. Both take an
+        input and give something back; they differ in whether the value goes
+        before the dot or inside the brackets.</p>
+        <p style="margin-bottom:0">There is no rule to derive here.
+        <code>len</code> is a function and <code>zfill</code> is a method
+        because that is how Python is arranged. You learn them as you meet
+        them.</p>
       </div>
 
       <h2>Indexing and slicing</h2>
