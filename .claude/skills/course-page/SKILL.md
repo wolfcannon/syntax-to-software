@@ -100,6 +100,10 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
 
 ## Voice
 
+- **Terse and precise, always.** Say it once, in the fewest words that stay
+  exact. Cut any sentence that restates the one before it, tells the reader
+  what the page is about to do, or reassures them. A definition is one
+  sentence; if it needs three, the term is doing too much work.
 - Say the thing, then show it working. No tours of what's coming.
 - Concrete over general: `int("01073…")` drops Alabama's zero, not "be careful
   with type conversion".

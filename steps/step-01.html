@@ -36,38 +36,32 @@
       <h2>Syntax, statements, and expressions</h2>
 
       <h3>Syntax</h3>
-      <p>The rules that decide whether a piece of text is Python at all.</p>
-      <p>Syntax is about arrangement: which characters may follow which, where
-      a colon is required, what has to be indented, what has to be closed. It
-      is checked before anything runs, and it is checked completely — Python
-      reads the whole thing first and refuses to start if any part of it does
-      not fit the rules.</p>
-      <p>Syntax says nothing about whether a program is any good. Text that
-      obeys every rule can still compute the wrong number, and text that
-      breaks one is not a program yet. Those are separate failures, and telling
-      them apart is most of what this page is for.</p>
+      <p>The rules that decide whether text is Python at all.</p>
+      <p>Syntax governs arrangement: which characters may follow which, where a
+      colon is required, what must be indented. Python checks all of it before
+      running any of it.</p>
+      <p>It says nothing about whether a program is correct. Code that obeys
+      every rule can still compute the wrong number.</p>
 
       <h3>Statement</h3>
-      <p>One complete instruction. A program is a sequence of them, and Python
-      carries them out in order.</p>
-      <p>The one you will write most is an assignment, which binds a name to a
-      value: <code>bike = 21</code>. It produces nothing. Its whole purpose is
-      the effect it leaves behind.</p>
+      <p>One complete instruction. A program is a sequence of them, run in
+      order.</p>
+      <p>The one you will write most is an assignment: <code>bike = 21</code>
+      binds a name to a value. It produces nothing. The effect is the point.</p>
 
       <h3>Expression</h3>
-      <p>A piece of code that has a value. Ask for one and something comes
-      back: <code>21 / 1303</code>, <code>len(rows)</code>,
-      <code>bike &gt; 0</code>.</p>
-      <p>Expressions are the parts statements are built from. In
+      <p>A piece of code that has a value: <code>21 / 1303</code>,
+      <code>len(rows)</code>, <code>bike &gt; 0</code>.</p>
+      <p>Expressions are what statements are built from. In
       <code>share = bike / workers</code>, the assignment is the statement and
-      <code>bike / workers</code> is the expression it stores.</p>
+      <code>bike / workers</code> is the expression.</p>
 
       <div class="note">
         <h4>Nothing is shown unless you ask</h4>
-        <p>Writing <code>bike = 21</code> displays nothing, because a statement
-        has no value to display. Writing <code>bike / workers</code> on its own
-        displays nothing either — the value is computed and then thrown away.
-        To see it, ask: <code>print(bike / workers)</code>.</p>
+        <p><code>bike = 21</code> displays nothing — a statement has no value.
+        <code>bike / workers</code> displays nothing either: the value is
+        computed, then discarded. To see it, ask for it —
+        <code>print(bike / workers)</code>.</p>
       </div>
 
       <h2>Blocks and scope</h2>
