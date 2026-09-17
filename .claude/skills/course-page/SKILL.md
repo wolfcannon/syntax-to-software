@@ -147,6 +147,9 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
 
    Stage two is deliberately bare. A reader who is one glance from seeing it
    should get another glance, not an explanation that does the seeing for them.
+   Set `retry` to point at the thing being missed on this question — "Pay
+   attention to the indentation", "Ask what adding two of them together would
+   mean" — rather than leaving the generic default.
 
    `highlighted` is the same snippet with the deciding lines marked — wrap every
    line in `<span class="ln">` and add `hl` to the ones that matter, with no

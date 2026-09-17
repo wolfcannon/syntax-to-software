@@ -15,19 +15,22 @@
 
       <p class="eyebrow">Unit 1 — Foundations · Step 2</p>
       <h1>Primitives and assignment</h1>
-      <p class="lede">Five basic types, what assignment actually does, and the
-      one conversion that will silently destroy this project if you let it.</p>
+      <ul class="lede-points">
+        <li>Five types you will use constantly.</li>
+        <li>A name refers to a value. It does not contain one.</li>
+        <li>Some things that look like numbers must never become numbers.</li>
+      </ul>
 
       <h2>Five types you need today</h2>
       <div class="tablewrap">
       <table>
         <thead><tr><th>Type</th><th>Example</th><th>In this project</th></tr></thead>
         <tbody>
-          <tr><td class="mono">int</td><td class="mono">1303</td><td>Counts of workers, cyclists</td></tr>
-          <tr><td class="mono">float</td><td class="mono">15.333333</td><td>Walkability scores, shares</td></tr>
-          <tr><td class="mono">str</td><td class="mono">"310103"</td><td>Names, and every identifier</td></tr>
-          <tr><td class="mono">bool</td><td class="mono">True</td><td>Did this row join? Is it usable?</td></tr>
-          <tr><td class="mono">None</td><td class="mono">None</td><td>"No answer" — distinct from zero</td></tr>
+          <tr><td class="mono">int</td><td class="mono">1303</td><td>A whole number: counts of people, of rows</td></tr>
+          <tr><td class="mono">float</td><td class="mono">15.333333</td><td>A number with a fractional part: scores, shares</td></tr>
+          <tr><td class="mono">str</td><td class="mono">"310103"</td><td>Text: names, and every identifier</td></tr>
+          <tr><td class="mono">bool</td><td class="mono">True</td><td>Yes or no, and nothing in between</td></tr>
+          <tr><td class="mono">None</td><td class="mono">None</td><td>No answer — which is not the same as zero</td></tr>
         </tbody>
       </table>
       </div>
@@ -45,26 +48,26 @@
       the old value:</p>
 <pre>workers = "1303"     <span class="c"># a string</span>
 workers = int(workers)   <span class="c"># now the name refers to an int; the string is gone</span></pre>
-      <p>Names have no declared type, so nothing stops a name from meaning a
-      string on line 1 and an integer on line 2. That flexibility is why the
-      next section is dangerous.</p>
+      <p>Names have no declared type, so nothing stops a name from meaning
+      text on one line and a number on the next.</p>
 
       <h2>Three kinds of division</h2>
 <pre>1303 / 8     <span class="c"># 162.875   true division, always a float</span>
 1303 // 8    <span class="c"># 162       floor division, discards the remainder</span>
 1303 % 8     <span class="c"># 7         the remainder itself</span></pre>
       <p>Use <code>/</code> for shares and rates. <code>//</code> and
-      <code>%</code> come up when you are chopping fixed-width identifiers
-      apart, which is exactly what a GEOID is.</p>
+      <code>%</code> are for pulling a fixed-width code apart — the first two
+      digits, the last two digits — which you do in exercise 3.</p>
 
       <div class="note">
         <h4>Floats are approximate</h4>
-        <p><code>0.1 + 0.2</code> is <code>0.30000000000000004</code>. Binary
-        floating point cannot represent 0.1 exactly, any more than decimal can
-        represent 1/3. So never write <code>if share == 0.05</code>; write
-        <code>if abs(share - 0.05) &lt; 1e-9</code> — near enough,
-        rather than exactly equal. This bites in step 6, when a walkability
-        score lands right on a category boundary.</p>
+        <p><code>0.1 + 0.2</code> is <code>0.30000000000000004</code>. A
+        computer stores a float in binary and cannot write 0.1 exactly, in the
+        same way you cannot write 1/3 exactly as a decimal.</p>
+        <p style="margin-bottom:0">So never ask whether two floats are equal.
+        Ask whether they are close enough: <code>abs(share - 0.05) &lt;
+        1e-9</code>. This bites in step 6, when a score lands right on a
+        category boundary.</p>
       </div>
 
       <h2>The trap this whole project turns on</h2>
@@ -101,12 +104,10 @@ workers = int(workers)   <span class="c"># now the name refers to an int; the st
           <text x="396" y="206" class="svg-muted" style="font-size:11px">11 characters — the leading zero is gone</text>
           <text x="396" y="222" class="svg-bad" style="font-size:11px">matches nothing, silently</text>
         </svg>
-        <figcaption>Every state with a FIPS code below 10 — Alabama, Alaska,
-        Arizona, Arkansas, California, Colorado, Connecticut, Delaware,
-        Washington DC — loses its leading zero the moment a GEOID becomes an
-        integer. Indiana is 18, so this bug is <em>invisible</em> in Marion
-        County and detonates the day you extend the analysis. That is ticket A
-        in step 19.</figcaption>
+        <figcaption>Nine states are numbered below 10, and every one of them
+        loses its leading zero the moment a GEOID becomes an integer. Indiana
+        is 18, so this bug is <em>invisible</em> in Marion County and goes off
+        the day you add a second county. That is ticket A in step 19.</figcaption>
       </figure>
 
       <div class="note trap">
@@ -116,6 +117,8 @@ workers = int(workers)   <span class="c"># now the name refers to an int; the st
         numbers, ISBNs. The test is not "does it look like a number" but "does
         adding two of them together mean anything".</p>
       </div>
+
+      <div id="q1"></div>
 
       <h2>Exercises</h2>
       <div id="ex1"></div>
@@ -132,26 +135,19 @@ workers = int(workers)   <span class="c"># now the name refers to an int; the st
         on — you are going to need to have believed it.</p>
       </div>
 
-      <details class="checkq">
-        <summary><span class="q">Why is a GEOID a <code>str</code> when it looks like a number?</span></summary>
-        <div class="ans">
-          <p>Because its digits are positional labels, not a quantity. Three
-          consequences follow:</p>
-          <ul>
-            <li>Leading zeros are meaningful, and integers cannot carry
-            them.</li>
-            <li>Arithmetic on it is meaningless — no GEOID is "twice" another
-            one.</li>
-            <li>Joining two datasets is equality of labels, and
-            <code>"01073..."</code> is not equal to <code>1073...</code>.</li>
-          </ul>
-          <p style="margin-bottom:0">The reason this is worth a whole section
-          is the failure mode: nothing raises. Rows just quietly stop matching,
-          your sample shrinks, and your correlation changes for a reason that
-          has nothing to do with the world. Step 18 writes the test that pins
-          this down permanently.</p>
-        </div>
-      </details>
+      <div class="note">
+        <h4>Tip 💡: deciding whether something is a number</h4>
+        <p>Ask what adding two of them together would mean.</p>
+        <ol>
+          <li>Two counts add up to a bigger count. It is a number.</li>
+          <li>Two scores average to a meaningful score. It is a number.</li>
+          <li>Two zip codes add up to nothing at all. It is text, and it stays
+          text.</li>
+        </ol>
+        <p style="margin-bottom:0">Getting this wrong raises no error. Rows
+        quietly stop matching and your results change for a reason that has
+        nothing to do with the world.</p>
+      </div>
 
       <div id="pager"></div>
     </div>
@@ -159,43 +155,72 @@ workers = int(workers)   <span class="c"># now the name refers to an int; the st
 </div>
 
 <script src="../assets/nav.js?v=6653f05c"></script>
-<script src="../assets/runner.js?v=84141c20"></script>
+<script src="../assets/runner.js?v=277a066f"></script>
+<script>
+COURSE.quiz("q1", {
+  id: "s02-identifier", tag: "Your turn", title: "Which one must stay text?",
+  retry: "Not that one. Ask what adding two of them together would mean.",
+  question:
+    "<p>All four of these arrive from the survey as text. Three of them should " +
+    "be converted to numbers before you use them.</p>" +
+    "<pre>\"1303\"            <span class='c'># workers in this neighbourhood</span>\n" +
+    "\"21\"              <span class='c'># of them who cycle</span>\n" +
+    "\"14.5\"            <span class='c'># its walkability score</span>\n" +
+    "\"010730001001\"    <span class='c'># the code identifying the neighbourhood</span></pre>" +
+    "<p>Which one must stay text?</p>",
+  options: [
+    { html: "<code>\"1303\"</code>" },
+    { html: "<code>\"21\"</code>" },
+    { html: "<code>\"14.5\"</code>" },
+    { html: "<code>\"010730001001\"</code>", correct: true,
+      why: "Nothing is ever computed from it — it only has to match the same " +
+           "code in another table. And <code>int()</code> would eat the leading " +
+           "zero, so it would no longer match anything." }
+  ],
+  why:
+    "<p>The other three are quantities: add them, average them, divide one by " +
+    "another, and the answer means something. The code is a label that happens " +
+    "to be made of digits.</p>"
+});
+</script>
 <script src="../assets/sample.js?v=3b94601e"></script>
 <script>
 COURSE.exercise("ex1", {
-  id: "s02-convert", tag: "Exercise 1", title: "Strings in, numbers out",
+  id: "s02-convert", tag: "Exercise 1", title: "Text in, numbers out",
   prompt:
-    "<p>Row <code>acs_raw[6]</code> is a block group with a healthy number of " +
-    "cyclists. Pull out the total workers (index 1) and the bicycle count " +
-    "(index 2), convert both to <code>int</code>, and compute " +
-    "<code>share</code> as a <code>float</code> between 0 and 1.</p>" +
-    "<p>Then set <code>walk_index</code> to the walkability score from " +
-    "<code>walk_raw[6]</code> (index 4) as a <code>float</code>.</p>",
-  setup: SAMPLE,
+    "<p>Three values, exactly as they arrive from the survey — all of them " +
+    "text, including the two that read as numbers.</p>" +
+    "<p>Convert <code>workers</code> and <code>bike</code> to whole numbers, " +
+    "and <code>score</code> to a number with a fractional part. Then set " +
+    "<code>share</code> to the fraction of workers who cycle.</p>",
+  setup:
+    "workers_text = \"1303\"\n" +
+    "bike_text = \"21\"\n" +
+    "score_text = \"14.5\"\n",
   starter:
-    "row = acs_raw[6]\n\n" +
-    "workers = \nbike = \nshare = \n\n" +
-    "walk_index = \n\n" +
-    "print(workers, bike, share, walk_index)",
+    "workers = \nbike = \nscore = \n\n" +
+    "share = \n\n" +
+    "print(workers, bike, score, share)",
   checks: [
-    { label: "workers is the count as an int",
+    { label: "workers is a whole number",
       code: "expect(expect_defined(globals(), 'workers'), 1303)" },
-    { label: "bike is the count as an int",
+    { label: "bike is a whole number",
       code: "expect(expect_defined(globals(), 'bike'), 21)" },
-    { label: "share is a float, not an int",
-      code: "expect_type(expect_defined(globals(), 'share'), float)" },
+    { label: "score kept its fractional part",
+      code: "expect_type(expect_defined(globals(), 'score'), float)\nexpect_close(score, 14.5, 1e-12)" },
     { label: "share is bike divided by workers",
-      code: "expect_close(share, 21 / 1303, 1e-12)" },
-    { label: "walk_index is the score as a float",
-      code: "expect_close(expect_defined(globals(), 'walk_index'), float(walk_raw[6][4]), 1e-9)" }
+      code: "expect_close(expect_defined(globals(), 'share'), 21 / 1303, 1e-12)" },
+    { label: "share is a float — '/' never gives a whole number",
+      code: "expect_type(share, float)" }
   ],
   solution:
-    "row = acs_raw[6]\n\n" +
-    "workers = int(row[1])\n" +
-    "bike = int(row[2])\n" +
-    "share = bike / workers        # '/' always gives a float -- '//' would give 0\n\n" +
-    "walk_index = float(walk_raw[6][4])\n\n" +
-    "print(workers, bike, share, walk_index)"
+    "workers = int(workers_text)\n" +
+    "bike = int(bike_text)\n" +
+    "score = float(score_text)\n\n" +
+    "share = bike / workers\n\n" +
+    "print(workers, bike, score, share)\n" +
+    "# int() for a count, float() for anything with a decimal point.\n" +
+    "# int(\"14.5\") does not round -- it refuses."
 });
 
 COURSE.exercise("ex2", {

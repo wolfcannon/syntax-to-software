@@ -50,6 +50,13 @@
       ]
     },
     {
+      "name": "indexing",
+      "step": 3,
+      "patterns": [
+        "\\w\\[\\d+\\]"
+      ]
+    },
+    {
       "name": "slice",
       "step": 3,
       "patterns": [

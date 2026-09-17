@@ -312,8 +312,10 @@ def _run_exercise(setup_src, user_src, checks_json):
      the problem: right answer -> Correct! and the explanation; first wrong
      answer -> a nudge and nothing else; second wrong answer -> the answer,
      with the lines that decide it highlighted in the code. */
-  const RETRY = "Read the code carefully and try again. " +
-                "Pay attention to the indentation.";
+  // What a first wrong answer says. Deliberately bare — a reader who is one
+  // glance from seeing it should get another glance, not an explanation.
+  // Pages override it with something pointed at the thing being missed.
+  const RETRY = "Read it again carefully and try again.";
 
   function quiz(mountId, spec) {
     const mount = document.getElementById(mountId);
@@ -434,7 +436,7 @@ def _run_exercise(setup_src, user_src, checks_json):
           anyRevealed = true;
         } else {
           r.note.className = "part-note nudge";
-          r.note.innerHTML = "<p>" + RETRY + "</p>";
+          r.note.innerHTML = "<p>" + (spec.retry || RETRY) + "</p>";
           r.note.hidden = false;
         }
       });
