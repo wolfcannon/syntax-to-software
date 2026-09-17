@@ -259,8 +259,11 @@ Rules, each of which has already caught a real bug:
   answer — pass a second, different input.
 - **Label checks in the learner's language.** "the boundary values 5.75, 10.5
   and 15.25 fall in the lower band", not "test_boundaries".
-- **Put given data in `setup`, not the starter**, and show it in the prompt if
-  they need to see it. The editor is for their work.
+- **Put given data in `setup`, not the starter** — the editor is for their
+  work. The exception is data whose exact form is part of the problem: if the
+  answer depends on stray spaces, a leading zero or a capital letter, it goes
+  in the starter where the learner can see it. Hidden setup for those makes the
+  exercise a guessing game.
 - Comment the solution with *why*, especially the trap it avoids.
 - **Rewriting a starter is safe.** Drafts are keyed by a hash of the starter
   they were typed against, so changing one shows the new code instead of

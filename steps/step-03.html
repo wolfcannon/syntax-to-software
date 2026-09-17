@@ -292,8 +292,7 @@ COURSE.exercise("ex0", {
     "lower case, and spaces between words replaced with hyphens.</p>" +
     "<p class='small'>Three methods, in some order. You have met all of " +
     "them.</p>",
-  setup: 'title = "  Walk Score Index  "\n',
-  starter: "slug = \n\nprint(slug)",
+  starter: 'title = "  Walk Score Index  "\n\nslug = \n\nprint(slug)\n',
   checks: [
     { label: "slug is the heading, cleaned up",
       code: "expect(expect_defined(globals(), 'slug'), 'walk-score-index')" },
@@ -309,6 +308,7 @@ COURSE.exercise("ex0", {
       code: "expect(__stdout__, 'walk-score-index\\n')" }
   ],
   solution:
+    'title = "  Walk Score Index  "\n\n' +
     'slug = title.strip().lower().replace(" ", "-")\n\n' +
     "print(slug)\n\n" +
     "# strip first, or the spaces on the ends become hyphens too:\n" +
