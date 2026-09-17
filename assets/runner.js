@@ -284,6 +284,7 @@ def _run_exercise(setup_src, user_src, checks_json):
       const wrap = el("div", "quiz-part");
       if (part.label) wrap.append(el("p", "lab", part.label));
       if (part.code) wrap.insertAdjacentHTML("beforeend", part.code);
+      const codeEl = wrap.querySelector("pre");
       if (part.question) wrap.append(el("p", "ask", part.question));
       const opts = el("div", "quiz-opts");
       const partWhy = el("div", "part-why");
@@ -299,7 +300,7 @@ def _run_exercise(setup_src, user_src, checks_json):
         return b;
       });
       wrap.append(opts, partWhy);
-      return { wrap, buttons, partWhy };
+      return { wrap, buttons, partWhy, codeEl, annotated: false };
     });
 
     if (parts.length > 1) {
@@ -357,11 +358,21 @@ def _run_exercise(setup_src, user_src, checks_json):
             r.buttons[chosen[pi]].classList.add("wrong");
             r.partWhy.innerHTML = opt.why || "<p>Not that one.</p>";
             r.partWhy.hidden = false;
+            // Wrong once: annotate the code line by line. It explains what
+            // each line does without saying what the whole thing prints, so
+            // there is still something left to work out.
+            if (part.annotated && r.codeEl && !r.annotated) {
+              r.codeEl.insertAdjacentHTML("afterend", part.annotated);
+              r.codeEl.remove();
+              r.codeEl = r.wrap.querySelector("pre");
+              r.annotated = true;
+            }
           }
         }
       });
       if (!allRight) {
-        if (hint) hint.textContent = "not quite — change what you need to and check again";
+        if (hint) hint.textContent =
+          "Not quite. Read the comments on the code, then try again.";
         return;
       }
       if (hint) hint.textContent = "";

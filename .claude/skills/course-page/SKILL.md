@@ -122,13 +122,22 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
      intro: "<p>what the two have in common</p>",
      parts: [
        { label: "A", code: "<pre>…</pre>", question: "What does A print?",
+         annotated: "<pre>…same code, one comment per line…</pre>",
          options: [ … ] },
        { label: "B", code: "<pre>…</pre>", question: "What does B print?",
-         options: [ … ] },
+         annotated: "<pre>…</pre>", options: [ … ] },
      ],
      why: "<p>shown once both are right</p>",
    });
    ```
+
+   `annotated` is the hint. Get a part wrong and its code is replaced by the
+   same code with a comment on every line, and the learner is told to read them
+   and try again. Two rules for writing those comments: say what each line
+   **does**, never what the program **prints** — the reader must still assemble
+   the answer — and annotate only the part they got wrong, which the component
+   handles, so a comparison is never spoiled by a hint on the half they read
+   correctly.
 
    One submit rather than two is the point: the learner has to commit to a
    reading of both before finding out about either. Answering one and being

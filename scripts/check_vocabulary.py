@@ -128,7 +128,8 @@ def main():
             parts = q.get("parts") or [{"options": q.get("options", [])}]
             raw = [q.get("question", ""), q.get("intro", ""), q.get("why", "")]
             for part in parts:
-                raw += [part.get("code", ""), part.get("question", "")]
+                raw += [part.get("code", ""), part.get("annotated", ""),
+                        part.get("question", "")]
                 for o in part.get("options", []):
                     raw += [o.get("html", ""), o.get("why", "")]
             text = re.sub(r"<[^>]+>", " ", " ".join(raw))
