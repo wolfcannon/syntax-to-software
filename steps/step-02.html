@@ -41,15 +41,74 @@
         exists but a value has not yet been assigned to it.</p>
       </div>
 
-      <h2>Assignment binds a name to a value</h2>
-      <p><code>workers = 1303</code> does not put 1303 into a box called
-      <code>workers</code>. It makes the name <code>workers</code> refer to the
-      value 1303. Rebinding it to something else is free and has no effect on
-      the old value:</p>
-<pre>workers = "1303"     <span class="c"># a string</span>
-workers = int(workers)   <span class="c"># now the name refers to an int; the string is gone</span></pre>
-      <p>Names have no declared type, so nothing stops a name from meaning
-      text on one line and a number on the next.</p>
+      <h2>Assignment</h2>
+      <p>The statement you will write most: a name, an <code>=</code>, and a
+      value.</p>
+<pre>workers = 1303
+score = 14.5
+label = "walkable"</pre>
+      <p>Python works out the value on the right, then binds the name on the
+      left to it. Nothing is printed. The effect is the point.</p>
+      <p>The <code>=</code> is an instruction, not a question. It does not ask
+      whether two things are equal — that is <code>==</code>, and it comes in
+      step 6.</p>
+
+      <h2>Casting</h2>
+      <p>Converting a value from one type to another. Each of the type names
+      doubles as a way of producing that type.</p>
+<pre>int("1303")     <span class="c"># 1303     text becomes a whole number</span>
+float("14.5")   <span class="c"># 14.5     text becomes a number with a fraction</span>
+str(1303)       <span class="c"># "1303"   a number becomes text</span></pre>
+      <p>Casting does not change the value you gave it. It produces a new one
+      and leaves the original alone.</p>
+      <p>Two cases are worth meeting now, because both look like mistakes when
+      you first hit them:</p>
+<pre>int(14.9)       <span class="c"># 14       it cuts the fraction off, it does not round</span>
+int("14.5")     <span class="c"># ValueError: invalid literal for int()</span></pre>
+      <p>The second one refuses because there is no whole number written in
+      <code>"14.5"</code>. Ask for <code>float("14.5")</code> and you get 14.5;
+      ask for <code>int(float("14.5"))</code> and you get 14, having said
+      out loud that you wanted the fraction discarded.</p>
+
+      <h2>Referential binding</h2>
+      <p>A name does not contain a value. It refers to one.</p>
+<pre>workers = "1303"
+workers = int(workers)</pre>
+
+      <figure>
+        <svg viewBox="0 0 720 215" role="img" aria-label="The name workers first refers to the text 1303, then to the whole number 1303; the original text is unchanged but nothing refers to it any more.">
+          <text x="14" y="20" class="svg-muted mono" style="font-size:11px">workers = "1303"</text>
+          <rect class="svg-box" x="14" y="30" width="126" height="46" rx="7"/>
+          <text x="34" y="59" class="svg-ink mono" style="font-size:13px">workers</text>
+          <path class="svg-line" d="M144 53 h40" marker-end="url(#b1)"/>
+          <rect x="188" y="30" width="140" height="46" rx="7" fill="var(--accent-wash)" stroke="var(--accent)"/>
+          <text x="208" y="54" class="svg-accent mono" style="font-size:13px">"1303"</text>
+          <text x="208" y="69" class="svg-muted" style="font-size:10px">str</text>
+          <defs><marker id="b1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" class="svg-muted"/></marker></defs>
+
+          <text x="14" y="108" class="svg-muted mono" style="font-size:11px">workers = int(workers)</text>
+          <rect class="svg-box" x="14" y="118" width="126" height="46" rx="7"/>
+          <text x="34" y="147" class="svg-ink mono" style="font-size:13px">workers</text>
+          <path class="svg-line" d="M144 141 h40" marker-end="url(#b1)"/>
+          <rect x="188" y="118" width="140" height="46" rx="7" fill="var(--ok-wash)" stroke="var(--ok)"/>
+          <text x="208" y="142" class="svg-ok mono" style="font-size:13px">1303</text>
+          <text x="208" y="157" class="svg-muted" style="font-size:10px">int</text>
+
+          <rect x="384" y="118" width="140" height="46" rx="7" fill="none"
+                stroke="var(--line-2)" stroke-dasharray="5 4"/>
+          <text x="404" y="142" class="svg-muted mono" style="font-size:13px">"1303"</text>
+          <text x="404" y="157" class="svg-muted" style="font-size:10px">str</text>
+          <text x="540" y="137" class="svg-muted" style="font-size:11px">unchanged, and now</text>
+          <text x="540" y="152" class="svg-muted" style="font-size:11px">referred to by nothing</text>
+
+          <line x1="14" y1="182" x2="706" y2="182" class="svg-line"/>
+          <text x="14" y="204" class="svg-ink" style="font-size:12px">The name moved. The value it used to refer to was never touched.</text>
+        </svg>
+        <figcaption>Rebinding is cheap and you will do it constantly. It is
+        also why a name can mean text on one line and a number on the next —
+        names have no declared type.</figcaption>
+      </figure>
 
       <h2>Three kinds of division</h2>
 <pre>1303 / 8     <span class="c"># 162.875   true division, always a float</span>
