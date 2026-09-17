@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Step 3 — Strings and formatting</title>
+<title>Step 3 — Methods and strings</title>
 <link rel="stylesheet" href="../assets/course.css?v=05c68d00">
 </head>
 <body>
@@ -14,7 +14,7 @@
     <div class="wrap">
 
       <p class="eyebrow">Unit 1 — Foundations · Step 3</p>
-      <h1>Strings and formatting</h1>
+      <h1>Methods and strings</h1>
       <ul class="lede-points">
         <li>Values can do things to themselves. That is what a dot means.</li>
         <li>Text can be cut apart by position.</li>
@@ -63,6 +63,11 @@
       that <code>2 + 2</code> is <code>4</code>, the call above is
       <code>'bikeable'</code>. A method call is an expression, as step 1 uses
       the word.</p>
+
+      <p>And because the return value is itself a value, you can ask it to do
+      something too. Each call works on what the one before it handed back:</p>
+<pre>"  Walk Score  ".strip()           <span class="c"># 'Walk Score'</span>
+"  Walk Score  ".strip().lower()   <span class="c"># 'walk score'</span></pre>
 
       <div class="note">
         <h4>Tip 💡: read it left to right</h4>
@@ -124,6 +129,9 @@ TypeError: str.upper() takes no arguments (1 given)</span></pre>
         because that is how Python is arranged. You learn them as you meet
         them.</p>
       </div>
+
+      <div id="q1"></div>
+      <div id="ex0"></div>
 
       <h2>Indexing and slicing</h2>
       <p>A string is a sequence of characters, indexed from zero. A slice
@@ -251,12 +259,67 @@ f"{'3101.03':&lt;10}|"   <span class="c"># '3101.03   |'  left-aligned, for tabl
   </div>
 </div>
 
-<script src="../assets/nav.js?v=d4755700"></script>
+<script src="../assets/nav.js?v=0748a261"></script>
 <script src="../assets/runner.js?v=277a066f"></script>
+<script>
+COURSE.quiz("q1", {
+  id: "s03-chain", tag: "Your turn", title: "One after another",
+  retry: "Not that one. Work out what the first call hands back, then read the second.",
+  question:
+    "<pre>'walk'.replace('walk', 'bike').replace('bike', 'cycle')</pre>" +
+    "<p>What is the result?</p>",
+  options: [
+    { html: "<code>'cycle'</code>", correct: true,
+      why: "The first call turns <code>'walk'</code> into <code>'bike'</code>. " +
+           "The second is called on that, and turns it into <code>'cycle'</code>." },
+    { html: "<code>'bike'</code>" },
+    { html: "<code>'walk'</code>" },
+    { html: "An error — you cannot put two methods on one line" }
+  ],
+  why:
+    "<p>Each call runs on whatever the one before it handed back, left to " +
+    "right. Swap the two and you get <code>'bike'</code> instead: there is no " +
+    "<code>\"bike\"</code> in <code>'walk'</code> for the first call to find, " +
+    "so it does nothing, and then the second one does.</p>"
+});
+</script>
+<script>
+COURSE.exercise("ex0", {
+  id: "s03-methods", tag: "Exercise 1", title: "Call some methods",
+  prompt:
+    "<p>A heading arrives with stray spaces around it and capitals in it.</p>" +
+    "<p>Turn it into <code>walk-score-index</code>: no surrounding spaces, all " +
+    "lower case, and spaces between words replaced with hyphens.</p>" +
+    "<p class='small'>Three methods, in some order. You have met all of " +
+    "them.</p>",
+  setup: 'title = "  Walk Score Index  "\n',
+  starter: "slug = \n\nprint(slug)",
+  checks: [
+    { label: "slug is the heading, cleaned up",
+      code: "expect(expect_defined(globals(), 'slug'), 'walk-score-index')" },
+    { label: "it was worked out from title, not typed in",
+      code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
+           + "if 'walk-score-index' in code_only:\n"
+           + "    raise CheckFailed('the answer is written out rather than built')\n"
+           + "if 'title' not in code_only:\n"
+           + "    raise CheckFailed('start from title')") },
+    { label: "the original was left alone — methods hand back a new value",
+      code: "expect(title, '  Walk Score Index  ')" },
+    { label: "it printed the result",
+      code: "expect(__stdout__, 'walk-score-index\\n')" }
+  ],
+  solution:
+    'slug = title.strip().lower().replace(" ", "-")\n\n' +
+    "print(slug)\n\n" +
+    "# strip first, or the spaces on the ends become hyphens too:\n" +
+    '#   title.lower().replace(" ", "-")  ->  \'--walk-score-index--\'\n' +
+    "# Order matters because each call works on what the last one returned."
+});
+</script>
 <script src="../assets/sample.js?v=3b94601e"></script>
 <script>
 COURSE.exercise("ex1", {
-  id: "s03-geoid", tag: "Exercise 1", title: "Build a GEOID that survives",
+  id: "s03-geoid", tag: "Exercise 2", title: "Build a GEOID that survives",
   prompt:
     "<p>Assemble a 12-character block group GEOID from its four parts: state " +
     "(2), county (3), tract (6), block group (1). The parts arrive as a " +
@@ -294,7 +357,7 @@ COURSE.exercise("ex1", {
 });
 
 COURSE.exercise("ex2", {
-  id: "s03-format", tag: "Exercise 2", title: "A line a human can read",
+  id: "s03-format", tag: "Exercise 3", title: "A line a human can read",
   prompt:
     "<p>Produce one summary line for the block group in <code>acs_raw[6]</code>, " +
     "assigned to <code>line</code>, in exactly this shape:</p>" +
@@ -335,7 +398,7 @@ COURSE.exercise("ex2", {
 });
 
 COURSE.exercise("ex3", {
-  id: "s03-parse", tag: "Exercise 3", title: "Pull a NAME apart",
+  id: "s03-parse", tag: "Exercise 4", title: "Pull a NAME apart",
   prompt:
     "<p>The ACS <code>NAME</code> field is a comma-separated description:</p>" +
     "<pre>Block Group 3, Census Tract 3401.1, Marion County, Indiana</pre>" +
