@@ -257,61 +257,133 @@ def _run_exercise(setup_src, user_src, checks_json):
 
   /* ---------- inline quiz ------------------------------------------------
      A question the learner answers by clicking, with no Python behind it —
-     instant, and it does not pull down the runtime. Wrong answers explain
-     themselves and let you try again; the right one locks and explains why. */
+     instant, and it does not pull down the runtime. Two shapes:
+
+       options: [...]   one question, answered on click
+       parts:   [...]   several questions, answered together on one submit
+
+     A wrong answer is the best teaching moment on a page, so every wrong
+     option carries its own explanation rather than a bare "try again". */
   function quiz(mountId, spec) {
     const mount = document.getElementById(mountId);
     if (!mount) return;
     const id = spec.id || mountId;
+    const parts = spec.parts ||
+      [{ options: spec.options, single: true }];
 
     const card = el("section", "quiz");
     const head = el("div", "quiz-head");
     head.append(el("span", "tag", spec.tag || "Your turn"),
                 el("span", "ttl", spec.title || ""));
-    const body = el("div", "quiz-body", spec.question || "");
-    const opts = el("div", "quiz-opts");
+    const body = el("div", "quiz-body", spec.question || spec.intro || "");
     const why = el("div", "quiz-why");
     why.hidden = true;
 
-    const buttons = (spec.options || []).map((opt, i) => {
-      const b = el("button", "quiz-opt");
-      b.type = "button";
-      b.innerHTML = '<span class="mark">' + String.fromCharCode(65 + i) +
-                    "</span>" + opt.html;
-      b.addEventListener("click", () => choose(b, opt));
-      opts.append(b);
-      return b;
+    const chosen = new Array(parts.length).fill(null);
+    const rendered = parts.map((part, pi) => {
+      const wrap = el("div", "quiz-part");
+      if (part.label) wrap.append(el("p", "lab", part.label));
+      if (part.code) wrap.insertAdjacentHTML("beforeend", part.code);
+      if (part.question) wrap.append(el("p", "ask", part.question));
+      const opts = el("div", "quiz-opts");
+      const partWhy = el("div", "part-why");
+      partWhy.hidden = true;
+      const buttons = (part.options || []).map((opt, i) => {
+        const b = el("button", "quiz-opt");
+        b.type = "button";
+        b.setAttribute("aria-pressed", "false");
+        b.innerHTML = '<span class="mark">' + String.fromCharCode(65 + i) +
+                      "</span>" + opt.html;
+        b.addEventListener("click", () => pick(pi, i));
+        opts.append(b);
+        return b;
+      });
+      wrap.append(opts, partWhy);
+      return { wrap, buttons, partWhy };
     });
 
-    body.append(opts, why);
+    if (parts.length > 1) {
+      const cols = el("div", "quiz-cols");
+      rendered.forEach((r) => cols.append(r.wrap));
+      body.append(cols);
+    } else {
+      rendered.forEach((r) => body.append(r.wrap));
+    }
+
+    let submit = null;
+    if (!parts[0].single) {
+      const bar = el("div", "quiz-bar");
+      submit = el("button", "primary", "Check both");
+      submit.type = "button";
+      submit.disabled = true;
+      const hint = el("span", "hint", "answer both, then check");
+      bar.append(submit, hint);
+      submit.addEventListener("click", () => grade(hint));
+      body.append(bar);
+    }
+    body.append(why);
     card.append(head, body);
     mount.replaceWith(card);
 
-    if (readDone()[id]) settle();
+    if (readDone()[id]) restore();
 
-    function choose(button, opt) {
-      if (opt.correct) {
-        settle();
-        markDone(id, true);
+    function pick(pi, oi) {
+      if (card.classList.contains("answered")) return;
+      chosen[pi] = oi;
+      const r = rendered[pi];
+      r.buttons.forEach((b, i) => {
+        b.setAttribute("aria-pressed", String(i === oi));
+        b.classList.remove("wrong", "right", "faded");
+      });
+      r.partWhy.hidden = true;
+      if (submit) {
+        submit.disabled = chosen.some((c) => c === null);
       } else {
-        button.classList.add("wrong");
-        button.disabled = true;
-        why.hidden = false;
-        why.innerHTML = opt.why || "<p>Not that one — try again.</p>";
+        grade();
       }
     }
 
-    function settle() {
-      buttons.forEach((b, i) => {
-        b.disabled = true;
-        const opt = spec.options[i];
-        if (opt.correct) b.classList.add("right");
-        else if (!b.classList.contains("wrong")) b.classList.add("faded");
+    function grade(hint) {
+      let allRight = true;
+      parts.forEach((part, pi) => {
+        const opt = part.options[chosen[pi]];
+        const r = rendered[pi];
+        if (opt && opt.correct) {
+          r.buttons[chosen[pi]].classList.add("right");
+          r.partWhy.hidden = true;
+        } else {
+          allRight = false;
+          if (opt) {
+            r.buttons[chosen[pi]].classList.add("wrong");
+            r.partWhy.innerHTML = opt.why || "<p>Not that one.</p>";
+            r.partWhy.hidden = false;
+          }
+        }
       });
+      if (!allRight) {
+        if (hint) hint.textContent = "not quite — change what you need to and check again";
+        return;
+      }
+      if (hint) hint.textContent = "";
+      settle();
+      markDone(id, true);
+    }
+
+    function settle() {
+      rendered.forEach((r, pi) => {
+        r.buttons.forEach((b, i) => {
+          b.disabled = true;
+          if (parts[pi].options[i].correct) b.classList.add("right");
+          else if (!b.classList.contains("wrong")) b.classList.add("faded");
+        });
+      });
+      if (submit) submit.disabled = true;
       card.classList.add("answered");
       why.hidden = false;
       why.innerHTML = spec.why || "";
     }
+
+    function restore() { settle(); }
   }
 
   function escapeHtml(s) {

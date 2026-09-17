@@ -125,11 +125,13 @@ def main():
 
         for q in (e for e in exercises
                   if e["file"] == path.name and e.get("kind") == "quiz"):
-            text = re.sub(r"<[^>]+>", " ",
-                          (q.get("question", "") + " "
-                           + " ".join(o.get("html", "") + " " + o.get("why", "")
-                                      for o in q.get("options", []))
-                           + " " + q.get("why", "")))
+            parts = q.get("parts") or [{"options": q.get("options", [])}]
+            raw = [q.get("question", ""), q.get("intro", ""), q.get("why", "")]
+            for part in parts:
+                raw += [part.get("code", ""), part.get("question", "")]
+                for o in part.get("options", []):
+                    raw += [o.get("html", ""), o.get("why", "")]
+            text = re.sub(r"<[^>]+>", " ", " ".join(raw))
             text = (text.replace("&lt;", "<").replace("&gt;", ">")
                         .replace("&amp;", "&").replace("&quot;", '"'))
             scanned += 1

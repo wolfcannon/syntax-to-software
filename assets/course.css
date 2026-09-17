@@ -274,7 +274,18 @@ button:disabled{opacity:.5; cursor:default}
   font:700 10.5px/1 var(--mono); letter-spacing:.08em; text-transform:uppercase;
   color:var(--muted); margin:0 0 5px;
 }
+.quiz-part{min-width:0}
+.quiz-part .ask{font-size:13.5px; font-weight:600; margin:10px 0 8px}
 .quiz-opts{display:grid; gap:8px; margin:0}
+.quiz-opt[aria-pressed="true"]{border-color:var(--accent); background:var(--accent-wash)}
+.quiz-opt[aria-pressed="true"] .mark{color:var(--accent-2)}
+.quiz-bar{display:flex; align-items:center; gap:10px; margin-top:16px; flex-wrap:wrap}
+.quiz-bar .hint{font-size:12.5px; color:var(--muted)}
+.part-why{
+  margin:10px 0 0; padding:10px 12px; border-radius:7px; font-size:13px;
+  background:var(--bad-wash); border:1px solid var(--bad);
+}
+.part-why :last-child{margin-bottom:0}
 .quiz-opt{
   text-align:left; padding:11px 14px; font:400 14px/1.45 var(--sans);
   border:1px solid var(--line-2); border-radius:8px;

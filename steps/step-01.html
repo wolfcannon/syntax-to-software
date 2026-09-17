@@ -250,26 +250,40 @@ walk_raw[1]  <span class="c"># ['18', '097', '310103', '2', '3.666667', '7', '3'
 <script>
 COURSE.quiz("q1", {
   id: "s01-indent", tag: "Your turn", title: "One line, moved one level",
-  question:
+  intro:
     "<p>These two are the same four statements. The only difference is how far " +
-    "the last one is indented.</p>" +
-    "<div class='quiz-cols'>" +
-      "<div><p class='lab'>A</p><pre>score = 14.5\nlabel = \"walkable\"\nif score &lt;= 5.75:\n    label = \"not walkable\"\n    print(label)</pre></div>" +
-      "<div><p class='lab'>B</p><pre>score = 14.5\nlabel = \"walkable\"\nif score &lt;= 5.75:\n    label = \"not walkable\"\nprint(label)</pre></div>" +
-    "</div>" +
-    "<p>A score of 14.5 is not below 5.75, so the block does not run. What does " +
-    "each one print?</p>",
-  options: [
-    { html: "A prints nothing. B prints <code>walkable</code>.", correct: true },
-    { html: "A prints <code>walkable</code>. B prints nothing.",
-      why: "<p>The other way round. In A the <code>print</code> is inside the " +
-           "block, and the block never runs — so A is the silent one.</p>" },
-    { html: "Both print <code>walkable</code>.",
-      why: "<p>B does. A cannot: its <code>print</code> is indented into a " +
-           "block that never runs.</p>" },
-    { html: "Both print <code>not walkable</code>.",
-      why: "<p>Neither does. <code>label</code> is only reassigned inside the " +
-           "block, and 14.5 is not below 5.75, so that line never runs.</p>" }
+    "the last one is indented. A score of 14.5 is not below 5.75, so the block " +
+    "does not run.</p>",
+  parts: [
+    {
+      label: "A",
+      code: "<pre>score = 14.5\nlabel = \"walkable\"\nif score &lt;= 5.75:\n    label = \"not walkable\"\n    print(label)</pre>",
+      question: "What does A print?",
+      options: [
+        { html: "Nothing at all", correct: true },
+        { html: "<code>walkable</code>",
+          why: "<p>That is B. Here the <code>print</code> is indented into the " +
+               "block, and the block never runs.</p>" },
+        { html: "<code>not walkable</code>",
+          why: "<p><code>label</code> is only reassigned inside the block, and " +
+               "that block never runs — so it is never <code>not walkable</code>.</p>" }
+      ]
+    },
+    {
+      label: "B",
+      code: "<pre>score = 14.5\nlabel = \"walkable\"\nif score &lt;= 5.75:\n    label = \"not walkable\"\nprint(label)</pre>",
+      question: "What does B print?",
+      options: [
+        { html: "Nothing at all",
+          why: "<p>That is A. Here <code>print</code> is back at the margin, " +
+               "outside the block, so it runs whatever the score is.</p>" },
+        { html: "<code>walkable</code>", correct: true },
+        { html: "<code>not walkable</code>",
+          why: "<p>The line that would have changed <code>label</code> is inside " +
+               "the block, and the block never runs. <code>label</code> is still " +
+               "what it was set to on line 2.</p>" }
+      ]
+    }
   ],
   why:
     "<p>Both are valid, but they are not equivalent. Only one will do what the " +

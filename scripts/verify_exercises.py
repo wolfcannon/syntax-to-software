@@ -27,14 +27,20 @@ def check_quizzes(quizzes):
     """A quiz with no correct answer, or two, is a broken quiz."""
     problems = []
     for q in quizzes:
-        right = [o for o in q.get("options", []) if o.get("correct")]
-        if len(right) != 1:
-            problems.append((q.get("id", q.get("mount")),
-                             f"has {len(right)} correct options, expected 1", ""))
-        for o in q.get("options", []):
-            if not o.get("correct") and not o.get("why"):
-                problems.append((q.get("id"), "a wrong option explains nothing",
-                                 o.get("html", "")[:60]))
+        parts = q.get("parts") or [{"options": q.get("options", [])}]
+        for i, part in enumerate(parts):
+            where = f"{q.get('id', q.get('mount'))}"
+            if q.get("parts"):
+                where += f" part {part.get('label', i + 1)}"
+            options = part.get("options", [])
+            right = [o for o in options if o.get("correct")]
+            if len(right) != 1:
+                problems.append(
+                    (where, f"has {len(right)} correct options, expected 1", ""))
+            for o in options:
+                if not o.get("correct") and not o.get("why"):
+                    problems.append((where, "a wrong option explains nothing",
+                                     o.get("html", "")[:60]))
         if not q.get("why"):
             problems.append((q.get("id"), "no explanation after the right answer", ""))
     return problems

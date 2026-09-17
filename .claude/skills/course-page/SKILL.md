@@ -104,7 +104,7 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
    COURSE.quiz("q1", {
      id: "sNN-slug",              // unique; remembers that it was answered
      tag: "Your turn", title: "…",
-     question: "<p>…</p>",        // may contain <pre>, or .quiz-cols for two side by side
+     question: "<p>…</p>",
      options: [
        { html: "…", correct: true },
        { html: "…", why: "<p>why this one is tempting and wrong</p>" },
@@ -112,6 +112,29 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
      why: "<p>shown once they get it right</p>",
    });
    ```
+
+   For a comparison, give each side its own snippet and its own choices, and
+   grade them together with one submit — `parts` instead of `options`:
+
+   ```js
+   COURSE.quiz("q1", {
+     id: "sNN-slug", tag: "Your turn", title: "…",
+     intro: "<p>what the two have in common</p>",
+     parts: [
+       { label: "A", code: "<pre>…</pre>", question: "What does A print?",
+         options: [ … ] },
+       { label: "B", code: "<pre>…</pre>", question: "What does B print?",
+         options: [ … ] },
+     ],
+     why: "<p>shown once both are right</p>",
+   });
+   ```
+
+   One submit rather than two is the point: the learner has to commit to a
+   reading of both before finding out about either. Answering one and being
+   told immediately would give away the other, since a comparison has only two
+   interesting outcomes. Wrong parts explain themselves and stay editable;
+   changing one clears its marks, and the card locks only when both are right.
 
    Every wrong option must explain itself — a wrong answer is the best teaching
    moment on the page, and "try again" wastes it. Wrong answers disable
