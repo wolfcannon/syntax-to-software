@@ -140,7 +140,7 @@ for geoid, score in lookup.items():   <span class="c"># both, unpacked</span>
           unhelpful: you learn that one row failed, not how many.</p>
           <p>With <code>.get()</code>, the lookup returns <code>None</code> and
           the loop continues. Now the absence is a value you can hold onto —
-          count it, list it, look at a few and work out why. Roughly: brackets
+          count it, list it, look at a few and work out why. Roughly: square brackets
           for keys you believe in, <code>.get()</code> for keys the data is
           allowed to withhold.</p>
           <p style="margin-bottom:0">The mistake is the third option:
@@ -228,7 +228,7 @@ COURSE.exercise("ex2", {
     "for row in walk_raw[1:]:\n" +
     "    geoid = row[0] + row[1] + row[2] + row[3]\n" +
     "    walk_lookup[geoid] = float(row[4])\n\n" +
-    "score_of = walk_lookup[\"180973401103\"]      # brackets: this key must exist\n" +
+    "score_of = walk_lookup[\"180973401103\"]      # square brackets: this key must exist\n" +
     "has_310308_3 = \"180973103083\" in walk_lookup\n\n" +
     "print(len(walk_lookup), score_of, has_310308_3)"
 });

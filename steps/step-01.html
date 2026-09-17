@@ -92,7 +92,7 @@
       matter:</p>
       <ul>
         <li>The caret <code>^</code> points at where the parser gave up, which
-        is often <em>after</em> the real mistake. An unclosed bracket on line 4
+        is often <em>after</em> the real mistake. An unclosed parenthesis on line 4
         reports an error on line 5.</li>
         <li>So when the flagged line looks fine, look at the line above it.</li>
       </ul>
@@ -126,7 +126,7 @@ type("1303")   <span class="c"># str — text</span></pre>
           <code>expected ':'</code>, <code>unexpected indent</code>,
           <code>unterminated string literal</code>.</li>
           <li>Look at the line it points to. If that line looks fine, look at
-          the line above: an unclosed quote or bracket is only noticed
+          the line above: an unclosed quote or parenthesis is only noticed
           later.</li>
           <li>If an indent looks correct and Python disagrees, you have mixed
           tabs and spaces. They are invisible on screen. Use spaces.</li>

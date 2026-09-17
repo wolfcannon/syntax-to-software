@@ -27,7 +27,7 @@
       knows how to do. Methods are accessed with a dot.</p>
 
       <figure>
-        <svg viewBox="0 0 720 118" role="img" aria-label="A method call marked underneath in three parts: the value, then the method name, then the arguments in brackets, with the joining dot picked out between the first two.">
+        <svg viewBox="0 0 720 118" role="img" aria-label="A method call marked underneath in three parts: the value, then the method name, then the arguments in parentheses, with the joining dot picked out between the first two.">
           <rect class="svg-box" x="14" y="16" width="692" height="52" rx="8"/>
           <text x="40" y="49" class="svg-ink mono" style="font-size:19px">"walkable"<tspan fill="var(--bad)" style="font-weight:700">.</tspan>replace("walk", "bike")</text>
 
@@ -51,13 +51,17 @@
         <li><span class="k a">arguments</span><span>what it needs in order to do it</span></li>
       </ul>
 
-      <p>The brackets are always there, even when nothing goes inside them:</p>
+      <p>The round brackets are <b>parentheses</b> — square brackets mean
+      something else in Python, and you meet those in step 6.</p>
+      <p>Parentheses are not decoration. The method name says which code to
+      run; the parentheses are what tell Python to run it. They are there even
+      when nothing goes inside them:</p>
 <pre>"walkable".upper()   <span class="c"># 'WALKABLE'</span>
 "WALKABLE".lower()   <span class="c"># 'walkable'</span></pre>
 
       <h3>Argument</h3>
       <p>A value handed to a method so it can do its work. Arguments go inside
-      the brackets, separated by commas.</p>
+      the parentheses, separated by commas.</p>
       <p>How many a method needs depends on how much it cannot work out for
       itself:</p>
 <pre>"walkable".upper()                   <span class="c"># 'WALKABLE'   needs nothing — the value is enough</span>
@@ -73,10 +77,10 @@
 TypeError: str.upper() takes no arguments (1 given)</span></pre>
 
       <div class="note trap">
-        <h4>Leaving the brackets off</h4>
+        <h4>Leaving the parentheses off</h4>
 <pre>"walkable".upper     <span class="c"># &lt;built-in method upper of str object&gt;</span>
 "walkable".upper()   <span class="c"># 'WALKABLE'</span></pre>
-        <p style="margin-bottom:0">Without brackets Python will return the
+        <p style="margin-bottom:0">Without parentheses Python will return the
         method itself rather than executing the code defined in the method. It
         does this without complaint. If a value prints as something about a
         "method", this is what happened.</p>
@@ -96,7 +100,7 @@ TypeError: str.upper() takes no arguments (1 given)</span></pre>
         <p><code>len("18")</code> is a function, handed a value.
         <code>"18".upper()</code> is a method, belonging to one. Both take an
         input and give something back; they differ in whether the value goes
-        before the dot or inside the brackets.</p>
+        before the dot or inside the parentheses.</p>
         <p style="margin-bottom:0">There is no rule to derive here.
         <code>len</code> is a function and <code>upper</code> is a method
         because that is how Python is arranged. You learn them as you meet

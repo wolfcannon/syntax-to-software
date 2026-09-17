@@ -204,6 +204,9 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
   vocabulary: prefer "nothing closes a block" over "there is no closing brace".
 - Define a term with a subheading and a sentence, not a lead-in explaining that
   you are about to define it.
+- **Call `( )` parentheses and `[ ]` square brackets**, never just "brackets".
+  The course uses both for different jobs from step 6 onward, and a reader
+  cannot tell which one an unqualified "bracket" means.
 - **One word per idea.** Once a term is defined, use it and no synonym. Step 1
   defines *syntax*, so nothing says "grammar" — a reader cannot tell whether a
   new word is a new concept, and has to hold both open until they find out.
