@@ -51,7 +51,7 @@ label = "walkable"</pre>
       left to it. Nothing is printed. The effect is the point.</p>
       <p>The <code>=</code> is an instruction, not a question. It does not ask
       whether two things are equal — that is <code>==</code>, and it comes in
-      step 6.</p>
+      step 5.</p>
 
       <h2>Casting</h2>
       <p>Converting a value from one type to another. Each of the type names
@@ -125,7 +125,7 @@ workers = int(workers)</pre>
         same way you cannot write 1/3 exactly as a decimal.</p>
         <p style="margin-bottom:0">So never ask whether two floats are equal.
         Ask whether they are close enough: <code>abs(share - 0.05) &lt;
-        1e-9</code>. This bites in step 6, when a score lands right on a
+        1e-9</code>. This bites in step 5, when a score lands right on a
         category boundary.</p>
       </div>
 
@@ -166,7 +166,7 @@ workers = int(workers)</pre>
         <figcaption>Nine states are numbered below 10, and every one of them
         loses its leading zero the moment a GEOID becomes an integer. Indiana
         is 18, so this bug is <em>invisible</em> in Marion County and goes off
-        the day you add a second county. That is ticket A in step 19.</figcaption>
+        the day you add a second county. That is ticket A in step 21.</figcaption>
       </figure>
 
       <div class="note trap">
@@ -213,7 +213,7 @@ workers = int(workers)</pre>
   </div>
 </div>
 
-<script src="../assets/nav.js?v=6653f05c"></script>
+<script src="../assets/nav.js?v=d4755700"></script>
 <script src="../assets/runner.js?v=277a066f"></script>
 <script>
 COURSE.quiz("q1", {
@@ -317,7 +317,7 @@ COURSE.exercise("ex2", {
     "still_matches = round_tripped == geoid\n\n" +
     "print(geoid, \"->\", round_tripped, \"| lost:\", lost_characters)\n" +
     "# One character. No exception, no warning. Every Alabama row silently\n" +
-    "# stops joining -- which is exactly the ticket you get handed in step 19."
+    "# stops joining -- which is exactly the ticket you get handed in step 21."
 });
 
 COURSE.exercise("ex3", {

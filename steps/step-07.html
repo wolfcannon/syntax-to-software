@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Step 7 — Comprehensions</title>
+<title>Step 7 — Loops</title>
 <link rel="stylesheet" href="../assets/course.css?v=90b252d8">
 </head>
 <body>
@@ -14,277 +14,200 @@
     <div class="wrap">
 
       <p class="eyebrow">Unit 1 — Foundations · Step 7</p>
-      <h1>Comprehensions</h1>
-      <p class="lede">Notation for "the collection of f(x) for every x in S
-      such that P(x)" — which you already know, just not with these brackets.</p>
-
-      <h2>The same loop, said once</h2>
-      <p>Four lines that build a list collapse into one:</p>
-<pre>shares = []
-for row in joined:
-    shares.append(row["bike"] / row["workers"])
-
-shares = [row["bike"] / row["workers"] for row in joined]</pre>
-      <p>The order reads awkwardly at first, because the value you are
-      collecting comes before the loop that collects it. It is the same three
-      pieces you already write, moved onto one line:</p>
-
-      <figure>
-        <svg viewBox="0 0 720 250" role="img" aria-label="A four-line loop and the one-line comprehension built from the same three pieces: what to collect, what to walk, and which rows to keep.">
-          <text x="14" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">THE LOOP YOU ALREADY WRITE</text>
-          <rect class="svg-box" x="14" y="34" width="692" height="92" rx="8"/>
-          <g class="mono" style="font-size:13px">
-            <text x="32" y="56" class="svg-ink">shares = []</text>
-            <text x="32" y="78" class="svg-ink">for row in joined:</text>
-            <text x="32" y="100" class="svg-ink">    if row["workers"] &gt; 0:</text>
-            <text x="32" y="118" class="svg-ink">        shares.append(row["bike"] / row["workers"])</text>
-          </g>
-          <rect x="196" y="64" width="150" height="20" rx="4" fill="var(--accent-wash)" stroke="var(--accent)" opacity=".9"/>
-          <rect x="60" y="86" width="208" height="20" rx="4" fill="var(--warn-wash)" stroke="var(--warn)" opacity=".9"/>
-          <rect x="176" y="105" width="230" height="20" rx="4" fill="var(--ok-wash)" stroke="var(--ok)" opacity=".9"/>
-
-          <path class="svg-line" d="M360 80 C 470 80 470 150 360 150" marker-end="url(#c1)"/>
-          <defs><marker id="c1" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-            <path d="M0 0 L8 4 L0 8 z" class="svg-muted"/></marker></defs>
-
-          <text x="14" y="176" class="svg-muted" style="font-size:11px; letter-spacing:.08em">THE SAME THING, ONE LINE</text>
-          <rect class="svg-box" x="14" y="188" width="692" height="44" rx="8"/>
-          <text x="32" y="216" class="svg-ink mono" style="font-size:13px">shares = [row["bike"] / row["workers"] for row in joined if row["workers"] &gt; 0]</text>
-          <rect x="82" y="200" width="230" height="20" rx="4" fill="var(--ok-wash)" stroke="var(--ok)" opacity=".9"/>
-          <rect x="316" y="200" width="150" height="20" rx="4" fill="var(--accent-wash)" stroke="var(--accent)" opacity=".9"/>
-          <rect x="470" y="200" width="196" height="20" rx="4" fill="var(--warn-wash)" stroke="var(--warn)" opacity=".9"/>
-        </svg>
-        <figcaption>Green is what you collect, accent is what you walk, amber
-        is which rows you keep. The loop puts them top to bottom; the
-        comprehension puts them left to right. Nothing else changes.</figcaption>
-      </figure>
-
-      <p>Read a comprehension by finding the <code>for</code> first. Everything
-      to its left is what you are collecting, everything to its right is where
-      the values come from and which ones to keep.</p>
-
-      <h2>Three brackets, three types</h2>
-<pre>[f(x) for x in xs]          <span class="c"># list — ordered, duplicates kept</span>
-{k: f(k) for k in keys}     <span class="c"># dict — the lookup from step 5, in one line</span>
-{x["geoid"] for x in rows}  <span class="c"># set — unordered, deduplicated, fast membership</span></pre>
-      <p>Dict comprehensions are the natural way to build a lookup:</p>
-<pre>walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}</pre>
-      <div class="note warn">
-        <h4>Duplicate keys don't complain</h4>
-        <p>If two rows produce the same key, the later one silently wins and
-        your lookup is quietly shorter than your input. Comparing
-        <code>len(lookup)</code> with <code>len(rows)</code> after building it
-        is a one-line check worth making a habit — and it is what catches a
-        duplicated GEOID in the real file.</p>
-      </div>
-
-      <h2>Sets answer the join questions directly</h2>
-      <p>Step 5 needed two loops to find the unmatched rows on each side. As
-      sets it is one operator each, and it reads like the question:</p>
-<pre>acs_ids = {row["geoid"] for row in acs_rows}
-walk_ids = set(walk_lookup)          <span class="c"># a dict yields its keys</span>
-
-unmatched = acs_ids - walk_ids       <span class="c"># asked for, never scored</span>
-orphans   = walk_ids - acs_ids       <span class="c"># scored, never asked for</span>
-both      = acs_ids &amp; walk_ids       <span class="c"># the actual analysis sample</span></pre>
-      <p>Membership in a set is fast in the way dictionary lookup is fast, so
-      <code>if geoid in walk_ids</code> stays cheap no matter how large the
-      data gets. The same test against a <em>list</em> scans it from the start
-      every time — fine for 632 rows, ruinous for the 220,000 block groups in
-      the national file you get to in the capstone.</p>
-
-      <h2>When a loop is the better answer</h2>
-      <p>A comprehension builds one collection from one source. Reach for a
-      loop when you are doing anything else:</p>
-      <ul>
-        <li>Building several things at once, or counting as you go.</li>
-        <li>Anything with <code>try</code>/<code>except</code> in it — you
-        cannot put one inside a comprehension, and step 11 will want to.</li>
-        <li>When the line stops fitting on one line. A comprehension with two
-        <code>for</code>s and a conditional expression is not clever, it is a
-        loop wearing a disguise.</li>
+      <h1>Loops</h1>
+      <ul class="lede-points">
+        <li>Do the same thing once per item, without writing it out.</li>
+        <li>Build up an answer as you go.</li>
+        <li>Skip an item, or stop early, when the data says so.</li>
       </ul>
 
-      <h2>Exercises</h2>
-      <div id="ex1"></div>
-      <div id="ex2"></div>
-      <div id="ex3"></div>
+      <h2><code>for</code></h2>
+      <p>A <code>for</code> statement opens a block and runs it once per item
+      in a sequence, binding a name to each item in turn.</p>
+<pre>scores = [3.5, 14.5, 9.0]
 
-      <div class="project">
-        <h4>Take it further</h4>
-        <p>Rewrite the lookups from step 5 as dict comprehensions, and confirm
-        they are identical to what the loops produced — <code>==</code> on two
-        dicts compares contents, so this is a one-line proof.</p>
-        <p style="margin-bottom:0">Then use set differences to diagnose the
-        join, and actually look at the unmatched GEOIDs. Report how many failed
-        and guess why. With the full data in step 12 you will have 12 of them,
-        and the guess you make now is worth testing then.</p>
+for score in scores:
+    print(score)</pre>
+      <p>The name after <code>for</code> is yours to choose. It exists only
+      because the loop put a value in it, and it is rebound on every pass —
+      which is step 2's referential binding, happening automatically.</p>
+      <p>A <code>range</code> works the same way, which is what makes it useful
+      for counting rather than for holding data:</p>
+<pre>for i in range(3):
+    print(i)        <span class="c"># 0, then 1, then 2</span></pre>
+
+      <h2>Building up an answer</h2>
+      <p>Most loops exist to accumulate something. Start with an empty answer
+      before the loop, add to it inside, and read it afterwards.</p>
+<pre>scores = [3.5, 14.5, 9.0]
+
+total = 0
+for score in scores:
+    total = total + score
+
+print(total / len(scores))   <span class="c"># 9.0 — the mean</span></pre>
+      <p>Where the accumulator is set matters. Inside the block it would be
+      reset on every pass; after the block it would not exist yet. This is the
+      indentation lesson from step 4 with something at stake.</p>
+
+      <h2>Leaving a loop early</h2>
+      <p>Two statements interrupt the normal run of a loop.
+      <code>continue</code> abandons this pass and starts the next.
+      <code>break</code> abandons the loop entirely.</p>
+<pre>for score in scores:
+    if score is None:
+        continue          <span class="c"># no score here — on to the next one</span>
+    print(score)</pre>
+      <div class="note trap">
+        <h4>A <code>continue</code> is a decision about the data</h4>
+        <p>Skipping a neighbourhood with no score is not the same as counting
+        it as zero. Zero drags a mean down on the strength of no evidence;
+        skipping leaves it out of the question entirely.</p>
+        <p style="margin-bottom:0">Either can be right. What is never right is
+        skipping without counting how many you skipped, which is exercise 1.</p>
       </div>
 
-      <details class="checkq">
-        <summary><span class="q">How many block groups failed to join, and why might that be?</span></summary>
-        <div class="ans">
-          <p>In the sample: one ACS row with no walkability score, one scored
-          block group no ACS row asked for. In the full data in
-          <code>data/</code>: 5 and 7.</p>
-          <p>Plausible reasons, and they are all real:</p>
-          <ul>
-            <li>The EPA excludes block groups with no population or no
-            households — parks, airports, industrial land, water.</li>
-            <li>The two datasets were cut from census geography at slightly
-            different times, so a block group split or merged in between.</li>
-            <li>A block group exists in the ACS release but had no reportable
-            estimates.</li>
-          </ul>
-          <p style="margin-bottom:0">What is <em>not</em> a reason here is the
-          leading-zero bug, because Indiana is state 18. That is exactly why it
-          stays invisible until step 19 — the join rate looks fine, so nobody
-          checks.</p>
-        </div>
-      </details>
+      <h2><code>while</code></h2>
+      <p><code>for</code> walks a sequence you already have.
+      <code>while</code> repeats for as long as a condition stays true, which
+      means you need to be sure the condition eventually goes false.</p>
+<pre>countdown = 3
+while countdown &gt; 0:
+    print(countdown)
+    countdown = countdown - 1</pre>
+      <p>Delete that last line and the condition never changes, so the loop
+      never ends. Reach for <code>for</code> unless you genuinely do not know
+      how many passes you need.</p>
+
+      <div id="q1"></div>
+
+      <h2>Exercises</h2>
+
+      <div id="ex1"></div>
+      <div id="ex2"></div>
+
+      <div class="note">
+        <h4>Tip 💡: three questions for every loop you write</h4>
+        <ol>
+          <li>What is the answer before the loop starts? Write that line
+          first.</li>
+          <li>Is each line inside the block or after it? One of them is almost
+          always wrong the first time.</li>
+          <li>What did you skip, and did you count it? A loop that quietly
+          drops rows is how a result ends up describing a population you did
+          not mean.</li>
+        </ol>
+      </div>
 
       <div id="pager"></div>
     </div>
   </div>
 </div>
 
-<script src="../assets/nav.js?v=6653f05c"></script>
+<script src="../assets/nav.js?v=d4755700"></script>
 <script src="../assets/runner.js?v=277a066f"></script>
-<script src="../assets/sample.js?v=3b94601e"></script>
+<script>
+COURSE.quiz("q1", {
+  id: "s07-placement", tag: "Your turn", title: "Where does the total go?",
+  retry: "Not that one. Look at which lines are inside the block.",
+  question:
+    "<p>Both of these mean to add up three scores.</p>" +
+    "<div class='quiz-cols'>" +
+      "<div><p class='lab'>A</p><pre>total = 0\nfor score in scores:\n    total = total + score\nprint(total)</pre></div>" +
+      "<div><p class='lab'>B</p><pre>for score in scores:\n    total = 0\n    total = total + score\nprint(total)</pre></div>" +
+    "</div>" +
+    "<p>With <code>scores = [3.5, 14.5, 9.0]</code>, what does B print?</p>",
+  options: [
+    { html: "<code>27.0</code> — the same as A" },
+    { html: "<code>9.0</code> — only the last score", correct: true,
+      why: "<code>total = 0</code> is inside the block, so it runs again on " +
+           "every pass and throws away everything added so far. Only the final " +
+           "pass survives." },
+    { html: "<code>0</code>" },
+    { html: "An error — <code>total</code> is not defined" }
+  ],
+  why:
+    "<p>Both are valid. B resets the answer once per item, so it reports the " +
+    "last score rather than the total. Where you start the accumulator is the " +
+    "whole of the difference.</p>"
+});
+</script>
 <script>
 COURSE.exercise("ex1", {
-  id: "s07-dictcomp", tag: "Exercise 1", title: "Same lookup, one line",
+  id: "s07-count", tag: "Exercise 1", title: "Count what you skip",
   prompt:
-    "<p>Build all three in comprehension form:</p><ul>" +
-    "<li><code>acs_rows</code> — a list of dicts, header zipped onto each row</li>" +
-    "<li><code>walk_lookup</code> — GEOID string to score as a float</li>" +
-    "<li><code>pop_lookup</code> — GEOID string to <code>TotPop</code> as an int</li>" +
-    "</ul><p>Then set <code>no_duplicate_keys</code> to whether " +
-    "<code>walk_lookup</code> has as many entries as there were rows.</p>",
-  setup: SAMPLE,
+    "<p>Six neighbourhoods. Two of them were never scored, and those arrive as " +
+    "<code>None</code>.</p>" +
+    "<p>Walk the list and set <code>usable</code> to how many have a score, and " +
+    "<code>skipped</code> to how many do not. Every score must be accounted " +
+    "for by exactly one of them.</p>",
+  setup: "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n",
   starter:
-    "acs_rows = \nwalk_lookup = \npop_lookup = \n\n" +
-    "no_duplicate_keys = \n\n" +
-    "print(len(acs_rows), len(walk_lookup), no_duplicate_keys)",
+    "usable = 0\nskipped = 0\n\n" +
+    "for score in scores:\n    pass\n\n" +
+    "print(usable, skipped)\n",
   checks: [
-    { label: "acs_rows is a list of dicts keyed by the header",
-      code: "expect([list(r.values()) for r in expect_defined(globals(), 'acs_rows')], acs_raw[1:])\nexpect(list(acs_rows[0].keys()), acs_raw[0])" },
-    { label: "walk_lookup maps 12-character GEOIDs to floats",
-      code: ("lk = expect_defined(globals(), 'walk_lookup')\n"
-           + "expect(sorted({len(k) for k in lk}), [12])\n"
-           + "expect(sorted({type(v).__name__ for v in lk.values()}), ['float'])") },
-    { label: "walk_lookup matches what a loop would have built",
-      code: "expect(walk_lookup, {r[0]+r[1]+r[2]+r[3]: float(r[4]) for r in walk_raw[1:]})" },
-    { label: "pop_lookup holds populations as ints",
-      code: "expect(expect_defined(globals(), 'pop_lookup'), {r[0]+r[1]+r[2]+r[3]: int(r[9]) for r in walk_raw[1:]})" },
-    { label: "no_duplicate_keys confirms nothing was overwritten",
-      code: "expect(expect_defined(globals(), 'no_duplicate_keys'), True)" }
+    { label: "usable counts the scores that exist",
+      code: "expect(expect_defined(globals(), 'usable'), 4)" },
+    { label: "skipped counts the ones that do not",
+      code: "expect(expect_defined(globals(), 'skipped'), 2)" },
+    { label: "the two add up to every neighbourhood — nothing vanished",
+      code: "expect(usable + skipped, len(scores))" },
+    { label: "the counters were not reset inside the loop",
+      code: ("body = [l for l in __source__.splitlines() if l[:1].isspace()]\n"
+           + "for l in body:\n"
+           + "    if l.strip() in ('usable = 0', 'skipped = 0'):\n"
+           + "        raise CheckFailed('%r is inside the loop, so it resets every pass' % l.strip())") }
   ],
   solution:
-    "acs_rows = [dict(zip(acs_raw[0], row)) for row in acs_raw[1:]]\n" +
-    "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n" +
-    "pop_lookup = {r[0] + r[1] + r[2] + r[3]: int(r[9]) for r in walk_raw[1:]}\n\n" +
-    "no_duplicate_keys = len(walk_lookup) == len(walk_raw) - 1\n\n" +
-    "print(len(acs_rows), len(walk_lookup), no_duplicate_keys)"
+    "usable = 0\nskipped = 0\n\n" +
+    "for score in scores:\n" +
+    "    if score is None:\n" +
+    "        skipped = skipped + 1\n" +
+    "        continue\n" +
+    "    usable = usable + 1\n\n" +
+    "print(usable, skipped)\n\n" +
+    "# The check that they add up to len(scores) is the cheapest data audit\n" +
+    "# there is. Run one every time you filter, and rows cannot disappear\n" +
+    "# without you noticing."
 });
 
 COURSE.exercise("ex2", {
-  id: "s07-sets", tag: "Exercise 2", title: "Diagnose the join with sets",
+  id: "s07-collect", tag: "Exercise 2", title: "Build a list as you go",
   prompt:
-    "<p>Build <code>acs_ids</code> and <code>walk_ids</code> as sets of GEOID " +
-    "strings, then answer the three join questions with set operations — no " +
-    "loops, no <code>if</code>:</p><ul>" +
-    "<li><code>unmatched</code> — in the ACS, with no walkability score</li>" +
-    "<li><code>orphans</code> — scored, but no ACS row</li>" +
-    "<li><code>sample</code> — in both, i.e. the rows the analysis can use</li>" +
-    "</ul><p>Then set <code>coverage</code> to the fraction of ACS block groups " +
-    "that found a score, as a float.</p>",
-  setup: SAMPLE,
+    "<p>From the same six, build <code>walkable</code>: a list of every score " +
+    "above 10.5, in the order they appear.</p>" +
+    "<p>Then set <code>best</code> to the highest score in that list.</p>" +
+    "<p class='small'>Remember that <code>None</code> cannot be compared with " +
+    "a number — deal with it before you test it.</p>",
+  setup: "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n",
   starter:
-    "acs_ids = \nwalk_ids = \n\n" +
-    "unmatched = \norphans = \nsample = \ncoverage = \n\n" +
-    "print(unmatched, orphans, f\"{coverage:.1%}\")",
+    "walkable = []\n\n" +
+    "for score in scores:\n    pass\n\n" +
+    "best = \n\nprint(walkable, best)\n",
   checks: [
-    { label: "both id sets are sets of GEOID strings",
-      code: ("expect_type(expect_defined(globals(), 'acs_ids'), set)\n"
-           + "expect_type(expect_defined(globals(), 'walk_ids'), set)\n"
-           + "expect(sorted({len(k) for k in acs_ids | walk_ids}), [12])") },
-    { label: "unmatched is the ACS-only side",
-      code: "expect(expect_defined(globals(), 'unmatched'), {r[6]+r[7]+r[8]+r[9] for r in acs_raw[1:]} - {r[0]+r[1]+r[2]+r[3] for r in walk_raw[1:]})" },
-    { label: "orphans is the walkability-only side",
-      code: "expect(expect_defined(globals(), 'orphans'), {r[0]+r[1]+r[2]+r[3] for r in walk_raw[1:]} - {r[6]+r[7]+r[8]+r[9] for r in acs_raw[1:]})" },
-    { label: "the two sides are genuinely different block groups",
-      code: "expect(unmatched & orphans, set())" },
-    { label: "sample is the intersection",
-      code: "expect(expect_defined(globals(), 'sample'), acs_ids & walk_ids)" },
-    { label: "coverage is the matched fraction of the ACS side",
-      code: "expect_close(expect_defined(globals(), 'coverage'), len(acs_ids & walk_ids) / len(acs_ids), 1e-12)" }
+    { label: "walkable holds the scores above 10.5, in order",
+      code: "expect(expect_defined(globals(), 'walkable'), [14.5, 19.5])" },
+    { label: "the missing scores did not raise on the way",
+      code: "expect(None in walkable, False)" },
+    { label: "best is the highest of them",
+      code: "expect_close(expect_defined(globals(), 'best'), 19.5, 1e-12)" },
+    { label: "best was worked out, not typed in",
+      code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
+           + "if '19.5' in code_only.split('scores =')[-1].split('\\n', 1)[-1]:\n"
+           + "    raise CheckFailed('19.5 is written out rather than found')") }
   ],
   solution:
-    "acs_ids = {r[6] + r[7] + r[8] + r[9] for r in acs_raw[1:]}\n" +
-    "walk_ids = {r[0] + r[1] + r[2] + r[3] for r in walk_raw[1:]}\n\n" +
-    "unmatched = acs_ids - walk_ids\n" +
-    "orphans = walk_ids - acs_ids\n" +
-    "sample = acs_ids & walk_ids\n" +
-    "coverage = len(sample) / len(acs_ids)\n\n" +
-    "print(unmatched, orphans, f\"{coverage:.1%}\")\n" +
-    "# Two loops in step 5 became two operators. Report coverage every time the\n" +
-    "# pipeline runs: if it drops from 99% to 62% after a change, you want to\n" +
-    "# find out from a number, not from a correlation that moved."
-});
-
-COURSE.exercise("ex3", {
-  id: "s07-filter", tag: "Exercise 3", title: "Filter down to usable rows",
-  prompt:
-    "<p>Build <code>usable</code>: a list of <code>(geoid, share, walk_index)</code> " +
-    "tuples for the block groups the analysis can actually use. A row qualifies " +
-    "only if it has a walkability score, has at least one worker, and its bike " +
-    "count is not the Census sentinel <code>-666666666</code>.</p>" +
-    "<p>Then set <code>n_dropped</code> to how many ACS rows didn't make it, " +
-    "and <code>mean_share</code> to the mean bike share across the ones that " +
-    "did.</p>",
-  setup: SAMPLE + "\n" +
-    "walk_lookup = {r[0]+r[1]+r[2]+r[3]: float(r[4]) for r in walk_raw[1:]}\n" +
-    "SENTINEL = -666666666\n",
-  starter:
-    "rows = [dict(zip(acs_raw[0], r)) for r in acs_raw[1:]]\n\n" +
-    "usable = \n\n" +
-    "n_dropped = \nmean_share = \n\n" +
-    "print(len(usable), n_dropped, round(mean_share, 5))",
-  checks: [
-    { label: "usable holds (str, float, float) tuples",
-      code: ("u = expect_defined(globals(), 'usable')\n"
-           + "expect_type(u[0], tuple)\nexpect(len(u[0]), 3)\n"
-           + "expect_type(u[0][0], str)\nexpect_type(u[0][1], float)\nexpect_type(u[0][2], float)") },
-    { label: "every excluded row was excluded for a reason",
-      code: ("want = [(r[6]+r[7]+r[8]+r[9], int(r[2]) / int(r[1]), walk_lookup[r[6]+r[7]+r[8]+r[9]])\n"
-           + "        for r in acs_raw[1:]\n"
-           + "        if r[6]+r[7]+r[8]+r[9] in walk_lookup and int(r[1]) > 0 and int(r[2]) != SENTINEL]\n"
-           + "expect(sorted(usable), sorted(want))") },
-    { label: "the sentinel row is gone",
-      code: "expect(any(s < 0 for g, s, w in usable), False)" },
-    { label: "n_dropped accounts for the rest",
-      code: "expect(expect_defined(globals(), 'n_dropped'), len(acs_raw) - 1 - len(usable))" },
-    { label: "mean_share is the mean over the usable rows only",
-      code: "expect_close(expect_defined(globals(), 'mean_share'), sum(s for g, s, w in usable) / len(usable), 1e-12)" }
-  ],
-  solution:
-    "rows = [dict(zip(acs_raw[0], r)) for r in acs_raw[1:]]\n\n" +
-    "usable = [\n" +
-    "    (r[\"state\"] + r[\"county\"] + r[\"tract\"] + r[\"block group\"],\n" +
-    "     int(r[\"B08301_018E\"]) / int(r[\"B08301_001E\"]),\n" +
-    "     walk_lookup[r[\"state\"] + r[\"county\"] + r[\"tract\"] + r[\"block group\"]])\n" +
-    "    for r in rows\n" +
-    "    if r[\"state\"] + r[\"county\"] + r[\"tract\"] + r[\"block group\"] in walk_lookup\n" +
-    "    and int(r[\"B08301_001E\"]) > 0\n" +
-    "    and int(r[\"B08301_018E\"]) != SENTINEL\n" +
-    "]\n\n" +
-    "n_dropped = len(rows) - len(usable)\n" +
-    "mean_share = sum(share for geoid, share, walk in usable) / len(usable)\n\n" +
-    "print(len(usable), n_dropped, round(mean_share, 5))\n" +
-    "# Notice how often the GEOID expression repeats, and how the conditions\n" +
-    "# are piling up. That is the comprehension telling you it has had enough.\n" +
-    "# Step 8 gives each of these pieces a name."
+    "walkable = []\n\n" +
+    "for score in scores:\n" +
+    "    if score is None:\n" +
+    "        continue\n" +
+    "    if score > 10.5:\n" +
+    "        walkable.append(score)\n\n" +
+    "best = max(walkable)\n\n" +
+    "print(walkable, best)\n\n" +
+    "# The None check has to come first. 'score > 10.5' on a None raises a\n" +
+    "# TypeError, the same one step 1 met when text was compared with a number."
 });
 </script>
 </body>

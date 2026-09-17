@@ -101,7 +101,7 @@ f"{'3101.03':&lt;10}|"   <span class="c"># '3101.03   |'  left-aligned, for tabl
         <h4>The debugging one</h4>
         <p><code>f"{workers=}"</code> prints <code>workers=1303</code> — name
         and value together. It is the fastest print-debugging tool in the
-        language and you will use it in step 10 more than you expect.</p>
+        language and you will use it in step 12 more than you expect.</p>
       </div>
 
       <h2>Exercises</h2>
@@ -115,7 +115,7 @@ f"{'3101.03':&lt;10}|"   <span class="c"># '3101.03   |'  left-aligned, for tabl
         <code>acs_raw</code> and for every row of <code>walk_raw</code>, and
         print them side by side. They will not line up — <code>acs_raw[3]</code>
         and <code>walk_raw[3]</code> are different block groups entirely. Notice
-        that now; step 5 is about fixing it properly.</p>
+        that now; step 8 is about fixing it properly.</p>
         <p style="margin-bottom:0">Then print one formatted summary line per
         row: GEOID, walkability to one decimal, and bike share as a
         percentage.</p>
@@ -134,8 +134,8 @@ f"{'3101.03':&lt;10}|"   <span class="c"># '3101.03   |'  left-aligned, for tabl
           you cannot always tell whether <code>1073</code> was Alabama county
           073 or state 10 county 73. The zero has to survive from the
           source.</p>
-          <p style="margin-bottom:0">This is why step 8 turns
-          <code>build_geoid</code> into a function and step 18 makes it the
+          <p style="margin-bottom:0">This is why step 10 turns
+          <code>build_geoid</code> into a function and step 20 makes it the
           very first thing tested.</p>
         </div>
       </details>
@@ -145,7 +145,7 @@ f"{'3101.03':&lt;10}|"   <span class="c"># '3101.03   |'  left-aligned, for tabl
   </div>
 </div>
 
-<script src="../assets/nav.js?v=6653f05c"></script>
+<script src="../assets/nav.js?v=d4755700"></script>
 <script src="../assets/runner.js?v=277a066f"></script>
 <script src="../assets/sample.js?v=3b94601e"></script>
 <script>
@@ -183,8 +183,8 @@ COURSE.exercise("ex1", {
     "geoid_in = f\"{state2:0>2}{county2:0>3}{tract2:0>6}{bg2}\"\n\n" +
     "print(geoid_al, geoid_in, len(geoid_al), len(geoid_in))\n" +
     "# The same spec handles both because the expression is evaluated before\n" +
-    "# it is padded. That is what makes this safe to reuse -- step 8 makes it\n" +
-    "# a function, and step 18 tests exactly this case."
+    "# it is padded. That is what makes this safe to reuse -- step 10 makes it\n" +
+    "# a function, and step 20 tests exactly this case."
 });
 
 COURSE.exercise("ex2", {

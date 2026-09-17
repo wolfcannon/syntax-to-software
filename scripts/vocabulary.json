@@ -17,21 +17,23 @@
     "step-06": 6,
     "step-07": 7,
     "step-08": 8,
-    "interlude-jupyter": 8.5,
     "step-09": 9,
     "step-10": 10,
+    "interlude-jupyter": 10.5,
     "step-11": 11,
     "step-12": 12,
     "step-13": 13,
     "step-14": 14,
     "step-15": 15,
     "step-16": 16,
-    "interlude-scripts": 16.5,
     "step-17": 17,
     "step-18": 18,
+    "interlude-scripts": 18.5,
     "step-19": 19,
     "step-20": 20,
-    "step-21": 21
+    "step-21": 21,
+    "step-22": 22,
+    "step-23": 23
   },
   "concepts": [
     {
@@ -65,70 +67,70 @@
     },
     {
       "name": "sorted(key=)",
-      "step": 4,
+      "step": 6,
       "patterns": [
         "sorted\\([^)]*key\\s*="
       ]
     },
     {
       "name": "lambda",
-      "step": 4,
+      "step": 6,
       "patterns": [
         "\\blambda\\b"
       ]
     },
     {
       "name": "enumerate",
-      "step": 4,
+      "step": 7,
       "patterns": [
         "\\benumerate\\("
       ]
     },
     {
       "name": ".append",
-      "step": 4,
+      "step": 6,
       "patterns": [
         "\\.append\\("
       ]
     },
     {
       "name": "dict literal",
-      "step": 5,
+      "step": 8,
       "patterns": [
         "^(?:(?!f[\"']).)*\\{\\s*[\"'][^\"']+[\"']\\s*:"
       ]
     },
     {
       "name": "dict .get",
-      "step": 5,
+      "step": 8,
       "patterns": [
         "\\.get\\("
       ]
     },
     {
       "name": "zip",
-      "step": 5,
+      "step": 8,
       "patterns": [
         "\\bzip\\("
       ]
     },
     {
       "name": "dict .items/.values",
-      "step": 5,
+      "step": 8,
       "patterns": [
         "\\.(items|values|keys)\\("
       ]
     },
     {
       "name": "for loop",
-      "step": 6,
+      "step": 7,
       "patterns": [
         "^\\s*for\\s+\\w"
       ]
     },
     {
       "name": "if statement",
-      "step": 6,
+      "step": 5,
       "patterns": [
         "^\\s*if\\s+",
         "^\\s*elif\\s+"
@@ -136,35 +138,35 @@
     },
     {
       "name": "while loop",
-      "step": 6,
+      "step": 7,
       "patterns": [
         "^\\s*while\\s+"
       ]
     },
     {
       "name": "continue/break",
-      "step": 6,
+      "step": 7,
       "patterns": [
         "^\\s*(continue|break)\\b"
       ]
     },
     {
       "name": "list comprehension",
-      "step": 7,
+      "step": 9,
       "patterns": [
         "\\[[^\\]]*\\bfor\\b[^\\]]*\\]"
       ]
     },
     {
       "name": "dict/set comprehension",
-      "step": 7,
+      "step": 9,
       "patterns": [
         "\\{[^}]*\\bfor\\b[^}]*\\}"
       ]
     },
     {
       "name": "set operations",
-      "step": 7,
+      "step": 9,
       "patterns": [
         "\\bset\\(",
         "\\w\\s[-&|]\\s\\w+_ids\\b"
@@ -172,21 +174,21 @@
     },
     {
       "name": "def",
-      "step": 8,
+      "step": 10,
       "patterns": [
         "^\\s*def\\s+\\w"
       ]
     },
     {
       "name": "return",
-      "step": 8,
+      "step": 10,
       "patterns": [
         "^\\s*return\\b"
       ]
     },
     {
       "name": "try/except",
-      "step": 11,
+      "step": 13,
       "patterns": [
         "^\\s*try:",
         "^\\s*except\\b"
@@ -194,14 +196,14 @@
     },
     {
       "name": "raise",
-      "step": 11,
+      "step": 13,
       "patterns": [
         "^\\s*raise\\b"
       ]
     },
     {
       "name": "open()/with",
-      "step": 12,
+      "step": 14,
       "patterns": [
         "^\\s*with\\s+",
         "\\bopen\\("
@@ -209,7 +211,7 @@
     },
     {
       "name": "import",
-      "step": 13,
+      "step": 15,
       "patterns": [
         "^\\s*import\\s+\\w",
         "^\\s*from\\s+[\\w.]+\\s+import\\b"
@@ -217,28 +219,28 @@
     },
     {
       "name": "class",
-      "step": 14,
+      "step": 16,
       "patterns": [
         "^\\s*class\\s+\\w"
       ]
     },
     {
       "name": "third-party library",
-      "step": 15,
+      "step": 17,
       "patterns": [
         "\\b(pd|np|plt|pandas|numpy|matplotlib|scipy|geopandas)\\."
       ]
     },
     {
       "name": "requests",
-      "step": 16,
+      "step": 18,
       "patterns": [
         "\\brequests\\.(get|post)\\("
       ]
     },
     {
       "name": "pytest",
-      "step": 18,
+      "step": 20,
       "patterns": [
         "\\bpytest\\b"
       ]
@@ -246,86 +248,71 @@
   ],
   "exemptions": [
     {
-      "page": "step-01",
-      "concept": "if statement",
-      "why": "the indentation quiz is ABOUT block structure \u2014 the if is scenery, and the learner predicts output rather than writing a condition"
-    },
-    {
-      "page": "step-04",
-      "concept": "for loop",
-      "why": "introduced on the page itself in a 'two shapes you need now' box \u2014 you cannot do anything with a list without walking it. Step 6 teaches control flow properly"
-    },
-    {
       "page": "step-04",
       "concept": "if statement",
-      "why": "same box"
-    },
-    {
-      "page": "step-05",
-      "concept": "for loop",
-      "why": "same box, carried forward; dictionaries are equally unusable without iteration"
+      "why": "the blocks page uses an if as scenery \u2014 the learner predicts output and moves a line, never writes a condition. Conditions are step 5"
     }
   ],
   "prose_terms": [
     {
       "term": "notebook",
-      "position": 8.5,
+      "position": 10.5,
       "patterns": [
         "\\bnotebooks?\\b"
       ]
     },
     {
       "term": "cell",
-      "position": 8.5,
+      "position": 10.5,
       "patterns": [
         "\\bcells?\\b"
       ]
     },
     {
       "term": "kernel",
-      "position": 8.5,
+      "position": 10.5,
       "patterns": [
         "\\bkernels?\\b"
       ]
     },
     {
       "term": "Jupyter",
-      "position": 8.5,
+      "position": 10.5,
       "patterns": [
         "\\bJupyter\\b"
       ]
     },
     {
       "term": "exception",
-      "position": 11,
+      "position": 13,
       "patterns": [
         "\\bexceptions?\\b"
       ]
     },
     {
       "term": "module",
-      "position": 13,
+      "position": 15,
       "patterns": [
         "\\bmodules?\\b"
       ]
     },
     {
       "term": "dataframe",
-      "position": 15,
+      "position": 17,
       "patterns": [
         "\\bdata ?frames?\\b"
       ]
     },
     {
       "term": "pandas",
-      "position": 15,
+      "position": 17,
       "patterns": [
         "\\bpandas\\b"
       ]
     },
     {
       "term": "virtualenv",
-      "position": 16.5,
+      "position": 18.5,
       "patterns": [
         "\\bvirtual environments?\\b",
         "\\bvenv\\b"
@@ -333,7 +320,7 @@
     },
     {
       "term": "git",
-      "position": 17,
+      "position": 19,
       "patterns": [
         "\\bgit\\b",
         "\\bgit commit\\b",
@@ -342,7 +329,7 @@
     },
     {
       "term": "pytest",
-      "position": 18,
+      "position": 20,
       "patterns": [
         "\\bpytest\\b",
         "\\bunit tests?\\b"

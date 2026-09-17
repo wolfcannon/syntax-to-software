@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Step 8 — Functions</title>
+<title>Step 8 — Dictionaries</title>
 <link rel="stylesheet" href="../assets/course.css?v=90b252d8">
 </head>
 <body>
@@ -14,365 +14,289 @@
     <div class="wrap">
 
       <p class="eyebrow">Unit 1 — Foundations · Step 8</p>
-      <h1>Functions</h1>
-      <p class="lede">Giving names to the three ideas you have now written out
-      by hand a dozen times — and the point where a pile of working code turns
-      into something that could become software.</p>
+      <h1>Dictionaries</h1>
+      <p class="lede">The type that turns two unrelated tables into one dataset
+      — and the step where the project stops being exercises and starts being
+      an analysis.</p>
 
-      <h2>Definition, arguments, return</h2>
-<pre>def bike_share(bike, workers):
-    """Fraction of workers who commute by bicycle, or None if unknowable."""
-    if workers == 0:
-        return None
-    return bike / workers</pre>
-      <p>Three things in three lines. The <b>docstring</b> is the first
-      statement in the body and is what <code>help(bike_share)</code> prints;
-      write it as a sentence about what comes out, not a restatement of the
-      name. <code>return</code> ends the call immediately — the second
-      <code>return</code> is reached only when the first was skipped. And a
-      function that falls off the end without returning gives back
-      <code>None</code>, which is a real source of confusion when you meant to
-      return something.</p>
+      <h2>Lookup by key, not by position</h2>
+      <p>A dictionary maps keys to values. Looking one up costs the same
+      whether it holds ten entries or ten million, which is the property the
+      rest of this step depends on.</p>
+<pre>row = {"geoid": "180973401103", "workers": 1303, "bike": 21}
+row["workers"]            <span class="c"># 1303</span>
+row["walk_index"]         <span class="c"># KeyError — it isn't there</span>
+row.get("walk_index")     <span class="c"># None — the polite version</span>
+row.get("walk_index", 0)  <span class="c"># 0 — with a default of your choosing</span></pre>
+      <p>The difference between <code>[]</code> and <code>.get()</code> is a
+      decision about whether a missing key is a bug or a fact. For a column
+      name you wrote yourself, missing means you typo'd it and you want the
+      <code>KeyError</code> immediately. For a GEOID that may legitimately not
+      exist in the other dataset, missing is data, and <code>.get()</code> lets
+      you record it.</p>
 
-      <h2>Pure functions</h2>
-      <p>A <b>pure</b> function's answer depends only on its arguments, and it
-      changes nothing outside itself. <code>bike_share(21, 1303)</code> is
-      0.0161 today, tomorrow, and anywhere else you call it, regardless of what
-      ran before it.</p>
-      <p>That is the property that makes the rest of this course possible. A
-      pure function can be tested in isolation (step 18), swapped for an
-      equivalent implementation and checked (step 9), and moved into another
-      file without dragging context with it (step 13). Impure code — code that
-      reads a global, or mutates a list its caller still holds — can do none of
-      those cleanly.</p>
-      <div class="note trap">
-        <h4>The default-argument trap</h4>
-        <p>Default values are evaluated <em>once</em>, when the
-        <code>def</code> runs — not on each call. So
-        <code>def collect(rows=[])</code> shares one list across every call
-        that omits the argument, and it accumulates. Use
-        <code>def collect(rows=None)</code> and build the empty list inside.
-        This costs people an afternoon exactly once.</p>
-      </div>
+      <h2>From positional rows to named fields</h2>
+      <p><code>zip</code> pairs up two sequences; <code>dict</code> turns pairs
+      into a mapping. Together they convert a row you have to count your way
+      through into one you can read:</p>
+<pre>header = acs_raw[0]
+row = dict(zip(header, acs_raw[1]))
+row["B08301_001E"]    <span class="c"># '401' — no more row[1]</span></pre>
+      <p>This is worth doing immediately and permanently.
+      <code>row[8] + row[9]</code> was fine for two steps; it is unreadable in
+      a hundred lines and it breaks silently if the API reorders its
+      columns.</p>
 
-      <h2>Scope</h2>
-      <p>Names assigned inside a function are local to it and vanish when it
-      returns. A function can also <em>read</em> names from the surrounding
-      program, which is convenient and is also how a function ends up secretly
-      depending on a name defined somewhere else entirely — a hazard the
-      level-up takes seriously. If a function needs a value, take it as an argument.</p>
-
-      <h2>What Unit 1 has actually built</h2>
-      <p>Every piece of the pipeline exists now, scattered across nine steps.
-      Named, they form the shape the rest of the course fills in:</p>
+      <h2>The join</h2>
+      <p>You have two tables describing the same block groups, and no
+      relationship between them except a shared identifier. Joining means:
+      build a lookup from one, then walk the other asking questions of it.</p>
 
       <figure>
-        <svg viewBox="0 0 720 210" role="img" aria-label="The Unit 1 pipeline: raw rows through build_geoid, join, bike_share and walk_category to a summary.">
-          <text x="14" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">THE PIPELINE, END TO END</text>
+        <svg viewBox="0 0 720 300" role="img" aria-label="Joining ACS rows to walkability scores by GEOID, with unmatched rows on both sides.">
+          <text x="14" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">ACS COMMUTE ROWS</text>
+          <text x="470" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">WALKABILITY LOOKUP</text>
 
-          <rect class="svg-box" x="14" y="38" width="104" height="52" rx="7"/>
-          <text x="30" y="62" class="svg-ink mono" style="font-size:11px">acs_raw</text>
-          <text x="30" y="78" class="svg-ink mono" style="font-size:11px">walk_raw</text>
+          <rect class="svg-box" x="14" y="34" width="210" height="34" rx="6"/>
+          <text x="28" y="56" class="svg-ink mono" style="font-size:11.5px">…340110 3</text>
+          <rect class="svg-box" x="14" y="76" width="210" height="34" rx="6"/>
+          <text x="28" y="98" class="svg-ink mono" style="font-size:11.5px">…341700 3</text>
+          <rect class="svg-box" x="14" y="118" width="210" height="34" rx="6"/>
+          <text x="28" y="140" class="svg-ink mono" style="font-size:11.5px">…353500 1</text>
+          <rect x="14" y="160" width="210" height="34" rx="6" fill="var(--bad-wash)" stroke="var(--bad)"/>
+          <text x="28" y="182" class="svg-bad mono" style="font-size:11.5px">…310308 3</text>
+          <text x="28" y="212" class="svg-bad" style="font-size:11px">in the ACS, not in the EPA file</text>
+          <text x="28" y="228" class="svg-muted" style="font-size:11px">5 of these in the full data</text>
 
-          <rect x="142" y="38" width="120" height="52" rx="7" fill="var(--accent-wash)" stroke="var(--accent)"/>
-          <text x="156" y="62" class="svg-accent mono" style="font-size:11px">build_geoid()</text>
-          <text x="156" y="79" class="svg-muted" style="font-size:10px">step 3</text>
+          <rect class="svg-box" x="466" y="34" width="240" height="34" rx="6"/>
+          <text x="480" y="56" class="svg-ink mono" style="font-size:11.5px">…340110 3 → 14.5</text>
+          <rect class="svg-box" x="466" y="76" width="240" height="34" rx="6"/>
+          <text x="480" y="98" class="svg-ink mono" style="font-size:11.5px">…341700 3 → 11.8</text>
+          <rect class="svg-box" x="466" y="118" width="240" height="34" rx="6"/>
+          <text x="480" y="140" class="svg-ink mono" style="font-size:11.5px">…353500 1 → 15.7</text>
+          <rect x="466" y="160" width="240" height="34" rx="6" fill="var(--warn-wash)" stroke="var(--warn)"/>
+          <text x="480" y="182" class="svg-ink mono" style="font-size:11.5px">…320107 1 → 9.0</text>
+          <text x="480" y="212" style="font-size:11px" fill="var(--warn)">scored, but nobody asked for it</text>
+          <text x="480" y="228" class="svg-muted" style="font-size:11px">7 of these in the full data</text>
 
-          <rect x="286" y="38" width="120" height="52" rx="7" fill="var(--accent-wash)" stroke="var(--accent)"/>
-          <text x="300" y="62" class="svg-accent mono" style="font-size:11px">join on GEOID</text>
-          <text x="300" y="79" class="svg-muted" style="font-size:10px">steps 5, 7</text>
+          <path class="svg-line" d="M228 51 H462" stroke="var(--ok)" marker-end="url(#a6)"/>
+          <path class="svg-line" d="M228 93 H462" stroke="var(--ok)" marker-end="url(#a6)"/>
+          <path class="svg-line" d="M228 135 H462" stroke="var(--ok)" marker-end="url(#a6)"/>
+          <path class="svg-line" d="M228 177 h150" stroke="var(--bad)" stroke-dasharray="5 4"/>
+          <text x="384" y="181" class="svg-bad mono" style="font-size:15px">✕</text>
+          <defs><marker id="a6" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" fill="var(--ok)"/></marker></defs>
 
-          <rect x="430" y="38" width="120" height="52" rx="7" fill="var(--accent-wash)" stroke="var(--accent)"/>
-          <text x="444" y="62" class="svg-accent mono" style="font-size:11px">bike_share()</text>
-          <text x="444" y="79" class="svg-muted" style="font-size:10px">steps 2, 6</text>
-
-          <rect x="574" y="38" width="132" height="52" rx="7" fill="var(--ok-wash)" stroke="var(--ok)"/>
-          <text x="588" y="62" class="svg-ok mono" style="font-size:11px">summary</text>
-          <text x="588" y="79" class="svg-muted" style="font-size:10px">step 8</text>
-
-          <g class="svg-line">
-            <path d="M120 64 h18" marker-end="url(#a9)"/>
-            <path d="M264 64 h18" marker-end="url(#a9)"/>
-            <path d="M408 64 h18" marker-end="url(#a9)"/>
-            <path d="M552 64 h18" marker-end="url(#a9)"/>
-          </g>
-          <defs><marker id="a9" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-            <path d="M0 0 L8 4 L0 8 z" class="svg-muted"/></marker></defs>
-
-          <line x1="14" y1="112" x2="706" y2="112" class="svg-line" stroke-dasharray="4 4"/>
-          <text x="14" y="134" class="svg-muted" style="font-size:11px; letter-spacing:.08em">WHAT THE REST OF THE COURSE DOES TO IT</text>
-          <text x="14" y="156" class="svg-ink" style="font-size:12px">Unit 2 — prove a refactor changed nothing; handle the sentinels; read the real CSVs instead of a literal.</text>
-          <text x="14" y="176" class="svg-ink" style="font-size:12px">Unit 3 — move it into a module, rebuild it in pandas, and fetch the ACS side from the API yourself.</text>
-          <text x="14" y="196" class="svg-ink" style="font-size:12px">Unit 4 — scripts, git, tests for these exact functions, and a capstone that answers the question.</text>
+          <line x1="14" y1="252" x2="706" y2="252" class="svg-line"/>
+          <text x="14" y="274" class="svg-ink" style="font-size:12px">A join is a question asked once per row on the left. The rows that get no answer are the finding.</text>
+          <text x="14" y="292" class="svg-muted" style="font-size:12px">Silently dropping them is how an analysis ends up describing a population that isn't the one you meant.</text>
         </svg>
-        <figcaption>Nothing after this step introduces a new stage. Everything
-        after this step makes these stages trustworthy.</figcaption>
+        <figcaption>Which side you iterate decides what you get: walking the
+        ACS rows gives you a left join and tells you about missing walkability
+        scores. Walking the walkability table tells you the opposite. Neither
+        is "the" join.</figcaption>
       </figure>
 
+      <div class="note">
+        <h4>Composite keys</h4>
+        <p>Within one county you do not strictly need a 12-character string:
+        the tuple <code>(tract, block_group)</code> identifies a block group
+        just as well, and tuples are hashable so they work as keys directly.
+        Build the full GEOID anyway. The moment you add a second county — step
+        21, ticket A — a tract number alone stops being unique, and code that
+        assumed otherwise fails in a way that looks like a data problem rather
+        than a code problem.</p>
+      </div>
+
+      <h2>Iterating a dictionary</h2>
+<pre>for geoid in lookup:              <span class="c"># keys</span>
+for score in lookup.values():     <span class="c"># values</span>
+for geoid, score in lookup.items():   <span class="c"># both, unpacked</span>
+"180973401103" in lookup          <span class="c"># membership — checks keys, and is fast</span></pre>
+
       <h2>Exercises</h2>
-      <p>These three are the real thing: the functions you carry into Unit 2,
-      and the ones step 18 writes tests for.</p>
       <div id="ex1"></div>
       <div id="ex2"></div>
       <div id="ex3"></div>
 
       <div class="project">
         <h4>Take it further</h4>
-        <p>You now have four functions worth keeping. Copy
-        <code>build_geoid()</code>, <code>bike_share()</code>,
-        <code>walk_category()</code> and <code>summarize()</code> somewhere
-        you'll find them again — a scratch file, a note, anywhere. The very
-        level-up has you paste them into an environment of your own.</p>
-        <p>Check them against the counts you kept in step 6: the same numbers
-        should come out. If they don't, extracting the functions changed
-        behaviour — and finding out which one did it is step 10.</p>
-        <p style="margin-bottom:0">Then take the level-up. Everything you have
-        written so far has run against eleven rows; Marion County has 632, and
-        your code does not need to change to handle them.</p>
+        <p>Convert both raw tables into lists of dictionaries. Build a lookup
+        from GEOID to walkability score. Then perform the join by hand — for
+        each ACS row, look up its walkability score — and report three numbers:
+        how many joined, how many ACS rows found no score, and how many
+        walkability rows nobody asked for.</p>
+        <p style="margin-bottom:0">Write those three numbers down somewhere. At
+        the level-up you will run the same code against all 632 block groups
+        and they will change; you want the sample's numbers recorded so you
+        can tell the difference between "more data" and "new bug".</p>
       </div>
 
       <details class="checkq">
-        <summary><span class="q">Can each function be called in isolation, with made-up arguments, and give the right answer?</span></summary>
+        <summary><span class="q">What happens when a GEOID exists in one dataset but not the other, and how does <code>.get()</code> change that?</span></summary>
         <div class="ans">
-          <p>That is the whole test, and it is worth applying deliberately:
-          start from nothing, call <code>build_geoid("01", "073", "000100",
-          "1")</code> with no other code around it, and see whether it works.</p>
-          <p>If it does, the function is self-contained. If it raises
-          <code>NameError</code>, it was secretly reading something from the
-          surrounding code — a header list, a lookup dict, a column index —
-          and that dependency needs to become a parameter.</p>
-          <p style="margin-bottom:0">Doing this by hand is tedious, which is
-          the entire argument for step 18. A test file is just this check,
-          written down once and run automatically forever. You have been on the
-          receiving end of about forty of them getting here.</p>
+          <p>With square brackets, a missing GEOID raises <code>KeyError</code>
+          and stops the loop dead on the first unmatched row. That is loud and
+          unhelpful: you learn that one row failed, not how many.</p>
+          <p>With <code>.get()</code>, the lookup returns <code>None</code> and
+          the loop continues. Now the absence is a value you can hold onto —
+          count it, list it, look at a few and work out why. Roughly: brackets
+          for keys you believe in, <code>.get()</code> for keys the data is
+          allowed to withhold.</p>
+          <p style="margin-bottom:0">The mistake is the third option:
+          <code>.get(geoid, 0)</code>. A default of zero turns "we don't know
+          this block group's walkability" into "this block group has the lowest
+          possible walkability", and that is now in your correlation with no
+          trace that it was ever missing. Default to <code>None</code>, and
+          decide what to do about it deliberately.</p>
         </div>
       </details>
-
-      <div class="note">
-        <h4>End of Unit 1</h4>
-        <p>You can read the project's data, represent it honestly, join two
-        sources on a shared key, handle the rows that don't match, and express
-        the result as named functions — using nothing but the core language.
-        Unit 2 stops adding and starts verifying.</p>
-      </div>
 
       <div id="pager"></div>
     </div>
   </div>
 </div>
 
-<script src="../assets/nav.js?v=6653f05c"></script>
+<script src="../assets/nav.js?v=d4755700"></script>
 <script src="../assets/runner.js?v=277a066f"></script>
 <script src="../assets/sample.js?v=3b94601e"></script>
 <script>
 COURSE.exercise("ex1", {
-  id: "s08-buildgeoid", tag: "Exercise 1", title: "build_geoid()",
+  id: "s08-zip", tag: "Exercise 1", title: "Rows with names on them",
   prompt:
-    "<p>Write <code>build_geoid(state, county, tract, block_group)</code>, " +
-    "returning the 12-character GEOID as a string. It must accept its " +
-    "arguments as either integers or strings, and it must keep leading " +
-    "zeros in both cases.</p>" +
-    "<p>Give it a docstring. The checks look for one.</p>",
+    "<p>Turn both raw tables into lists of dictionaries — <code>acs_rows</code> " +
+    "and <code>walk_rows</code> — using the header row for the keys. Do not " +
+    "type the field names out; <code>zip</code> them.</p>" +
+    "<p>Then set <code>first_workers</code> to the worker count of the first " +
+    "ACS row, looked up <em>by name</em>, as an <code>int</code>.</p>",
   setup: SAMPLE,
   starter:
-    "def build_geoid(state, county, tract, block_group):\n" +
-    "    \n" +
-    "    \n\n" +
-    "print(build_geoid(1, 73, \"000100\", 1))\n" +
-    "print(build_geoid(\"18\", \"097\", \"340110\", \"3\"))",
+    "acs_rows = \nwalk_rows = \n\n" +
+    "first_workers = \n\n" +
+    "print(acs_rows[0][\"NAME\"])\nprint(first_workers)",
   checks: [
-    { label: "build_geoid is defined and takes four arguments",
-      code: "f = expect_defined(globals(), 'build_geoid')\nexpect(f.__code__.co_argcount, 4)" },
-    { label: "it has a docstring",
-      code: "expect(bool(build_geoid.__doc__ and build_geoid.__doc__.strip()), True)" },
-    { label: "strings in, GEOID out",
-      code: "expect(build_geoid('18', '097', '340110', '3'), '180973401103')" },
-    { label: "integers in, leading zeros preserved",
-      code: "expect(build_geoid(1, 73, '000100', 1), '010730001001')" },
-    { label: "a single-digit county pads to three",
-      code: "expect(build_geoid(6, 7, 402300, 2), '060074023002')" },
-    { label: "the result is always 12 characters",
-      code: ("cases = [(1,1,1,1), ('18','097','340110','3'), (56, 999, 999999, 9)]\n"
-           + "expect(sorted({len(build_geoid(*c)) for c in cases}), [12])") },
-    { label: "it is pure — same arguments, same answer, no side effects",
-      code: "expect(build_geoid(1, 73, '000100', 1), build_geoid(1, 73, '000100', 1))" }
+    { label: "acs_rows is a list of dicts, one per data row",
+      code: "expect(len(expect_defined(globals(), 'acs_rows')), len(acs_raw) - 1)\nexpect_type(acs_rows[0], dict)" },
+    { label: "the keys came from the header",
+      code: "expect(list(acs_rows[0].keys()), acs_raw[0])" },
+    { label: "the values are still the row's values, in order",
+      code: "expect([list(r.values()) for r in acs_rows], acs_raw[1:])" },
+    { label: "walk_rows was built the same way",
+      code: "expect(len(expect_defined(globals(), 'walk_rows')), len(walk_raw) - 1)\nexpect(list(walk_rows[0].keys()), walk_raw[0])" },
+    { label: "first_workers is an int looked up by field name",
+      code: "expect(expect_defined(globals(), 'first_workers'), 401)" }
   ],
   solution:
-    "def build_geoid(state, county, tract, block_group):\n" +
-    "    \"\"\"Return the 12-character census block group GEOID as a string.\n\n" +
-    "    Parts may arrive as ints or strings; each is zero-padded to its\n" +
-    "    census width, so state 1 becomes '01' rather than '1'.\n" +
-    "    \"\"\"\n" +
-    "    return f\"{state:0>2}{county:0>3}{tract:0>6}{block_group}\"\n\n" +
-    "print(build_geoid(1, 73, \"000100\", 1))\n" +
-    "print(build_geoid(\"18\", \"097\", \"340110\", \"3\"))"
+    "acs_rows = [dict(zip(acs_raw[0], row)) for row in acs_raw[1:]]\n" +
+    "walk_rows = [dict(zip(walk_raw[0], row)) for row in walk_raw[1:]]\n\n" +
+    "first_workers = int(acs_rows[0][\"B08301_001E\"])\n\n" +
+    "print(acs_rows[0][\"NAME\"])\n" +
+    "print(first_workers)\n" +
+    "# A plain for-loop with .append() is just as correct here. Step 9 is where\n" +
+    "# the bracketed form above stops looking like a trick."
 });
 
 COURSE.exercise("ex2", {
-  id: "s08-bikeshare", tag: "Exercise 2", title: "bike_share()",
+  id: "s08-lookup", tag: "Exercise 2", title: "A lookup keyed by GEOID",
   prompt:
-    "<p>Write <code>bike_share(bike, workers)</code>, returning the fraction of " +
-    "workers commuting by bicycle as a <code>float</code> — or " +
-    "<code>None</code> when no answer exists.</p>" +
-    "<p>There are two such cases, and they are different: nobody works there, " +
-    "or the Census withheld the estimate (the sentinel <code>-666666666</code>, " +
-    "and in fact any negative count). Neither is a bike share of zero.</p>" +
-    "<p class='small'>Give the sentinel a default argument so a caller can " +
-    "override it — other Census tables use different ones.</p>",
+    "<p>Build <code>walk_lookup</code>: a dictionary mapping each " +
+    "12-character GEOID string to that block group's walkability score as a " +
+    "<code>float</code>.</p>" +
+    "<p>Then answer two questions with it: set <code>score_of</code> to the " +
+    "score for <code>\"180973401103\"</code>, and <code>has_310308_3</code> to " +
+    "whether GEOID <code>\"180973103083\"</code> is present at all.</p>",
   setup: SAMPLE,
   starter:
-    "def bike_share(bike, workers, sentinel=-666666666):\n" +
-    "    \n" +
-    "    \n\n" +
-    "print(bike_share(21, 1303))\n" +
-    "print(bike_share(0, 348), bike_share(4, 0), bike_share(-666666666, 401))",
+    "walk_lookup = {}\n\n" +
+    "for row in walk_raw[1:]:\n    pass\n\n" +
+    "score_of = \nhas_310308_3 = \n\n" +
+    "print(len(walk_lookup), score_of, has_310308_3)",
   checks: [
-    { label: "an ordinary row gives the right fraction",
-      code: "expect_close(expect_defined(globals(), 'bike_share')(21, 1303), 21 / 1303, 1e-12)" },
-    { label: "it has a docstring",
-      code: "expect(bool(bike_share.__doc__ and bike_share.__doc__.strip()), True)" },
-    { label: "no workers gives None, not zero and not an exception",
-      code: "expect(bike_share(4, 0), None)" },
-    { label: "a real zero bike count is 0.0, not None",
-      code: "expect_close(bike_share(0, 348), 0.0, 1e-12)\nexpect(bike_share(0, 348) is None, False)" },
-    { label: "the sentinel gives None",
-      code: "expect(bike_share(-666666666, 401), None)" },
-    { label: "so does any negative count",
-      code: "expect(bike_share(-999999999, 401), None)" },
-    { label: "the sentinel can be overridden by the caller",
-      code: "expect(bike_share(-1, 100, sentinel=-1), None)\nexpect_close(bike_share(5, 100, sentinel=-1), 0.05, 1e-12)" },
-    { label: "the result is a float whenever there is one",
-      code: "expect_type(bike_share(21, 1303), float)" }
+    { label: "walk_lookup has one entry per walkability row",
+      code: "expect(len(expect_defined(globals(), 'walk_lookup')), len(walk_raw) - 1)" },
+    { label: "keys are 12-character strings",
+      code: "expect(sorted({type(k).__name__ for k in walk_lookup}), ['str'])\nexpect(sorted({len(k) for k in walk_lookup}), [12])" },
+    { label: "values are floats",
+      code: "expect(sorted({type(v).__name__ for v in walk_lookup.values()}), ['float'])" },
+    { label: "the lookup returns the right score",
+      code: "expect_close(expect_defined(globals(), 'score_of'), 14.5, 1e-9)" },
+    { label: "the block group with no walkability score is correctly absent",
+      code: "expect(expect_defined(globals(), 'has_310308_3'), False)" }
   ],
   solution:
-    "def bike_share(bike, workers, sentinel=-666666666):\n" +
-    "    \"\"\"Fraction of workers commuting by bicycle, or None if unknowable.\n\n" +
-    "    Returns None when there are no workers to take a share of, and when\n" +
-    "    the count is a Census 'estimate unavailable' sentinel. A genuine\n" +
-    "    count of zero returns 0.0 -- those rows are data, not gaps.\n" +
-    "    \"\"\"\n" +
-    "    if bike == sentinel or bike < 0:\n" +
-    "        return None\n" +
-    "    if workers <= 0:\n" +
-    "        return None\n" +
-    "    return bike / workers\n\n" +
-    "print(bike_share(21, 1303))\n" +
-    "print(bike_share(0, 348), bike_share(4, 0), bike_share(-666666666, 401))"
+    "walk_lookup = {}\n\n" +
+    "for row in walk_raw[1:]:\n" +
+    "    geoid = row[0] + row[1] + row[2] + row[3]\n" +
+    "    walk_lookup[geoid] = float(row[4])\n\n" +
+    "score_of = walk_lookup[\"180973401103\"]      # brackets: this key must exist\n" +
+    "has_310308_3 = \"180973103083\" in walk_lookup\n\n" +
+    "print(len(walk_lookup), score_of, has_310308_3)"
 });
 
 COURSE.exercise("ex3", {
-  id: "s08-pipeline", tag: "Exercise 3", title: "Compose the whole unit",
+  id: "s08-join", tag: "Exercise 3", title: "The join, by hand",
   prompt:
-    "<p>The finale. Using the three functions already defined for you above the " +
-    "editor — <code>build_geoid</code>, <code>bike_share</code> and " +
-    "<code>walk_category</code> — write <code>summarize(acs_raw, walk_raw)</code> " +
-    "returning a dict with exactly these keys:</p>" +
+    "<p>Walk the ACS rows and attach each one's walkability score. Produce:</p>" +
     "<ul>" +
-    "<li><code>\"n_input\"</code> — ACS data rows in</li>" +
-    "<li><code>\"n_usable\"</code> — rows with a score and a computable share</li>" +
-    "<li><code>\"coverage\"</code> — usable / input, a float</li>" +
-    "<li><code>\"mean_share\"</code> — mean bike share over usable rows</li>" +
-    "<li><code>\"by_category\"</code> — dict of the four EPA labels to counts, " +
-    "over usable rows</li>" +
-    "<li><code>\"unmatched\"</code> — sorted list of ACS GEOIDs with no score</li>" +
+    "<li><code>joined</code> — a list of dicts, one per ACS row, each with keys " +
+    "<code>\"geoid\"</code>, <code>\"workers\"</code> (int), <code>\"bike\"</code> " +
+    "(int) and <code>\"walk_index\"</code> (a float, or <code>None</code> if " +
+    "there was no match)</li>" +
+    "<li><code>n_matched</code> — how many got a score</li>" +
+    "<li><code>unmatched_geoids</code> — the GEOIDs that got none</li>" +
+    "<li><code>orphan_geoids</code> — walkability GEOIDs no ACS row asked for</li>" +
     "</ul>" +
-    "<p>Take both tables as arguments. Reading them from the surrounding " +
-    "surrounding code is the habit this step exists to break.</p>",
-  setup: SAMPLE + "\n" +
-    "def build_geoid(state, county, tract, block_group):\n" +
-    "    \"\"\"Return the 12-character block group GEOID as a string.\"\"\"\n" +
-    "    return f'{state:0>2}{county:0>3}{tract:0>6}{block_group}'\n\n" +
-    "def bike_share(bike, workers, sentinel=-666666666):\n" +
-    "    \"\"\"Bicycle commute share, or None where none exists.\"\"\"\n" +
-    "    if bike == sentinel or bike < 0 or workers <= 0:\n" +
-    "        return None\n" +
-    "    return bike / workers\n\n" +
-    "def walk_category(score):\n" +
-    "    \"\"\"EPA walkability band for a National Walkability Index score.\"\"\"\n" +
-    "    if score <= 5.75:\n" +
-    "        return 'Least Walkable'\n" +
-    "    if score <= 10.5:\n" +
-    "        return 'Below Average'\n" +
-    "    if score <= 15.25:\n" +
-    "        return 'Above Average'\n" +
-    "    return 'Most Walkable'\n",
+    "<p class='small'>Leave the sentinel <code>-666666666</code> alone for now. " +
+    "Converting it is step 13's job, and pretending it's a real count until " +
+    "then is a useful discomfort.</p>",
+  setup: SAMPLE,
   starter:
-    "def summarize(acs_raw, walk_raw):\n" +
-    "    \"\"\"Join the two tables and describe the usable sample.\"\"\"\n" +
-    "    \n" +
-    "    \n\n" +
-    "result = summarize(acs_raw, walk_raw)\n" +
-    "for key, value in result.items():\n" +
-    "    print(f\"{key:>12}: {value}\")",
+    "# given: the lookup from exercise 2, written compactly (step 9 explains how)\n" +
+    "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n\n" +
+    "joined = []\nfor row in acs_raw[1:]:\n    pass\n\n" +
+    "n_matched = \nunmatched_geoids = \norphan_geoids = \n\n" +
+    "print(n_matched, \"matched |\", unmatched_geoids, \"| orphans:\", orphan_geoids)",
   checks: [
-    { label: "summarize takes both tables as arguments",
-      code: "f = expect_defined(globals(), 'summarize')\nexpect(f.__code__.co_argcount, 2)" },
-    { label: "it returns a dict with exactly the six keys",
-      code: ("r = summarize(acs_raw, walk_raw)\n"
-           + "expect(sorted(r.keys()), ['by_category','coverage','mean_share','n_input','n_usable','unmatched'])") },
-    { label: "n_input counts the data rows, not the header",
-      code: "expect(summarize(acs_raw, walk_raw)['n_input'], len(acs_raw) - 1)" },
-    { label: "n_usable excludes unmatched, zero-worker and sentinel rows",
-      code: ("lk = {build_geoid(r[0], r[1], r[2], r[3]): float(r[4]) for r in walk_raw[1:]}\n"
-           + "want = sum(1 for r in acs_raw[1:]\n"
-           + "           if build_geoid(r[6], r[7], r[8], r[9]) in lk\n"
-           + "           and bike_share(int(r[2]), int(r[1])) is not None)\n"
-           + "expect(summarize(acs_raw, walk_raw)['n_usable'], want)") },
-    { label: "coverage is usable over input",
-      code: ("r = summarize(acs_raw, walk_raw)\n"
-           + "expect_close(r['coverage'], r['n_usable'] / r['n_input'], 1e-12)") },
-    { label: "mean_share averages only the usable rows",
-      code: ("lk = {build_geoid(r[0], r[1], r[2], r[3]): float(r[4]) for r in walk_raw[1:]}\n"
-           + "shares = [bike_share(int(r[2]), int(r[1])) for r in acs_raw[1:]\n"
-           + "          if build_geoid(r[6], r[7], r[8], r[9]) in lk\n"
-           + "          and bike_share(int(r[2]), int(r[1])) is not None]\n"
-           + "expect_close(summarize(acs_raw, walk_raw)['mean_share'], sum(shares) / len(shares), 1e-12)") },
-    { label: "by_category counts the usable rows by EPA band",
-      code: ("r = summarize(acs_raw, walk_raw)\n"
-           + "expect(set(r['by_category']) <= {'Least Walkable','Below Average','Above Average','Most Walkable'}, True)\n"
-           + "expect(sum(r['by_category'].values()), r['n_usable'])") },
-    { label: "unmatched is a sorted list of the ACS-only GEOIDs",
-      code: ("lk = {build_geoid(r[0], r[1], r[2], r[3]) for r in walk_raw[1:]}\n"
-           + "want = sorted(build_geoid(r[6], r[7], r[8], r[9]) for r in acs_raw[1:]\n"
-           + "              if build_geoid(r[6], r[7], r[8], r[9]) not in lk)\n"
-           + "expect(summarize(acs_raw, walk_raw)['unmatched'], want)") },
-    { label: "it is pure — calling it twice gives the same answer",
-      code: "expect(summarize(acs_raw, walk_raw), summarize(acs_raw, walk_raw))" }
+    { label: "joined has one entry per ACS row",
+      code: "expect(len(expect_defined(globals(), 'joined')), len(acs_raw) - 1)" },
+    { label: "each entry has the four required keys",
+      code: "expect(sorted(joined[0].keys()), ['bike', 'geoid', 'walk_index', 'workers'])" },
+    { label: "workers and bike are ints",
+      code: "expect(sorted({type(r['workers']).__name__ for r in joined}), ['int'])\nexpect(sorted({type(r['bike']).__name__ for r in joined}), ['int'])" },
+    { label: "unmatched rows carry None, not a stand-in number",
+      code: ("miss = [r for r in joined if r['walk_index'] is None]\n"
+           + "expect(len(miss), 1)\n"
+           + "expect(0 in [r['walk_index'] for r in joined], False)") },
+    { label: "the matched scores are right",
+      code: ("lk = {r[0]+r[1]+r[2]+r[3]: float(r[4]) for r in walk_raw[1:]}\n"
+           + "expect([r['walk_index'] for r in joined], [lk.get(r['geoid']) for r in joined])") },
+    { label: "n_matched counts the rows that found a score",
+      code: "expect(expect_defined(globals(), 'n_matched'), sum(1 for r in joined if r['walk_index'] is not None))" },
+    { label: "unmatched_geoids names the ACS row with no score",
+      code: "expect(sorted(expect_defined(globals(), 'unmatched_geoids')), ['180973103083'])" },
+    { label: "orphan_geoids names the walkability row nobody asked for",
+      code: "expect(sorted(expect_defined(globals(), 'orphan_geoids')), ['180973201071'])" }
   ],
   solution:
-    "def summarize(acs_raw, walk_raw):\n" +
-    "    \"\"\"Join the two tables and describe the usable sample.\"\"\"\n" +
-    "    walk_lookup = {build_geoid(r[0], r[1], r[2], r[3]): float(r[4])\n" +
-    "                   for r in walk_raw[1:]}\n\n" +
-    "    usable, unmatched = [], []\n" +
-    "    by_category = {}\n\n" +
-    "    for row in acs_raw[1:]:\n" +
-    "        geoid = build_geoid(row[6], row[7], row[8], row[9])\n" +
-    "        score = walk_lookup.get(geoid)\n" +
-    "        if score is None:\n" +
-    "            unmatched.append(geoid)\n" +
-    "            continue\n" +
-    "        share = bike_share(int(row[2]), int(row[1]))\n" +
-    "        if share is None:\n" +
-    "            continue\n" +
-    "        usable.append(share)\n" +
-    "        label = walk_category(score)\n" +
-    "        by_category[label] = by_category.get(label, 0) + 1\n\n" +
-    "    n_input = len(acs_raw) - 1\n" +
-    "    return {\n" +
-    "        \"n_input\": n_input,\n" +
-    "        \"n_usable\": len(usable),\n" +
-    "        \"coverage\": len(usable) / n_input,\n" +
-    "        \"mean_share\": sum(usable) / len(usable),\n" +
-    "        \"by_category\": by_category,\n" +
-    "        \"unmatched\": sorted(unmatched),\n" +
-    "    }\n\n" +
-    "result = summarize(acs_raw, walk_raw)\n" +
-    "for key, value in result.items():\n" +
-    "    print(f\"{key:>12}: {value}\")\n" +
-    "# The whole pipeline as one call, taking its data as arguments rather\n" +
-    "# than reaching for it. That is what makes it movable in step 13 -- and\n" +
-    "# testable in step 18 with nothing else loaded at all."
+    "# given: the lookup from exercise 2, written compactly (step 9 explains how)\n" +
+    "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n\n" +
+    "joined = []\n" +
+    "for row in acs_raw[1:]:\n" +
+    "    geoid = row[6] + row[7] + row[8] + row[9]\n" +
+    "    joined.append({\n" +
+    "        \"geoid\": geoid,\n" +
+    "        \"workers\": int(row[1]),\n" +
+    "        \"bike\": int(row[2]),\n" +
+    "        \"walk_index\": walk_lookup.get(geoid),   # None when absent\n" +
+    "    })\n\n" +
+    "n_matched = sum(1 for r in joined if r[\"walk_index\"] is not None)\n" +
+    "unmatched_geoids = [r[\"geoid\"] for r in joined if r[\"walk_index\"] is None]\n" +
+    "asked_for = {r[\"geoid\"] for r in joined}\n" +
+    "orphan_geoids = [g for g in walk_lookup if g not in asked_for]\n\n" +
+    "print(n_matched, \"matched |\", unmatched_geoids, \"| orphans:\", orphan_geoids)\n" +
+    "# 10 of 11 matched. Both leftovers are real: one block group the EPA never\n" +
+    "# scored, one the EPA scored and the ACS didn't report. Step 9 finds these\n" +
+    "# with a single set operation instead of two loops."
 });
 </script>
 </body>

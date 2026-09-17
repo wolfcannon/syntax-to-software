@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Step 4 — Lists, tuples, and ranges</title>
+<title>Step 4 — Blocks and indentation</title>
 <link rel="stylesheet" href="../assets/course.css?v=90b252d8">
 </head>
 <body>
@@ -14,281 +14,231 @@
     <div class="wrap">
 
       <p class="eyebrow">Unit 1 — Foundations · Step 4</p>
-      <h1>Lists, tuples, and ranges</h1>
-      <p class="lede">Your data arrives as a list of lists. Time to be
-      deliberate about which sequence type means what.</p>
+      <h1>Blocks and indentation</h1>
+      <ul class="lede-points">
+        <li>Lines that belong together are one unit.</li>
+        <li>Indentation is what says which lines those are.</li>
+        <li>Move a line one level and you have written a different program.</li>
+      </ul>
 
-      <h2>Slice boundaries sit between elements</h2>
-      <p>The cleanest way to stop making off-by-one errors is to stop picturing
-      indices as labels on elements and start picturing them as the gaps
-      between them. <code>rows[1:4]</code> is everything between gap 1 and gap
-      4 — three elements, because 4 − 1 = 3.</p>
+      <h2>Block</h2>
+
+      <p>A run of consecutive statements that belong together and are handled
+      as one unit — run them all, run them ten times, run none of them. Python
+      marks a block with indentation.</p>
+      <p>A block is always introduced by a line ending in a colon. That line
+      says what the block is for, and the lines indented beneath it are its
+      contents. Blocks nest, and the indentation is what tells you how
+      deeply.</p>
 
       <figure>
-        <svg viewBox="0 0 720 180" role="img" aria-label="Slice indices as boundaries between list elements.">
-          <text x="14" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">acs_raw[1:4]</text>
-          <g>
-            <rect class="svg-box" x="40" y="46" width="128" height="44" rx="6"/>
-            <text x="56" y="73" class="svg-muted mono" style="font-size:12px">header row</text>
-            <rect x="172" y="46" width="128" height="44" rx="6" fill="var(--accent-wash)" stroke="var(--accent)"/>
-            <text x="188" y="73" class="svg-accent mono" style="font-size:12px">3101.03 bg2</text>
-            <rect x="304" y="46" width="128" height="44" rx="6" fill="var(--accent-wash)" stroke="var(--accent)"/>
-            <text x="320" y="73" class="svg-accent mono" style="font-size:12px">3102.01 bg2</text>
-            <rect x="436" y="46" width="128" height="44" rx="6" fill="var(--accent-wash)" stroke="var(--accent)"/>
-            <text x="452" y="73" class="svg-accent mono" style="font-size:12px">3103.08 bg3</text>
-            <rect class="svg-box" x="568" y="46" width="128" height="44" rx="6"/>
-            <text x="584" y="73" class="svg-muted mono" style="font-size:12px">3201.07 bg2</text>
+        <svg viewBox="0 0 720 210" role="img" aria-label="A colon line introduces a block; the indented lines beneath it are its contents, and blocks nest inside one another.">
+          <rect x="14" y="30" width="692" height="128" rx="8" fill="var(--accent-wash)" stroke="var(--accent)"/>
+          <rect x="52" y="72" width="640" height="72" rx="6" fill="var(--warn-wash)" stroke="var(--warn)"/>
+
+          <g class="mono" style="font-size:13px">
+            <text x="28" y="56" class="svg-ink">for row in rows<tspan class="svg-accent" style="font-weight:700">:</tspan></text>
+            <text x="66" y="96" class="svg-ink">if row[1] != "0"<tspan style="font-weight:700" fill="var(--warn)">:</tspan></text>
+            <text x="104" y="132" class="svg-ink">counted = counted + 1</text>
+            <text x="28" y="180" class="svg-ink">print(counted)</text>
           </g>
-          <g class="svg-muted">
-            <line x1="36" y1="38" x2="36" y2="102" class="svg-line"/>
-            <line x1="168" y1="38" x2="168" y2="110" stroke="var(--accent)" fill="none"/>
-            <line x1="564" y1="38" x2="564" y2="110" stroke="var(--accent)" fill="none"/>
-            <line x1="700" y1="38" x2="700" y2="102" class="svg-line"/>
-            <text x="30" y="120" class="svg-muted mono" style="font-size:12px">0</text>
-            <text x="163" y="126" class="svg-accent mono" style="font-size:13px; font-weight:700">1</text>
-            <text x="298" y="120" class="svg-muted mono" style="font-size:12px">2</text>
-            <text x="430" y="120" class="svg-muted mono" style="font-size:12px">3</text>
-            <text x="559" y="126" class="svg-accent mono" style="font-size:13px; font-weight:700">4</text>
-            <text x="694" y="120" class="svg-muted mono" style="font-size:12px">5</text>
-          </g>
-          <text x="14" y="152" class="svg-ink" style="font-size:12px">The indices are the cut points, not the boxes. Three boxes lie between cut 1 and cut 4.</text>
-          <text x="14" y="170" class="svg-muted" style="font-size:12px">Which is why acs_raw[1:] means "everything except the header" and never needs a length.</text>
+
+          <text x="330" y="56" class="svg-accent" style="font-size:11px">the colon opens a block</text>
+          <text x="330" y="96" style="font-size:11px" fill="var(--warn)">and this one opens another, inside it</text>
+          <text x="330" y="132" class="svg-muted" style="font-size:11px">two levels deep — it belongs to both</text>
+          <text x="180" y="180" class="svg-muted" style="font-size:11px">back at the margin: outside both blocks, runs once</text>
+
+          <line x1="14" y1="196" x2="706" y2="196" class="svg-line"/>
         </svg>
-        <figcaption>The half-open convention pays for itself:
-        <code>rows[:k]</code> and <code>rows[k:]</code> partition a list with
-        no overlap and no gap, for any k.</figcaption>
+        <figcaption>Nothing closes these blocks. They end where the
+        indentation stops, which is why the width of the gap on the left is
+        load-bearing information.</figcaption>
       </figure>
 
-      <h2>Two shapes you need now</h2>
-      <p>You cannot do anything with a list without walking it, so here are the
-      two pieces of syntax the rest of this page uses. Both get taught properly
-      in step 6 — this is just enough to read what follows.</p>
-<pre><span class="c"># do something once per item</span>
-for row in rows:
-    print(row)
-
-<span class="c"># do something only sometimes</span>
-if len(row) == 10:
-    print("full row")</pre>
-      <p>A colon opens the block and the indented lines under it are the block,
-      exactly as in step 1. The name after <code>for</code> is yours to choose;
-      it takes each item in turn.</p>
-
-      <h2>List or tuple?</h2>
-      <p>Both hold an ordered sequence. The difference is mutability, and the
-      convention that has grown around it:</p>
+      <h2>Indentation is syntax</h2>
+      <p>Indentation is not presentation:</p>
       <ul>
-        <li>A <b>list</b> is a collection of things of the same kind, however
-        many there happen to be. Rows of data. Scores. You append to it, sort
-        it, filter it.</li>
-        <li>A <b>tuple</b> is one thing with several parts, and the number of
-        parts is fixed by what it means. <code>(geoid, walk_index)</code> is a
-        pairing, not a collection of two; there is no sensible way to append a
-        third item to it.</li>
+        <li>A colon opens a block.</li>
+        <li>The indented lines under it <em>are</em> the block.</li>
+        <li>Nothing closes a block. Change a line's indentation and you have
+        moved it into a different block — it now runs at a different time, or a
+        different number of times. That is not a style problem. It is a
+        different program.</li>
       </ul>
-<pre>scores = []                      <span class="c"># a list: it will grow</span>
-scores.append(("18097340110", 14.5))   <span class="c"># a tuple: a labelled pair</span>
-scores.sort()
 
-pair = scores[0]
-geoid, walk = pair               <span class="c"># unpacking: one name per part</span></pre>
-      <p>Tuples being immutable also makes them usable as dictionary keys,
-      which is the whole of step 5.</p>
-
-      <h2>Sorting by something other than the value</h2>
-      <p><code>sorted()</code> returns a new sorted list; <code>.sort()</code>
-      rearranges in place and returns <code>None</code> — assigning the result
-      of <code>.sort()</code> to a name is a classic first-week bug. The
-      <code>key=</code> argument takes a function that maps each element to the
-      thing you actually want to sort on:</p>
-<pre>rows = acs_raw[1:]
-by_workers = sorted(rows, key=lambda row: int(row[1]), reverse=True)</pre>
-      <p>A <code>lambda</code> is a small unnamed function. Everything it does
-      could be done by a <code>def</code>, which is step 8. Note the
-      <code>int()</code>: sorting the raw strings would put <code>"9"</code>
-      after <code>"1303"</code>, because text sorts alphabetically.</p>
-
-      <div class="note warn">
-        <h4>A sort that looks right and isn't</h4>
-        <p>String sorting of numeric text is one of those bugs that produces a
-        plausible-looking answer. <code>sorted(["9", "1303", "57"])</code> is
-        <code>['1303', '57', '9']</code>. If your "top 10 block groups" table
-        ever looks strange, check that you converted before sorting.</p>
+      <div class="note">
+        <h4>Two kinds of wrong</h4>
+        <p><b>A syntax error</b> means Python could not read your code as
+        Python. Nothing runs — not the broken line, not the lines above it. You
+        find out the moment you run it, and you are told roughly where.</p>
+        <p><b>A logic error</b> means your code read perfectly well and does
+        something other than what you meant. It runs, it produces an answer,
+        and nothing is reported, because from Python's side nothing went
+        wrong.</p>
+        <p style="margin-bottom:0">A misplaced indent can be either. Indent a
+        line that opens a block and you get a syntax error. Indent a line
+        <em>inside</em> a block and you usually get the second kind, which is
+        the expensive one — an analysis that produces a number nobody
+        questions.</p>
       </div>
+      <div id="q1"></div>
 
-      <h2><code>range</code>, and when not to use it</h2>
-      <p><code>range(5)</code> is <code>0, 1, 2, 3, 4</code> — half-open again.
-      It is the right tool when you need the index itself. It is the wrong tool
-      for walking a list: write <code>for row in rows</code>, not
-      <code>for i in range(len(rows))</code>. When you need both, use
-      <code>enumerate</code>:</p>
-<pre>for i, row in enumerate(acs_raw[1:], start=1):
-    print(i, row[0])</pre>
+      <div id="q1"></div>
 
       <h2>Exercises</h2>
+      <p>Both of these are the same five lines, with one thing wrong.</p>
+
       <div id="ex1"></div>
       <div id="ex2"></div>
-      <div id="ex3"></div>
 
-      <div class="project">
-        <h4>Take it further</h4>
-        <p>In an editor above, separate <code>acs_raw</code> into a header and a
-        list of data rows, and do the same for <code>walk_raw</code>. Build a
-        list of <code>(geoid, walk_index)</code> tuples and sort it to find the
-        most and least walkable block groups in the sample.</p>
-        <p style="margin-bottom:0">Then try to pair the two datasets by
-        position — <code>acs_rows[i]</code> with <code>walk_rows[i]</code> —
-        and print the two GEOIDs side by side. Most will differ. Positional
-        pairing is not a join, and step 5 does it properly.</p>
+      <div class="note">
+        <h4>Tip 💡: reading an indentation error</h4>
+        <ol>
+          <li><code>unexpected indent</code> means a line is indented and
+          nothing above it opened a block. Look at the line above for a missing
+          colon.</li>
+          <li><code>expected an indented block</code> is the opposite: a colon
+          opened a block and nothing was put in it.</li>
+          <li>If an indent looks correct and Python disagrees, you have mixed
+          tabs and spaces. They are invisible on screen. Use spaces.</li>
+        </ol>
+        <p style="margin-bottom:0">Fix one thing and run again. The error
+        changes as you go, and each new one is progress.</p>
       </div>
-
-      <details class="checkq">
-        <summary><span class="q">Why is <code>(geoid, walk_index)</code> a good tuple, but a row you intend to modify is better as a list?</span></summary>
-        <div class="ans">
-          <p>Because the tuple's shape is part of its meaning. A
-          <code>(geoid, walk_index)</code> pair always has exactly two parts,
-          each with a fixed role, and unpacking it into two names is a
-          statement about what it is. If you appended a third element it would
-          no longer be that kind of pair.</p>
-          <p>A data row is the opposite: you want to add a computed column,
-          replace a sentinel with <code>None</code>, or drop a field. Those are
-          all mutations of a collection, and a list is the type that supports
-          them.</p>
-          <p style="margin-bottom:0">The immutability has a second payoff.
-          Because a tuple cannot change, it can be hashed, so it can be a
-          dictionary key — <code>(tract, block_group)</code> is a perfectly
-          good composite key, and that is how step 5 gets away without building
-          a GEOID string at all.</p>
-        </div>
-      </details>
 
       <div id="pager"></div>
     </div>
   </div>
 </div>
 
-<script src="../assets/nav.js?v=6653f05c"></script>
+<script src="../assets/nav.js?v=d4755700"></script>
 <script src="../assets/runner.js?v=277a066f"></script>
-<script src="../assets/sample.js?v=3b94601e"></script>
+<script>
+COURSE.quiz("q1", {
+  id: "s04-indent", tag: "Your turn", title: "One line, moved one level",
+  retry: "Read the code carefully and try again. Pay attention to the indentation.",
+  intro:
+    "<p>These two are the same four statements. The only difference is how far " +
+    "the last one is indented. A score of 14.5 is not below 5.75, so the block " +
+    "does not run.</p>",
+  parts: [
+    {
+      label: "A",
+      code: "<pre>score = 14.5\nlabel = \"walkable\"\nif score &lt;= 5.75:\n    label = \"not walkable\"\n    print(label)</pre>",
+      highlighted: "<pre><span class='ln'>score = 14.5</span><span class='ln'>label = \"walkable\"</span><span class='ln hl'>if score &lt;= 5.75:</span><span class='ln'>    label = \"not walkable\"</span><span class='ln hl'>    print(label)</span></pre>",
+      question: "What does A print?",
+      options: [
+        { html: "Nothing at all", correct: true,
+          why: "The <code>print</code> is indented, so it is inside the block — " +
+               "and the block never runs." },
+        { html: "<code>walkable</code>" },
+        { html: "<code>not walkable</code>" }
+      ]
+    },
+    {
+      label: "B",
+      code: "<pre>score = 14.5\nlabel = \"walkable\"\nif score &lt;= 5.75:\n    label = \"not walkable\"\nprint(label)</pre>",
+      highlighted: "<pre><span class='ln'>score = 14.5</span><span class='ln'>label = \"walkable\"</span><span class='ln hl'>if score &lt;= 5.75:</span><span class='ln'>    label = \"not walkable\"</span><span class='ln hl'>print(label)</span></pre>",
+      question: "What does B print?",
+      options: [
+        { html: "Nothing at all" },
+        { html: "<code>walkable</code>", correct: true,
+          why: "The <code>print</code> is back at the margin, outside the block, " +
+               "so it runs whatever the score is — and <code>label</code> is " +
+               "still what line 2 set it to." },
+        { html: "<code>not walkable</code>" }
+      ]
+    }
+  ],
+  why:
+    "<p>Both are valid, but they are not equivalent. Only one will do what the " +
+    "author intended, the other will produce a logic error.</p>"
+});
+</script>
 <script>
 COURSE.exercise("ex1", {
-  id: "s04-split", tag: "Exercise 1", title: "Header off, data through",
+  id: "s04-move", tag: "Exercise 1", title: "Move one line",
   prompt:
-    "<p>Split <code>acs_raw</code> into <code>header</code> (the first row) and " +
-    "<code>rows</code> (everything else), without writing any numbers except " +
-    "<code>0</code> and <code>1</code>.</p>" +
-    "<p>Then set <code>workers_col</code> to the position of " +
-    "<code>\"B08301_001E\"</code> in the header — look it up rather than " +
-    "counting by eye — and <code>first_workers</code> to that field from the " +
-    "first data row, as an <code>int</code>.</p>",
-  setup: SAMPLE,
+    "<p>This reports a label for every score. It should only report one when " +
+    "the score is low enough to be relabelled.</p>" +
+    "<p>Move <code>print(label)</code> into the block. A score of 14.5 should " +
+    "then print nothing at all.</p>",
   starter:
-    "header = \nrows = \n\n" +
-    "workers_col = \nfirst_workers = \n\n" +
-    "print(len(rows), workers_col, first_workers)",
+    "score = 14.5\n" +
+    "label = \"walkable\"\n" +
+    "if score <= 5.75:\n" +
+    "    label = \"not walkable\"\n" +
+    "print(label)\n",
   checks: [
-    { label: "header is the first row",
-      code: "expect(expect_defined(globals(), 'header'), acs_raw[0])" },
-    { label: "rows holds every data row and no header",
-      code: "expect(expect_defined(globals(), 'rows'), acs_raw[1:])" },
-    { label: "workers_col was looked up, and is right",
-      code: "expect(expect_defined(globals(), 'workers_col'), 1)" },
-    { label: "first_workers is an int from the first data row",
-      code: "expect(expect_defined(globals(), 'first_workers'), 401)" }
+    { label: "the print line is inside the block",
+      code: ("lines = [l for l in __source__.splitlines()\n"
+           + "         if 'print' in l and not l.strip().startswith('#')]\n"
+           + "if not lines:\n"
+           + "    raise CheckFailed('there is no print line any more')\n"
+           + "if len(lines) > 1:\n"
+           + "    raise CheckFailed('expected one print line, found %d' % len(lines))\n"
+           + "if not lines[0][:1].isspace():\n"
+           + "    raise CheckFailed('still at the margin: %r' % lines[0])") },
+    { label: "nothing is printed for a score of 14.5",
+      code: "expect(__stdout__, '')" },
+    { label: "the condition was left alone",
+      code: ("if 'if score <= 5.75:' not in __source__:\n"
+           + "    raise CheckFailed('the if line should not need changing')") },
+    { label: "label still holds the value line 2 gave it",
+      code: "expect(expect_defined(globals(), 'label'), 'walkable')" }
   ],
   solution:
-    "header = acs_raw[0]\n" +
-    "rows = acs_raw[1:]\n\n" +
-    "workers_col = header.index(\"B08301_001E\")   # .index() finds the position\n" +
-    "first_workers = int(rows[0][workers_col])\n\n" +
-    "print(len(rows), workers_col, first_workers)\n" +
-    "# Looking the column up by name means the code survives the API returning\n" +
-    "# fields in a different order -- which it is entitled to do."
+    "score = 14.5\n" +
+    "label = \"walkable\"\n" +
+    "if score <= 5.75:\n" +
+    "    label = \"not walkable\"\n" +
+    "    print(label)\n\n" +
+    "# Four spaces, and the line belongs to the block above it. The block is\n" +
+    "# skipped, so nothing prints -- and no error says so."
 });
 
 COURSE.exercise("ex2", {
-  id: "s04-sort", tag: "Exercise 2", title: "The three most walkable",
+  id: "s04-syntax", tag: "Exercise 3", title: "Two things Python cannot read",
   prompt:
-    "<p>From <code>walk_raw</code>, build <code>pairs</code>: a list of " +
-    "<code>(geoid, walk_index)</code> tuples, where the GEOID is the 12-character " +
-    "string and the index is a <code>float</code>.</p>" +
-    "<p>Then set <code>top3</code> to the three most walkable, highest first.</p>" +
-    "<p class='small'>Columns: 0 state, 1 county, 2 tract, 3 block group, 4 score.</p>",
-  setup: SAMPLE,
+    "<p>The same code again, typed badly. Nothing here runs — Python cannot " +
+    "read it, so it refuses to start.</p>" +
+    "<p>Fix one thing, run it, read the next error, fix that. Three errors " +
+    "stand between this and a working program, and you have met all three " +
+    "already.</p>",
   starter:
-    "pairs = []\nfor row in walk_raw[1:]:\n    pass\n\n" +
-    "top3 = \n\n" +
-    "for geoid, score in top3:\n    print(geoid, score)",
+    "score = \"3.5\n" +
+    "    label = \"walkable\"\n" +
+    "if score <= 5.75:\n" +
+    "    label = \"not walkable\"\n" +
+    "    print(label)\n",
   checks: [
-    { label: "pairs has one entry per walkability row",
-      code: "expect(len(expect_defined(globals(), 'pairs')), len(walk_raw) - 1)" },
-    { label: "each entry is a (str, float) tuple",
-      code: "expect_type(pairs[0], tuple); expect_type(pairs[0][0], str); expect_type(pairs[0][1], float)" },
-    { label: "the GEOIDs are 12 characters",
-      code: "expect(sorted({len(g) for g, s in pairs}), [12])" },
-    { label: "top3 holds the three highest scores, highest first",
-      code: "expect(expect_defined(globals(), 'top3'), sorted(pairs, key=lambda p: p[1], reverse=True)[:3])" },
-    { label: "the scores really are descending",
-      code: "expect([s for g, s in top3], sorted([s for g, s in top3], reverse=True))" }
+    { label: "Python can read it now",
+      code: "expect_defined(globals(), 'score')" },
+    { label: "the second line is back at the margin",
+      code: ("lines = [l for l in __source__.splitlines() if 'walkable\"' in l]\n"
+           + "if not lines:\n"
+           + "    raise CheckFailed('the label line has gone missing')\n"
+           + "if lines[0][:1].isspace():\n"
+           + "    raise CheckFailed('still indented, so it still opens nothing: %r' % lines[0])") },
+    { label: "score is the number 3.5, not text",
+      code: "expect_type(score, float)\nexpect_close(score, 3.5, 1e-12)" },
+    { label: "3.5 is below 5.75, so the block ran",
+      code: "expect(expect_defined(globals(), 'label'), 'not walkable')" },
+    { label: "and it printed",
+      code: "expect(__stdout__, 'not walkable\\n')" }
   ],
   solution:
-    "pairs = []\n" +
-    "for row in walk_raw[1:]:\n" +
-    "    geoid = row[0] + row[1] + row[2] + row[3]\n" +
-    "    pairs.append((geoid, float(row[4])))\n\n" +
-    "top3 = sorted(pairs, key=lambda pair: pair[1], reverse=True)[:3]\n\n" +
-    "for geoid, score in top3:\n" +
-    "    print(geoid, score)\n" +
-    "# sorted() returns a new list. pairs.sort() would rearrange pairs itself\n" +
-    "# and return None -- 'top3 = pairs.sort()' is the bug everyone writes once."
-});
-
-COURSE.exercise("ex3", {
-  id: "s04-unpack", tag: "Exercise 3", title: "Positional pairing is not a join",
-  prompt:
-    "<p>Pair the two datasets by position: <code>acs_raw[i]</code> with " +
-    "<code>walk_raw[i]</code>. Build <code>mismatches</code>, a list of " +
-    "<code>(acs_geoid, walk_geoid)</code> tuples for the positions where the " +
-    "two GEOIDs are <em>not</em> the same block group.</p>" +
-    "<p>Then set <code>n_mismatched</code> to how many there were.</p>" +
-    "<p class='small'>In the ACS row, tract is index 8 and block group index 9; " +
-    "state and county are indices 6 and 7.</p>",
-  setup: SAMPLE,
-  starter:
-    "mismatches = []\n\n" +
-    "for i in range(1, len(walk_raw)):\n" +
-    "    pass\n\n" +
-    "n_mismatched = \n\n" +
-    "for a, w in mismatches:\n    print(a, \"!=\", w)",
-  checks: [
-    { label: "mismatches holds (acs_geoid, walk_geoid) tuples",
-      code: "expect_type(expect_defined(globals(), 'mismatches'), list)\nexpect_type(mismatches[0], tuple)" },
-    { label: "every recorded pair really does disagree",
-      code: "expect([a == w for a, w in mismatches], [False] * len(mismatches))" },
-    { label: "the mismatches found are the right ones",
-      code: ("a = [r[6]+r[7]+r[8]+r[9] for r in acs_raw[1:]]\n"
-           + "w = [r[0]+r[1]+r[2]+r[3] for r in walk_raw[1:]]\n"
-           + "expect(sorted(mismatches), sorted([(x, y) for x, y in zip(a, w) if x != y]))") },
-    { label: "n_mismatched counts them",
-      code: "expect(expect_defined(globals(), 'n_mismatched'), len(mismatches))" },
-    { label: "at least one position disagrees — pairing by position is wrong",
-      code: "expect(n_mismatched > 0, True)" }
-  ],
-  solution:
-    "mismatches = []\n\n" +
-    "for i in range(1, len(walk_raw)):\n" +
-    "    a = acs_raw[i]\n" +
-    "    w = walk_raw[i]\n" +
-    "    acs_geoid = a[6] + a[7] + a[8] + a[9]\n" +
-    "    walk_geoid = w[0] + w[1] + w[2] + w[3]\n" +
-    "    if acs_geoid != walk_geoid:\n" +
-    "        mismatches.append((acs_geoid, walk_geoid))\n\n" +
-    "n_mismatched = len(mismatches)\n\n" +
-    "for a, w in mismatches:\n" +
-    "    print(a, \"!=\", w)\n" +
-    "# The two files are both sorted, the same length here, and still don't\n" +
-    "# correspond: one dataset has block groups the other lacks, and one\n" +
-    "# missing row shifts everything after it. Row order is never a key."
+    "score = 3.5\n" +
+    "label = \"walkable\"\n" +
+    "if score <= 5.75:\n" +
+    "    label = \"not walkable\"\n" +
+    "    print(label)\n\n" +
+    "# Three errors, in the order Python reports them:\n" +
+    "#   the string on line 1 is never closed\n" +
+    "#   line 2 is indented, and nothing above it opened a block\n" +
+    "#   and once it parses, \"3.5\" still cannot be compared with 5.75\n" +
+    "# Only the third one is a mistake about meaning. The first two are\n" +
+    "# Python failing to read the file at all."
 });
 </script>
 </body>
