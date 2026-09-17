@@ -171,6 +171,18 @@ pre .g{color:var(--ok)}
 .note.warn h4{color:var(--warn)} .note.trap h4{color:var(--bad)}
 .note :last-child{margin-bottom:0}
 
+/* ---------- premise block ---------- */
+.premise{
+  border-left:3px solid var(--accent); padding:4px 0 4px 18px;
+  margin:0 0 20px;
+}
+.premise p{margin:9px 0; display:flex; gap:14px; align-items:baseline}
+.premise .lbl{
+  flex:0 0 66px; font:700 10.5px/1.6 var(--mono); letter-spacing:.09em;
+  text-transform:uppercase; color:var(--accent);
+}
+.premise p:last-child .lbl{color:var(--ink-2)}
+
 /* ---------- project + check blocks ---------- */
 .project,.checkq{
   border:1px solid var(--line); border-radius:11px; background:var(--surface);

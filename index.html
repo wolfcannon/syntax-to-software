@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>From Syntax to Software — Python Through a Walkability Project</title>
-<link rel="stylesheet" href="assets/course.css?v=fa4a889b">
+<link rel="stylesheet" href="assets/course.css?v=90b252d8">
 </head>
 <body>
 <div class="shell">
@@ -91,11 +91,16 @@
       </ul>
 
       <h2>The question</h2>
-      <p>A walkable neighbourhood is one where things are close together and
-      the streets connect. The claim worth testing is that people in such
-      places travel under their own power more often — so if walkability
-      predicts anything, it should predict cycling to work.</p>
-      <p>Two public datasets can answer that, because both describe the same
+      <div class="premise">
+        <p><span class="lbl">Given</span><span>A walkable neighbourhood is one
+        where destinations are close together and the streets connect.</span></p>
+        <p><span class="lbl">Given</span><span>How someone travels to work
+        depends partly on how easy each way is.</span></p>
+        <p><span class="lbl">Suppose</span><span>More walkable neighbourhoods
+        have more people cycling to work.</span></p>
+      </div>
+
+      <p>Two public datasets can test that, because both describe the same
       unit of geography: a census block group, a few hundred households. The
       <b>EPA's National Walkability Index</b> scores every block group in the
       country from 1 to 20. The <b>Census Bureau's commute survey</b> counts how
