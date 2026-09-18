@@ -216,6 +216,11 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
 - Cross-reference by number — "step 12" — and only backwards or with a
   signpost. Renumbering is scripted; see the git history for the pattern.
 
+Links out of the course open in a new tab:
+`<a href="https://…" target="_blank" rel="noopener noreferrer">`. A learner
+following a reference mid-exercise should not lose the page they were working
+on — the exercise editor holds unsaved work.
+
 ## Diagrams
 
 Inline `<svg viewBox="0 0 720 H">` inside `<figure>`, with a `<figcaption>`
