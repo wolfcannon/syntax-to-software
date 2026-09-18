@@ -173,8 +173,31 @@ f"{bike / workers}"
 f"{name.upper()}"</pre>
       <div id="exf"></div>
 
-      <p>After a colon comes a <b>format spec</b>, which controls how the value
-      is written out rather than what it is.</p>
+      <h3>Format spec</h3>
+      <p>Instructions for how to write a value down, written after a colon
+      inside the braces. They change how it appears, never what it is.</p>
+      <p>Say you want the bike share as a percentage, to one decimal place. You
+      can do that yourself:</p>
+<pre>share = bike / workers        <span class="c"># 0.016116653875671526</span>
+percent = round(share * 100, 1)   <span class="c"># 1.6  — round() cuts it to one decimal</span>
+line = f"{percent}%"              <span class="c"># '1.6%'</span></pre>
+      <p>Or you can say the same thing in a spec, and let the f-string do
+      it:</p>
+<pre>line = f"{bike / workers:.1%}"    <span class="c"># '1.6%'</span></pre>
+
+      <div class="note trap">
+        <h4><code>.1%</code> is not something to look for</h4>
+        <p>It reads like text you are searching for. It is not. It is two
+        instructions:</p>
+        <ul>
+          <li><code>%</code> — write this as a percentage, which multiplies by
+          100 and adds the sign</li>
+          <li><code>.1</code> — keep one digit after the decimal point</li>
+        </ul>
+        <p style="margin-bottom:0">Nothing in a spec is text. Every character
+        in it is an instruction, which is why they are so short and so
+        unguessable.</p>
+      </div>
 
       <figure>
         <svg viewBox="0 0 720 215" role="img" aria-label="An f-string slot in parts, and the two stages underneath: the expression is worked out to a long decimal, then the format spec turns that into 1.6 percent.">
