@@ -1,7 +1,7 @@
 # From Syntax to Software
 
 A Python course that starts at what a statement is and ends with a tested
-project under version control — 23 steps and two level-ups. It assumes no
+project under version control — 22 steps and two level-ups. It assumes no
 programming experience and no maths beyond arithmetic. Every step teaches one
 layer of the language or of the development process, and advances the same
 project: **does neighbourhood walkability predict bike commuting, and what
@@ -15,12 +15,12 @@ uncertainty.
 
 | | Where the work happens |
 | --- | --- |
-| **Unit 1 — Foundations** (steps 1–10) ✅ built | the browser |
+| **Unit 1 — Foundations** (steps 1–9) ✅ built | the browser |
 | **↑ Level up: Jupyter notebooks** ✅ built | your machine, in a notebook |
-| **Unit 2 — Correctness** (steps 11–14) | " |
-| **Unit 3 — Structure and the ecosystem** (steps 15–18) | " |
+| **Unit 2 — Correctness** (steps 10–13) | " |
+| **Unit 3 — Structure and the ecosystem** (steps 14–17) | " |
 | **↑ Level up: Notebooks to scripts** ✅ built | your machine, in a terminal |
-| **Unit 4 — Development practice** (steps 19–23) | " |
+| **Unit 4 — Development practice** (steps 18–22) | " |
 
 The two level-ups are deliberate. Each is a change of environment, and each
 lands *after* the learner has something worth putting there — Jupyter arrives
@@ -56,8 +56,8 @@ caches it, and nothing else phones home.
 ## What's here
 
 ```
-index.html            course home: how it works, the data, all 23 steps
-steps/step-01..10     Unit 1, one page per step
+index.html            course home: how it works, the data, all 22 steps
+steps/step-01..09     Unit 1, one page per step
 steps/interlude-*     the two level-ups
 assets/course.css     styles (light and dark, follows the browser)
 assets/nav.js         sidebar, topbar, pager — defined once for every page
@@ -66,7 +66,7 @@ assets/sample.js      sample rows, generated — do not hand-edit
 data/                 the project's two datasets, the sample cell, and
                       marion_full.py — the whole county as literals, a
                       stopgap so the first level-up can run on real data
-                      before file I/O (step 14) exists
+                      before file I/O (step 13) exists
 notebooks/            where the learner's own work goes
 scripts/              data preparation and the repo's own tests
 ```
@@ -78,7 +78,7 @@ never sees. `assets/runner.js` runs their code in a fresh namespace, then runs
 the assertions against it, and reports each one separately — `got '1731001'
 (str), expected '017300001001' (str)` rather than a bare red traceback.
 
-That is a setup for **step 20**, where the harness stops being hidden: the
+That is a setup for **step 19**, where the harness stops being hidden: the
 assertions grading the learner turn out to be ordinary `pytest`-style
 assertions, and they start writing their own. Keep the checks honest and
 readable, because they eventually get read.
@@ -138,7 +138,7 @@ Both datasets are committed, so Unit 1 needs no downloads and no API key.
 | --- | --- | --- |
 | `data/walkability_marion.csv` | EPA National Walkability Index, via the EPA's ArcGIS service | 632 block groups |
 | `data/acs_commute_marion.csv` | Census ACS 5-year 2015–2019, table B08301 | 630 block groups |
-| `data/sample_rows.py` | ~11 rows of each, for steps 1–11 | generated |
+| `data/sample_rows.py` | ~11 rows of each, for steps 1–10 | generated |
 | `data/marion_full.py` | the whole county as Python literals | generated |
 
 > **The walkability data is real. The commute data is not yet.**
@@ -167,11 +167,11 @@ curriculum — steps 5, 6, 8 and 12 each exist partly to deal with one of them.
 
 Use the **2015–2019** ACS release (`/data/2019/acs/acs5`). Later releases use
 2020 block group boundaries and will not join cleanly to the EPA file, which is
-ticket B in step 21.
+ticket B in step 20.
 
 ## Texts
 
-- [*Think Python*, 3rd ed.](https://allendowney.github.io/ThinkPython/) — free; covers steps 1–14
+- [*Think Python*, 3rd ed.](https://allendowney.github.io/ThinkPython/) — free; covers Unit 1 through Unit 3
 - [*Research Software Engineering with Python*](https://third-bit.com/py-rse/) — free; covers steps 16–20
 - [The official Python tutorial](https://docs.python.org/3/tutorial/),
   [*Beyond the Basic Stuff with Python*](https://inventwithpython.com/),

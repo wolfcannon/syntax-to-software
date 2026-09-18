@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Step 7 — Loops</title>
+<title>Step 7 — Dictionaries</title>
 <link rel="stylesheet" href="../assets/course.css?v=05c68d00">
 </head>
 <body>
@@ -14,200 +14,289 @@
     <div class="wrap">
 
       <p class="eyebrow">Unit 1 — Foundations · Step 7</p>
-      <h1>Loops</h1>
-      <ul class="lede-points">
-        <li>Do the same thing once per item, without writing it out.</li>
-        <li>Build up an answer as you go.</li>
-        <li>Skip an item, or stop early, when the data says so.</li>
-      </ul>
+      <h1>Dictionaries</h1>
+      <p class="lede">The type that turns two unrelated tables into one dataset
+      — and the step where the project stops being exercises and starts being
+      an analysis.</p>
 
-      <h2><code>for</code></h2>
-      <p>A <code>for</code> statement opens a block and runs it once per item
-      in a sequence, binding a name to each item in turn.</p>
-<pre>scores = [3.5, 14.5, 9.0]
+      <h2>Lookup by key, not by position</h2>
+      <p>A dictionary maps keys to values. Looking one up costs the same
+      whether it holds ten entries or ten million, which is the property the
+      rest of this step depends on.</p>
+<pre>row = {"geoid": "180973401103", "workers": 1303, "bike": 21}
+row["workers"]            <span class="c"># 1303</span>
+row["walk_index"]         <span class="c"># KeyError — it isn't there</span>
+row.get("walk_index")     <span class="c"># None — the polite version</span>
+row.get("walk_index", 0)  <span class="c"># 0 — with a default of your choosing</span></pre>
+      <p>The difference between <code>[]</code> and <code>.get()</code> is a
+      decision about whether a missing key is a bug or a fact. For a column
+      name you wrote yourself, missing means you typo'd it and you want the
+      <code>KeyError</code> immediately. For a GEOID that may legitimately not
+      exist in the other dataset, missing is data, and <code>.get()</code> lets
+      you record it.</p>
 
-for score in scores:
-    print(score)</pre>
-      <p>The name after <code>for</code> is yours to choose. It exists only
-      because the loop put a value in it, and it is rebound on every pass —
-      which is step 2's referential binding, happening automatically.</p>
-      <p>A <code>range</code> works the same way, which is what makes it useful
-      for counting rather than for holding data:</p>
-<pre>for i in range(3):
-    print(i)        <span class="c"># 0, then 1, then 2</span></pre>
+      <h2>From positional rows to named fields</h2>
+      <p><code>zip</code> pairs up two sequences; <code>dict</code> turns pairs
+      into a mapping. Together they convert a row you have to count your way
+      through into one you can read:</p>
+<pre>header = acs_raw[0]
+row = dict(zip(header, acs_raw[1]))
+row["B08301_001E"]    <span class="c"># '401' — no more row[1]</span></pre>
+      <p>This is worth doing immediately and permanently.
+      <code>row[8] + row[9]</code> was fine for two steps; it is unreadable in
+      a hundred lines and it breaks silently if the API reorders its
+      columns.</p>
 
-      <h2>Building up an answer</h2>
-      <p>Most loops exist to accumulate something. Start with an empty answer
-      before the loop, add to it inside, and read it afterwards.</p>
-<pre>scores = [3.5, 14.5, 9.0]
+      <h2>The join</h2>
+      <p>You have two tables describing the same block groups, and no
+      relationship between them except a shared identifier. Joining means:
+      build a lookup from one, then walk the other asking questions of it.</p>
 
-total = 0
-for score in scores:
-    total = total + score
+      <figure>
+        <svg viewBox="0 0 720 300" role="img" aria-label="Joining ACS rows to walkability scores by GEOID, with unmatched rows on both sides.">
+          <text x="14" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">ACS COMMUTE ROWS</text>
+          <text x="470" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">WALKABILITY LOOKUP</text>
 
-print(total / len(scores))   <span class="c"># 9.0 — the mean</span></pre>
-      <p>Where the accumulator is set matters. Inside the block it would be
-      reset on every pass; after the block it would not exist yet. This is the
-      indentation lesson from step 4 with something at stake.</p>
+          <rect class="svg-box" x="14" y="34" width="210" height="34" rx="6"/>
+          <text x="28" y="56" class="svg-ink mono" style="font-size:11.5px">…340110 3</text>
+          <rect class="svg-box" x="14" y="76" width="210" height="34" rx="6"/>
+          <text x="28" y="98" class="svg-ink mono" style="font-size:11.5px">…341700 3</text>
+          <rect class="svg-box" x="14" y="118" width="210" height="34" rx="6"/>
+          <text x="28" y="140" class="svg-ink mono" style="font-size:11.5px">…353500 1</text>
+          <rect x="14" y="160" width="210" height="34" rx="6" fill="var(--bad-wash)" stroke="var(--bad)"/>
+          <text x="28" y="182" class="svg-bad mono" style="font-size:11.5px">…310308 3</text>
+          <text x="28" y="212" class="svg-bad" style="font-size:11px">in the ACS, not in the EPA file</text>
+          <text x="28" y="228" class="svg-muted" style="font-size:11px">5 of these in the full data</text>
 
-      <h2>Leaving a loop early</h2>
-      <p>Two statements interrupt the normal run of a loop.
-      <code>continue</code> abandons this pass and starts the next.
-      <code>break</code> abandons the loop entirely.</p>
-<pre>for score in scores:
-    if score is None:
-        continue          <span class="c"># no score here — on to the next one</span>
-    print(score)</pre>
-      <div class="note trap">
-        <h4>A <code>continue</code> is a decision about the data</h4>
-        <p>Skipping a neighbourhood with no score is not the same as counting
-        it as zero. Zero drags a mean down on the strength of no evidence;
-        skipping leaves it out of the question entirely.</p>
-        <p style="margin-bottom:0">Either can be right. What is never right is
-        skipping without counting how many you skipped, which is exercise 1.</p>
-      </div>
+          <rect class="svg-box" x="466" y="34" width="240" height="34" rx="6"/>
+          <text x="480" y="56" class="svg-ink mono" style="font-size:11.5px">…340110 3 → 14.5</text>
+          <rect class="svg-box" x="466" y="76" width="240" height="34" rx="6"/>
+          <text x="480" y="98" class="svg-ink mono" style="font-size:11.5px">…341700 3 → 11.8</text>
+          <rect class="svg-box" x="466" y="118" width="240" height="34" rx="6"/>
+          <text x="480" y="140" class="svg-ink mono" style="font-size:11.5px">…353500 1 → 15.7</text>
+          <rect x="466" y="160" width="240" height="34" rx="6" fill="var(--warn-wash)" stroke="var(--warn)"/>
+          <text x="480" y="182" class="svg-ink mono" style="font-size:11.5px">…320107 1 → 9.0</text>
+          <text x="480" y="212" style="font-size:11px" fill="var(--warn)">scored, but nobody asked for it</text>
+          <text x="480" y="228" class="svg-muted" style="font-size:11px">7 of these in the full data</text>
 
-      <h2><code>while</code></h2>
-      <p><code>for</code> walks a sequence you already have.
-      <code>while</code> repeats for as long as a condition stays true, which
-      means you need to be sure the condition eventually goes false.</p>
-<pre>countdown = 3
-while countdown &gt; 0:
-    print(countdown)
-    countdown = countdown - 1</pre>
-      <p>Delete that last line and the condition never changes, so the loop
-      never ends. Reach for <code>for</code> unless you genuinely do not know
-      how many passes you need.</p>
+          <path class="svg-line" d="M228 51 H462" stroke="var(--ok)" marker-end="url(#a6)"/>
+          <path class="svg-line" d="M228 93 H462" stroke="var(--ok)" marker-end="url(#a6)"/>
+          <path class="svg-line" d="M228 135 H462" stroke="var(--ok)" marker-end="url(#a6)"/>
+          <path class="svg-line" d="M228 177 h150" stroke="var(--bad)" stroke-dasharray="5 4"/>
+          <text x="384" y="181" class="svg-bad mono" style="font-size:15px">✕</text>
+          <defs><marker id="a6" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0 0 L8 4 L0 8 z" fill="var(--ok)"/></marker></defs>
 
-      <div id="q1"></div>
-
-      <h2>Exercises</h2>
-
-      <div id="ex1"></div>
-      <div id="ex2"></div>
+          <line x1="14" y1="252" x2="706" y2="252" class="svg-line"/>
+          <text x="14" y="274" class="svg-ink" style="font-size:12px">A join is a question asked once per row on the left. The rows that get no answer are the finding.</text>
+          <text x="14" y="292" class="svg-muted" style="font-size:12px">Silently dropping them is how an analysis ends up describing a population that isn't the one you meant.</text>
+        </svg>
+        <figcaption>Which side you iterate decides what you get: walking the
+        ACS rows gives you a left join and tells you about missing walkability
+        scores. Walking the walkability table tells you the opposite. Neither
+        is "the" join.</figcaption>
+      </figure>
 
       <div class="note">
-        <h4>Tip 💡: three questions for every loop you write</h4>
-        <ol>
-          <li>What is the answer before the loop starts? Write that line
-          first.</li>
-          <li>Is each line inside the block or after it? One of them is almost
-          always wrong the first time.</li>
-          <li>What did you skip, and did you count it? A loop that quietly
-          drops rows is how a result ends up describing a population you did
-          not mean.</li>
-        </ol>
+        <h4>Composite keys</h4>
+        <p>Within one county you do not strictly need a 12-character string:
+        the tuple <code>(tract, block_group)</code> identifies a block group
+        just as well, and tuples are hashable so they work as keys directly.
+        Build the full GEOID anyway. The moment you add a second county — step
+        21, ticket A — a tract number alone stops being unique, and code that
+        assumed otherwise fails in a way that looks like a data problem rather
+        than a code problem.</p>
       </div>
+
+      <h2>Iterating a dictionary</h2>
+<pre>for geoid in lookup:              <span class="c"># keys</span>
+for score in lookup.values():     <span class="c"># values</span>
+for geoid, score in lookup.items():   <span class="c"># both, unpacked</span>
+"180973401103" in lookup          <span class="c"># membership — checks keys, and is fast</span></pre>
+
+      <h2>Exercises</h2>
+      <div id="ex1"></div>
+      <div id="ex2"></div>
+      <div id="ex3"></div>
+
+      <div class="project">
+        <h4>Take it further</h4>
+        <p>Convert both raw tables into lists of dictionaries. Build a lookup
+        from GEOID to walkability score. Then perform the join by hand — for
+        each ACS row, look up its walkability score — and report three numbers:
+        how many joined, how many ACS rows found no score, and how many
+        walkability rows nobody asked for.</p>
+        <p style="margin-bottom:0">Write those three numbers down somewhere. At
+        the level-up you will run the same code against all 632 block groups
+        and they will change; you want the sample's numbers recorded so you
+        can tell the difference between "more data" and "new bug".</p>
+      </div>
+
+      <details class="checkq">
+        <summary><span class="q">What happens when a GEOID exists in one dataset but not the other, and how does <code>.get()</code> change that?</span></summary>
+        <div class="ans">
+          <p>With square brackets, a missing GEOID raises <code>KeyError</code>
+          and stops the loop dead on the first unmatched row. That is loud and
+          unhelpful: you learn that one row failed, not how many.</p>
+          <p>With <code>.get()</code>, the lookup returns <code>None</code> and
+          the loop continues. Now the absence is a value you can hold onto —
+          count it, list it, look at a few and work out why. Roughly: square brackets
+          for keys you believe in, <code>.get()</code> for keys the data is
+          allowed to withhold.</p>
+          <p style="margin-bottom:0">The mistake is the third option:
+          <code>.get(geoid, 0)</code>. A default of zero turns "we don't know
+          this block group's walkability" into "this block group has the lowest
+          possible walkability", and that is now in your correlation with no
+          trace that it was ever missing. Default to <code>None</code>, and
+          decide what to do about it deliberately.</p>
+        </div>
+      </details>
 
       <div id="pager"></div>
     </div>
   </div>
 </div>
 
-<script src="../assets/nav.js?v=7931b038"></script>
+<script src="../assets/nav.js?v=a0f4b0dc"></script>
 <script src="../assets/runner.js?v=277a066f"></script>
-<script>
-COURSE.quiz("q1", {
-  id: "s07-placement", tag: "Your turn", title: "Where does the total go?",
-  retry: "Not that one. Look at which lines are inside the block.",
-  question:
-    "<p>Both of these mean to add up three scores.</p>" +
-    "<div class='quiz-cols'>" +
-      "<div><p class='lab'>A</p><pre>total = 0\nfor score in scores:\n    total = total + score\nprint(total)</pre></div>" +
-      "<div><p class='lab'>B</p><pre>for score in scores:\n    total = 0\n    total = total + score\nprint(total)</pre></div>" +
-    "</div>" +
-    "<p>With <code>scores = [3.5, 14.5, 9.0]</code>, what does B print?</p>",
-  options: [
-    { html: "<code>27.0</code> — the same as A" },
-    { html: "<code>9.0</code> — only the last score", correct: true,
-      why: "<code>total = 0</code> is inside the block, so it runs again on " +
-           "every pass and throws away everything added so far. Only the final " +
-           "pass survives." },
-    { html: "<code>0</code>" },
-    { html: "An error — <code>total</code> is not defined" }
-  ],
-  why:
-    "<p>Both are valid. B resets the answer once per item, so it reports the " +
-    "last score rather than the total. Where you start the accumulator is the " +
-    "whole of the difference.</p>"
-});
-</script>
+<script src="../assets/sample.js?v=3b94601e"></script>
 <script>
 COURSE.exercise("ex1", {
-  id: "s07-count", tag: "Exercise 1", title: "Count what you skip",
+  id: "s07-zip", tag: "Exercise 1", title: "Rows with names on them",
   prompt:
-    "<p>Six neighbourhoods. Two of them were never scored, and those arrive as " +
-    "<code>None</code>.</p>" +
-    "<p>Walk the list and set <code>usable</code> to how many have a score, and " +
-    "<code>skipped</code> to how many do not. Every score must be accounted " +
-    "for by exactly one of them.</p>",
-  setup: "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n",
+    "<p>Turn both raw tables into lists of dictionaries — <code>acs_rows</code> " +
+    "and <code>walk_rows</code> — using the header row for the keys. Do not " +
+    "type the field names out; <code>zip</code> them.</p>" +
+    "<p>Then set <code>first_workers</code> to the worker count of the first " +
+    "ACS row, looked up <em>by name</em>, as an <code>int</code>.</p>",
+  setup: SAMPLE,
   starter:
-    "usable = 0\nskipped = 0\n\n" +
-    "for score in scores:\n    pass\n\n" +
-    "print(usable, skipped)\n",
+    "acs_rows = \nwalk_rows = \n\n" +
+    "first_workers = \n\n" +
+    "print(acs_rows[0][\"NAME\"])\nprint(first_workers)",
   checks: [
-    { label: "usable counts the scores that exist",
-      code: "expect(expect_defined(globals(), 'usable'), 4)" },
-    { label: "skipped counts the ones that do not",
-      code: "expect(expect_defined(globals(), 'skipped'), 2)" },
-    { label: "the two add up to every neighbourhood — nothing vanished",
-      code: "expect(usable + skipped, len(scores))" },
-    { label: "the counters were not reset inside the loop",
-      code: ("body = [l for l in __source__.splitlines() if l[:1].isspace()]\n"
-           + "for l in body:\n"
-           + "    if l.strip() in ('usable = 0', 'skipped = 0'):\n"
-           + "        raise CheckFailed('%r is inside the loop, so it resets every pass' % l.strip())") }
+    { label: "acs_rows is a list of dicts, one per data row",
+      code: "expect(len(expect_defined(globals(), 'acs_rows')), len(acs_raw) - 1)\nexpect_type(acs_rows[0], dict)" },
+    { label: "the keys came from the header",
+      code: "expect(list(acs_rows[0].keys()), acs_raw[0])" },
+    { label: "the values are still the row's values, in order",
+      code: "expect([list(r.values()) for r in acs_rows], acs_raw[1:])" },
+    { label: "walk_rows was built the same way",
+      code: "expect(len(expect_defined(globals(), 'walk_rows')), len(walk_raw) - 1)\nexpect(list(walk_rows[0].keys()), walk_raw[0])" },
+    { label: "first_workers is an int looked up by field name",
+      code: "expect(expect_defined(globals(), 'first_workers'), 401)" }
   ],
   solution:
-    "usable = 0\nskipped = 0\n\n" +
-    "for score in scores:\n" +
-    "    if score is None:\n" +
-    "        skipped = skipped + 1\n" +
-    "        continue\n" +
-    "    usable = usable + 1\n\n" +
-    "print(usable, skipped)\n\n" +
-    "# The check that they add up to len(scores) is the cheapest data audit\n" +
-    "# there is. Run one every time you filter, and rows cannot disappear\n" +
-    "# without you noticing."
+    "acs_rows = [dict(zip(acs_raw[0], row)) for row in acs_raw[1:]]\n" +
+    "walk_rows = [dict(zip(walk_raw[0], row)) for row in walk_raw[1:]]\n\n" +
+    "first_workers = int(acs_rows[0][\"B08301_001E\"])\n\n" +
+    "print(acs_rows[0][\"NAME\"])\n" +
+    "print(first_workers)\n" +
+    "# A plain for-loop with .append() is just as correct here. Step 8 is where\n" +
+    "# the bracketed form above stops looking like a trick."
 });
 
 COURSE.exercise("ex2", {
-  id: "s07-collect", tag: "Exercise 2", title: "Build a list as you go",
+  id: "s07-lookup", tag: "Exercise 2", title: "A lookup keyed by GEOID",
   prompt:
-    "<p>From the same six, build <code>walkable</code>: a list of every score " +
-    "above 10.5, in the order they appear.</p>" +
-    "<p>Then set <code>best</code> to the highest score in that list.</p>" +
-    "<p class='small'>Remember that <code>None</code> cannot be compared with " +
-    "a number — deal with it before you test it.</p>",
-  setup: "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n",
+    "<p>Build <code>walk_lookup</code>: a dictionary mapping each " +
+    "12-character GEOID string to that block group's walkability score as a " +
+    "<code>float</code>.</p>" +
+    "<p>Then answer two questions with it: set <code>score_of</code> to the " +
+    "score for <code>\"180973401103\"</code>, and <code>has_310308_3</code> to " +
+    "whether GEOID <code>\"180973103083\"</code> is present at all.</p>",
+  setup: SAMPLE,
   starter:
-    "walkable = []\n\n" +
-    "for score in scores:\n    pass\n\n" +
-    "best = \n\nprint(walkable, best)\n",
+    "walk_lookup = {}\n\n" +
+    "for row in walk_raw[1:]:\n    pass\n\n" +
+    "score_of = \nhas_310308_3 = \n\n" +
+    "print(len(walk_lookup), score_of, has_310308_3)",
   checks: [
-    { label: "walkable holds the scores above 10.5, in order",
-      code: "expect(expect_defined(globals(), 'walkable'), [14.5, 19.5])" },
-    { label: "the missing scores did not raise on the way",
-      code: "expect(None in walkable, False)" },
-    { label: "best is the highest of them",
-      code: "expect_close(expect_defined(globals(), 'best'), 19.5, 1e-12)" },
-    { label: "best was worked out, not typed in",
-      code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
-           + "if '19.5' in code_only.split('scores =')[-1].split('\\n', 1)[-1]:\n"
-           + "    raise CheckFailed('19.5 is written out rather than found')") }
+    { label: "walk_lookup has one entry per walkability row",
+      code: "expect(len(expect_defined(globals(), 'walk_lookup')), len(walk_raw) - 1)" },
+    { label: "keys are 12-character strings",
+      code: "expect(sorted({type(k).__name__ for k in walk_lookup}), ['str'])\nexpect(sorted({len(k) for k in walk_lookup}), [12])" },
+    { label: "values are floats",
+      code: "expect(sorted({type(v).__name__ for v in walk_lookup.values()}), ['float'])" },
+    { label: "the lookup returns the right score",
+      code: "expect_close(expect_defined(globals(), 'score_of'), 14.5, 1e-9)" },
+    { label: "the block group with no walkability score is correctly absent",
+      code: "expect(expect_defined(globals(), 'has_310308_3'), False)" }
   ],
   solution:
-    "walkable = []\n\n" +
-    "for score in scores:\n" +
-    "    if score is None:\n" +
-    "        continue\n" +
-    "    if score > 10.5:\n" +
-    "        walkable.append(score)\n\n" +
-    "best = max(walkable)\n\n" +
-    "print(walkable, best)\n\n" +
-    "# The None check has to come first. 'score > 10.5' on a None raises a\n" +
-    "# TypeError, the same one step 1 met when text was compared with a number."
+    "walk_lookup = {}\n\n" +
+    "for row in walk_raw[1:]:\n" +
+    "    geoid = row[0] + row[1] + row[2] + row[3]\n" +
+    "    walk_lookup[geoid] = float(row[4])\n\n" +
+    "score_of = walk_lookup[\"180973401103\"]      # square brackets: this key must exist\n" +
+    "has_310308_3 = \"180973103083\" in walk_lookup\n\n" +
+    "print(len(walk_lookup), score_of, has_310308_3)"
+});
+
+COURSE.exercise("ex3", {
+  id: "s07-join", tag: "Exercise 3", title: "The join, by hand",
+  prompt:
+    "<p>Walk the ACS rows and attach each one's walkability score. Produce:</p>" +
+    "<ul>" +
+    "<li><code>joined</code> — a list of dicts, one per ACS row, each with keys " +
+    "<code>\"geoid\"</code>, <code>\"workers\"</code> (int), <code>\"bike\"</code> " +
+    "(int) and <code>\"walk_index\"</code> (a float, or <code>None</code> if " +
+    "there was no match)</li>" +
+    "<li><code>n_matched</code> — how many got a score</li>" +
+    "<li><code>unmatched_geoids</code> — the GEOIDs that got none</li>" +
+    "<li><code>orphan_geoids</code> — walkability GEOIDs no ACS row asked for</li>" +
+    "</ul>" +
+    "<p class='small'>Leave the sentinel <code>-666666666</code> alone for now. " +
+    "Converting it is step 12's job, and pretending it's a real count until " +
+    "then is a useful discomfort.</p>",
+  setup: SAMPLE,
+  starter:
+    "# given: the lookup from exercise 2, written compactly (step 8 explains how)\n" +
+    "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n\n" +
+    "joined = []\nfor row in acs_raw[1:]:\n    pass\n\n" +
+    "n_matched = \nunmatched_geoids = \norphan_geoids = \n\n" +
+    "print(n_matched, \"matched |\", unmatched_geoids, \"| orphans:\", orphan_geoids)",
+  checks: [
+    { label: "joined has one entry per ACS row",
+      code: "expect(len(expect_defined(globals(), 'joined')), len(acs_raw) - 1)" },
+    { label: "each entry has the four required keys",
+      code: "expect(sorted(joined[0].keys()), ['bike', 'geoid', 'walk_index', 'workers'])" },
+    { label: "workers and bike are ints",
+      code: "expect(sorted({type(r['workers']).__name__ for r in joined}), ['int'])\nexpect(sorted({type(r['bike']).__name__ for r in joined}), ['int'])" },
+    { label: "unmatched rows carry None, not a stand-in number",
+      code: ("miss = [r for r in joined if r['walk_index'] is None]\n"
+           + "expect(len(miss), 1)\n"
+           + "expect(0 in [r['walk_index'] for r in joined], False)") },
+    { label: "the matched scores are right",
+      code: ("lk = {r[0]+r[1]+r[2]+r[3]: float(r[4]) for r in walk_raw[1:]}\n"
+           + "expect([r['walk_index'] for r in joined], [lk.get(r['geoid']) for r in joined])") },
+    { label: "n_matched counts the rows that found a score",
+      code: "expect(expect_defined(globals(), 'n_matched'), sum(1 for r in joined if r['walk_index'] is not None))" },
+    { label: "unmatched_geoids names the ACS row with no score",
+      code: "expect(sorted(expect_defined(globals(), 'unmatched_geoids')), ['180973103083'])" },
+    { label: "orphan_geoids names the walkability row nobody asked for",
+      code: "expect(sorted(expect_defined(globals(), 'orphan_geoids')), ['180973201071'])" }
+  ],
+  solution:
+    "# given: the lookup from exercise 2, written compactly (step 8 explains how)\n" +
+    "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n\n" +
+    "joined = []\n" +
+    "for row in acs_raw[1:]:\n" +
+    "    geoid = row[6] + row[7] + row[8] + row[9]\n" +
+    "    joined.append({\n" +
+    "        \"geoid\": geoid,\n" +
+    "        \"workers\": int(row[1]),\n" +
+    "        \"bike\": int(row[2]),\n" +
+    "        \"walk_index\": walk_lookup.get(geoid),   # None when absent\n" +
+    "    })\n\n" +
+    "n_matched = sum(1 for r in joined if r[\"walk_index\"] is not None)\n" +
+    "unmatched_geoids = [r[\"geoid\"] for r in joined if r[\"walk_index\"] is None]\n" +
+    "asked_for = {r[\"geoid\"] for r in joined}\n" +
+    "orphan_geoids = [g for g in walk_lookup if g not in asked_for]\n\n" +
+    "print(n_matched, \"matched |\", unmatched_geoids, \"| orphans:\", orphan_geoids)\n" +
+    "# 10 of 11 matched. Both leftovers are real: one block group the EPA never\n" +
+    "# scored, one the EPA scored and the ACS didn't report. Step 8 finds these\n" +
+    "# with a single set operation instead of two loops."
 });
 </script>
 </body>

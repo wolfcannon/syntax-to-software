@@ -1,6 +1,6 @@
 /* Shared chrome: sidebar, topbar, pager. Defined once so the pages don't drift.
 
-   ITEMS is the whole course in order — 23 numbered steps and 2 interludes.
+   ITEMS is the whole course in order — 22 numbered steps and 2 interludes.
    An entry with `n: null` is an interlude: a level-up between units, where the
    work moves onto the learner's own machine. An entry with `file: null` is not
    written yet; it shows greyed in the sidebar and the pager skips over it, so
@@ -13,43 +13,41 @@
       ex: ["s02-convert", "s02-geoid", "s02-division"] },
     { n: 3, file: "steps/step-03.html", title: "Methods and strings",
       ex: ["s03-methods", "s03-interp", "s03-geoid", "s03-format", "s03-parse"] },
-    { n: 4, file: "steps/step-04.html", title: "Blocks and indentation",
-      ex: ["s04-move", "s04-syntax"] },
-    { n: 5, file: "steps/step-05.html", title: "Conditions and truthiness",
-      ex: ["s05-category", "s05-truthy"] },
-    { n: 6, file: "steps/step-06.html", title: "Tuples, lists, and ranges",
-      ex: ["s06-split", "s06-sort", "s06-unpack"] },
-    { n: 7, file: "steps/step-07.html", title: "Loops",
-      ex: ["s07-count", "s07-collect"] },
-    { n: 8, file: "steps/step-08.html", title: "Dictionaries",
-      ex: ["s08-zip", "s08-lookup", "s08-join"] },
-    { n: 9, file: "steps/step-09.html", title: "Comprehensions",
-      ex: ["s09-dictcomp", "s09-sets", "s09-filter"] },
-    { n: 10, file: "steps/step-10.html", title: "Functions",
-      ex: ["s10-buildgeoid", "s10-bikeshare", "s10-pipeline"] },
+    { n: 4, file: "steps/step-04.html", title: "Blocks and conditions",
+      ex: ["s04-move", "s04-syntax", "s04-category", "s04-truthy"] },
+    { n: 5, file: "steps/step-05.html", title: "Tuples, lists, and ranges",
+      ex: ["s05-split", "s05-sort", "s05-unpack"] },
+    { n: 6, file: "steps/step-06.html", title: "Loops",
+      ex: ["s06-count", "s06-collect"] },
+    { n: 7, file: "steps/step-07.html", title: "Dictionaries",
+      ex: ["s07-zip", "s07-lookup", "s07-join"] },
+    { n: 8, file: "steps/step-08.html", title: "Comprehensions",
+      ex: ["s08-dictcomp", "s08-sets", "s08-filter"] },
+    { n: 9, file: "steps/step-09.html", title: "Functions",
+      ex: ["s09-buildgeoid", "s09-bikeshare", "s09-pipeline"] },
 
     { unit: "Level up", n: null, file: "steps/interlude-jupyter.html",
       title: "Jupyter notebooks", ex: ["int-order", "int-state"] },
 
-    { unit: "Unit 2 — Correctness", n: 11, file: null, title: "Equivalent forms" },
-    { n: 12, file: null, title: "Debugging and refactoring" },
-    { n: 13, file: null, title: "Exceptions" },
-    { n: 14, file: null, title: "File I/O" },
+    { unit: "Unit 2 — Correctness", n: 10, file: null, title: "Equivalent forms" },
+    { n: 11, file: null, title: "Debugging and refactoring" },
+    { n: 12, file: null, title: "Exceptions" },
+    { n: 13, file: null, title: "File I/O" },
 
-    { unit: "Unit 3 — Structure and ecosystem", n: 15, file: null, title: "Modules" },
-    { n: 16, file: null, title: "Classes" },
-    { n: 17, file: null, title: "Third-party modules" },
-    { n: 18, file: null, title: "Servers and clients" },
+    { unit: "Unit 3 — Structure and ecosystem", n: 14, file: null, title: "Modules" },
+    { n: 15, file: null, title: "Classes" },
+    { n: 16, file: null, title: "Third-party modules" },
+    { n: 17, file: null, title: "Servers and clients" },
 
     { unit: "Level up", n: null, file: "steps/interlude-scripts.html",
       title: "Notebooks to scripts",
       ex: ["scr-layout", "scr-requirements", "scr-order"] },
 
-    { unit: "Unit 4 — Development practice", n: 19, file: null, title: "Git" },
-    { n: 20, file: null, title: "Testing with pytest" },
-    { n: 21, file: null, title: "The maintenance cycle" },
-    { n: 22, file: null, title: "Organizing a project" },
-    { n: 23, file: null, title: "Capstone" },
+    { unit: "Unit 4 — Development practice", n: 18, file: null, title: "Git" },
+    { n: 19, file: null, title: "Testing with pytest" },
+    { n: 20, file: null, title: "The maintenance cycle" },
+    { n: 21, file: null, title: "Organizing a project" },
+    { n: 22, file: null, title: "Capstone" },
   ];
 
   const base = /\/steps\//.test(location.pathname) ? "../" : "";

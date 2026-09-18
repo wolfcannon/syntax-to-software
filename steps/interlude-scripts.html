@@ -59,7 +59,7 @@ pip freeze &gt; requirements.txt</pre>
       </div>
 
       <h2>One file becomes four</h2>
-      <p>Your module from step 15 has been growing. Split it along the line the
+      <p>Your module from step 14 has been growing. Split it along the line the
       data travels, so each file has one reason to change:</p>
       <div class="tablewrap">
       <table>
@@ -124,7 +124,7 @@ pip freeze &gt; requirements.txt</pre>
       <h2>Running it from a terminal</h2>
 <pre>python run.py                <span class="c"># the whole pipeline, raw data to figures</span>
 python -m bikewalk.clean     <span class="c"># one module, if it has a __main__ block</span></pre>
-      <p>Each module ends with the guard you met in step 15:</p>
+      <p>Each module ends with the guard you met in step 14:</p>
 <pre>if __name__ == "__main__":
     main()</pre>
       <p>Imported, <code>__name__</code> is the module's name and the block is
@@ -201,7 +201,7 @@ python -m bikewalk.clean     <span class="c"># one module, if it has a __main__ 
   </div>
 </div>
 
-<script src="../assets/nav.js?v=7931b038"></script>
+<script src="../assets/nav.js?v=a0f4b0dc"></script>
 <script src="../assets/runner.js?v=277a066f"></script>
 <script>
 COURSE.exercise("ex1", {

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Step 6 — Tuples, lists, and ranges</title>
+<title>Step 6 — Loops</title>
 <link rel="stylesheet" href="../assets/course.css?v=05c68d00">
 </head>
 <body>
@@ -14,109 +14,70 @@
     <div class="wrap">
 
       <p class="eyebrow">Unit 1 — Foundations · Step 6</p>
-      <h1>Tuples, lists, and ranges</h1>
+      <h1>Loops</h1>
       <ul class="lede-points">
-        <li>A list holds values in order, and can be changed.</li>
-        <li>A tuple is one thing with a fixed number of parts.</li>
-        <li>A range counts for you without storing the numbers.</li>
+        <li>Do the same thing once per item, without writing it out.</li>
+        <li>Build up an answer as you go.</li>
+        <li>Skip an item, or stop early, when the data says so.</li>
       </ul>
 
-      <h2>List</h2>
-      <p>An ordered collection of values, written in square brackets. Every
-      value so far has been one thing; a list is however many you like, kept in
-      order.</p>
+      <h2><code>for</code></h2>
+      <p>A <code>for</code> statement opens a block and runs it once per item
+      in a sequence, binding a name to each item in turn.</p>
 <pre>scores = [3.5, 14.5, 9.0]
 
-scores[0]      <span class="c"># 3.5    the first, counting from zero</span>
-scores[2]      <span class="c"># 9.0    the third</span>
-scores[-1]     <span class="c"># 9.0    the last, counting from the end</span>
-len(scores)    <span class="c"># 3      how many there are</span></pre>
-      <p>Indexing and slicing work exactly as they did on text in step 3. A
-      slice <code>scores[a:b]</code> runs from <code>a</code> up to but not
-      including <code>b</code>, so its length is always <code>b - a</code>.</p>
+for score in scores:
+    print(score)</pre>
+      <p>The name after <code>for</code> is yours to choose. It exists only
+      because the loop put a value in it, and it is rebound on every pass —
+      which is step 2's referential binding, happening automatically.</p>
+      <p>A <code>range</code> works the same way, which is what makes it useful
+      for counting rather than for holding data:</p>
+<pre>for i in range(3):
+    print(i)        <span class="c"># 0, then 1, then 2</span></pre>
 
-      <figure>
-        <svg viewBox="0 0 720 180" role="img" aria-label="Slice indices sit between list elements, not on them.">
-          <text x="14" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">scores[1:4]</text>
-          <g>
-            <rect class="svg-box" x="40" y="46" width="128" height="44" rx="6"/>
-            <text x="56" y="73" class="svg-muted mono" style="font-size:12px">3.5</text>
-            <rect x="172" y="46" width="128" height="44" rx="6" fill="var(--accent-wash)" stroke="var(--accent)"/>
-            <text x="188" y="73" class="svg-accent mono" style="font-size:12px">14.5</text>
-            <rect x="304" y="46" width="128" height="44" rx="6" fill="var(--accent-wash)" stroke="var(--accent)"/>
-            <text x="320" y="73" class="svg-accent mono" style="font-size:12px">9.0</text>
-            <rect x="436" y="46" width="128" height="44" rx="6" fill="var(--accent-wash)" stroke="var(--accent)"/>
-            <text x="452" y="73" class="svg-accent mono" style="font-size:12px">19.5</text>
-            <rect class="svg-box" x="568" y="46" width="128" height="44" rx="6"/>
-            <text x="584" y="73" class="svg-muted mono" style="font-size:12px">6.25</text>
-          </g>
-          <g class="svg-muted">
-            <line x1="36" y1="38" x2="36" y2="102" class="svg-line"/>
-            <line x1="168" y1="38" x2="168" y2="110" stroke="var(--accent)" fill="none"/>
-            <line x1="564" y1="38" x2="564" y2="110" stroke="var(--accent)" fill="none"/>
-            <line x1="700" y1="38" x2="700" y2="102" class="svg-line"/>
-            <text x="30" y="120" class="svg-muted mono" style="font-size:12px">0</text>
-            <text x="163" y="126" class="svg-accent mono" style="font-size:13px; font-weight:700">1</text>
-            <text x="298" y="120" class="svg-muted mono" style="font-size:12px">2</text>
-            <text x="430" y="120" class="svg-muted mono" style="font-size:12px">3</text>
-            <text x="559" y="126" class="svg-accent mono" style="font-size:13px; font-weight:700">4</text>
-            <text x="694" y="120" class="svg-muted mono" style="font-size:12px">5</text>
-          </g>
-          <text x="14" y="152" class="svg-ink" style="font-size:12px">The indices are the cut points, not the boxes. Three values lie between cut 1 and cut 4.</text>
-          <text x="14" y="170" class="svg-muted" style="font-size:12px">Which is why scores[1:] means "everything after the first" and never needs a length.</text>
-        </svg>
-        <figcaption>The half-open convention pays for itself:
-        <code>scores[:k]</code> and <code>scores[k:]</code> split a list with no
-        overlap and no gap, for any k.</figcaption>
-      </figure>
+      <h2>Building up an answer</h2>
+      <p>Most loops exist to accumulate something. Start with an empty answer
+      before the loop, add to it inside, and read it afterwards.</p>
+<pre>scores = [3.5, 14.5, 9.0]
 
-      <h2>Adding and removing</h2>
-      <p>A list can be changed after it exists, which is the main reason to
-      choose one.</p>
-<pre>scores.append(19.5)   <span class="c"># puts 19.5 on the end</span>
-scores.pop()          <span class="c"># takes the last one off and hands it back</span>
-scores.pop(0)         <span class="c"># or the one at a position</span></pre>
-      <p><code>append</code> changes the list in place and hands back nothing.
-      <code>pop</code> changes it in place and hands back the value it
-      removed.</p>
+total = 0
+for score in scores:
+    total = total + score
 
+print(total / len(scores))   <span class="c"># 9.0 — the mean</span></pre>
+      <p>Where the accumulator is set matters. Inside the block it would be
+      reset on every pass; after the block it would not exist yet. This is the
+      indentation lesson from step 4 with something at stake.</p>
+
+      <h2>Leaving a loop early</h2>
+      <p>Two statements interrupt the normal run of a loop.
+      <code>continue</code> abandons this pass and starts the next.
+      <code>break</code> abandons the loop entirely.</p>
+<pre>for score in scores:
+    if score is None:
+        continue          <span class="c"># no score here — on to the next one</span>
+    print(score)</pre>
       <div class="note trap">
-        <h4>The one that catches everyone</h4>
-        <p><code>scores = scores.append(19.5)</code> looks reasonable and
-        destroys your list. <code>append</code> has already done its work by
-        changing the list; what it hands back is <code>None</code>, and that is
-        what the name now refers to.</p>
-        <p style="margin-bottom:0">Call it on its own line. The same applies to
-        every method that changes a list in place.</p>
+        <h4>A <code>continue</code> is a decision about the data</h4>
+        <p>Skipping a neighbourhood with no score is not the same as counting
+        it as zero. Zero drags a mean down on the strength of no evidence;
+        skipping leaves it out of the question entirely.</p>
+        <p style="margin-bottom:0">Either can be right. What is never right is
+        skipping without counting how many you skipped, which is exercise 1.</p>
       </div>
 
-      <h2>Tuple</h2>
-      <p>A fixed group of parts, written in parentheses, which cannot be
-      changed once made.</p>
-<pre>pair = ("180973401103", 14.5)
-
-geoid, score = pair    <span class="c"># unpacking: one name per part</span>
-pair[0]                <span class="c"># '180973401103'</span></pre>
-      <p>The difference from a list is not really about the punctuation:</p>
-      <ul>
-        <li>A <b>list</b> is a collection of things of the same kind, however
-        many there happen to be. You add to it and take from it.</li>
-        <li>A <b>tuple</b> is one thing with several parts, and the number of
-        parts is fixed by what it means. There is no sensible way to append a
-        third item to a pairing.</li>
-      </ul>
-      <p>Being unchangeable also makes a tuple usable as a dictionary key,
-      which is step 8.</p>
-
-      <h2>Range</h2>
-      <p>A sequence of whole numbers, produced as they are needed rather than
-      stored.</p>
-<pre>range(5)         <span class="c"># 0, 1, 2, 3, 4</span>
-range(2, 6)      <span class="c"># 2, 3, 4, 5</span>
-list(range(5))   <span class="c"># [0, 1, 2, 3, 4] — if you really want them</span></pre>
-      <p>Half-open again: <code>range(5)</code> stops before 5, and has 5
-      numbers in it. A range is for counting, not for holding data, and step 7
-      is where counting starts being useful.</p>
+      <h2><code>while</code></h2>
+      <p><code>for</code> walks a sequence you already have.
+      <code>while</code> repeats for as long as a condition stays true, which
+      means you need to be sure the condition eventually goes false.</p>
+<pre>countdown = 3
+while countdown &gt; 0:
+    print(countdown)
+    countdown = countdown - 1</pre>
+      <p>Delete that last line and the condition never changes, so the loop
+      never ends. Reach for <code>for</code> unless you genuinely do not know
+      how many passes you need.</p>
 
       <div id="q1"></div>
 
@@ -124,16 +85,17 @@ list(range(5))   <span class="c"># [0, 1, 2, 3, 4] — if you really want them</
 
       <div id="ex1"></div>
       <div id="ex2"></div>
-      <div id="ex3"></div>
 
       <div class="note">
-        <h4>Tip 💡: picking the right one</h4>
+        <h4>Tip 💡: three questions for every loop you write</h4>
         <ol>
-          <li>Will it grow or shrink? List.</li>
-          <li>Is it one thing with named parts that always come together?
-          Tuple.</li>
-          <li>Do you just need the numbers 0 to n? Range — and do not turn it
-          into a list unless something makes you.</li>
+          <li>What is the answer before the loop starts? Write that line
+          first.</li>
+          <li>Is each line inside the block or after it? One of them is almost
+          always wrong the first time.</li>
+          <li>What did you skip, and did you count it? A loop that quietly
+          drops rows is how a result ends up describing a population you did
+          not mean.</li>
         </ol>
       </div>
 
@@ -142,126 +104,110 @@ list(range(5))   <span class="c"># [0, 1, 2, 3, 4] — if you really want them</
   </div>
 </div>
 
-<script src="../assets/nav.js?v=7931b038"></script>
+<script src="../assets/nav.js?v=a0f4b0dc"></script>
 <script src="../assets/runner.js?v=277a066f"></script>
 <script>
 COURSE.quiz("q1", {
-  id: "s06-append", tag: "Your turn", title: "What is scores now?",
-  retry: "Not that one. Ask what append hands back, not what it does.",
+  id: "s06-placement", tag: "Your turn", title: "Where does the total go?",
+  retry: "Not that one. Look at which lines are inside the block.",
   question:
-    "<pre>scores = [3.5, 14.5]\nscores = scores.append(19.5)</pre>" +
-    "<p>After those two lines, what is <code>scores</code>?</p>",
+    "<p>Both of these mean to add up three scores.</p>" +
+    "<div class='quiz-cols'>" +
+      "<div><p class='lab'>A</p><pre>total = 0\nfor score in scores:\n    total = total + score\nprint(total)</pre></div>" +
+      "<div><p class='lab'>B</p><pre>for score in scores:\n    total = 0\n    total = total + score\nprint(total)</pre></div>" +
+    "</div>" +
+    "<p>With <code>scores = [3.5, 14.5, 9.0]</code>, what does B print?</p>",
   options: [
-    { html: "<code>[3.5, 14.5, 19.5]</code>" },
-    { html: "<code>[3.5, 14.5]</code> — the append was ignored" },
-    { html: "<code>None</code>", correct: true,
-      why: "<code>append</code> added 19.5 to the list, then handed back " +
-           "nothing. Assigning that nothing to <code>scores</code> threw the " +
-           "list away." },
-    { html: "<code>19.5</code>" }
+    { html: "<code>27.0</code> — the same as A" },
+    { html: "<code>9.0</code> — only the last score", correct: true,
+      why: "<code>total = 0</code> is inside the block, so it runs again on " +
+           "every pass and throws away everything added so far. Only the final " +
+           "pass survives." },
+    { html: "<code>0</code>" },
+    { html: "An error — <code>total</code> is not defined" }
   ],
   why:
-    "<p>The list really was extended. The mistake is assigning the result, " +
-    "because a method that changes something in place has nothing left to " +
-    "give you. Write <code>scores.append(19.5)</code> on its own line.</p>"
+    "<p>Both are valid. B resets the answer once per item, so it reports the " +
+    "last score rather than the total. Where you start the accumulator is the " +
+    "whole of the difference.</p>"
 });
 </script>
 <script>
 COURSE.exercise("ex1", {
-  id: "s06-split", tag: "Exercise 1", title: "Cut a list up",
+  id: "s06-count", tag: "Exercise 1", title: "Count what you skip",
   prompt:
-    "<p>Eight walkability scores. Take them apart with slices — no numbers " +
-    "other than positions, and no typing values out.</p>" +
-    "<ul><li><code>first_three</code> — the first three</li>" +
-    "<li><code>last_two</code> — the last two</li>" +
-    "<li><code>middle</code> — everything except the first and the last</li>" +
-    "<li><code>count</code> — how many there are altogether</li></ul>",
-  setup: "scores = [3.5, 14.5, 9.0, 19.5, 6.25, 11.0, 15.25, 2.0]\n",
-  starter: "first_three = \nlast_two = \nmiddle = \ncount = \n\nprint(first_three, last_two, middle, count)",
+    "<p>Six neighbourhoods. Two of them were never scored, and those arrive as " +
+    "<code>None</code>.</p>" +
+    "<p>Walk the list and set <code>usable</code> to how many have a score, and " +
+    "<code>skipped</code> to how many do not. Every score must be accounted " +
+    "for by exactly one of them.</p>",
+  setup: "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n",
+  starter:
+    "usable = 0\nskipped = 0\n\n" +
+    "for score in scores:\n    pass\n\n" +
+    "print(usable, skipped)\n",
   checks: [
-    { label: "first_three is the first three",
-      code: "expect(expect_defined(globals(), 'first_three'), [3.5, 14.5, 9.0])" },
-    { label: "last_two is the last two",
-      code: "expect(expect_defined(globals(), 'last_two'), [15.25, 2.0])" },
-    { label: "middle drops one from each end",
-      code: "expect(expect_defined(globals(), 'middle'), [14.5, 9.0, 19.5, 6.25, 11.0, 15.25])" },
-    { label: "count is the length",
-      code: "expect(expect_defined(globals(), 'count'), 8)" },
-    { label: "the slices were taken, not typed out",
-      code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
-           + "if '14.5' in code_only or '15.25' in code_only:\n"
-           + "    raise CheckFailed('values are written out rather than sliced')") }
+    { label: "usable counts the scores that exist",
+      code: "expect(expect_defined(globals(), 'usable'), 4)" },
+    { label: "skipped counts the ones that do not",
+      code: "expect(expect_defined(globals(), 'skipped'), 2)" },
+    { label: "the two add up to every neighbourhood — nothing vanished",
+      code: "expect(usable + skipped, len(scores))" },
+    { label: "the counters were not reset inside the loop",
+      code: ("body = [l for l in __source__.splitlines() if l[:1].isspace()]\n"
+           + "for l in body:\n"
+           + "    if l.strip() in ('usable = 0', 'skipped = 0'):\n"
+           + "        raise CheckFailed('%r is inside the loop, so it resets every pass' % l.strip())") }
   ],
   solution:
-    "first_three = scores[:3]\n" +
-    "last_two = scores[-2:]\n" +
-    "middle = scores[1:-1]\n" +
-    "count = len(scores)\n\n" +
-    "print(first_three, last_two, middle, count)\n\n" +
-    "# Leaving an end off a slice means 'all the way'. Negative positions count\n" +
-    "# back from the end, so [1:-1] is 'drop one from each side' whatever the\n" +
-    "# length turns out to be."
+    "usable = 0\nskipped = 0\n\n" +
+    "for score in scores:\n" +
+    "    if score is None:\n" +
+    "        skipped = skipped + 1\n" +
+    "        continue\n" +
+    "    usable = usable + 1\n\n" +
+    "print(usable, skipped)\n\n" +
+    "# The check that they add up to len(scores) is the cheapest data audit\n" +
+    "# there is. Run one every time you filter, and rows cannot disappear\n" +
+    "# without you noticing."
 });
 
 COURSE.exercise("ex2", {
-  id: "s06-sort", tag: "Exercise 2", title: "Add one, take one back",
+  id: "s06-collect", tag: "Exercise 2", title: "Build a list as you go",
   prompt:
-    "<p>A survey arrives with one score missing from the end and one bad value " +
-    "at the front.</p>" +
-    "<p>Put <code>19.5</code> on the end, then take the first value off and " +
-    "keep it in <code>discarded</code>. Leave <code>scores</code> holding what " +
-    "is left, in order.</p>",
-  setup: "scores = [-1.0, 3.5, 14.5, 9.0]\n",
-  starter: "discarded = \n\nprint(scores, discarded)",
+    "<p>From the same six, build <code>walkable</code>: a list of every score " +
+    "above 10.5, in the order they appear.</p>" +
+    "<p>Then set <code>best</code> to the highest score in that list.</p>" +
+    "<p class='small'>Remember that <code>None</code> cannot be compared with " +
+    "a number — deal with it before you test it.</p>",
+  setup: "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n",
+  starter:
+    "walkable = []\n\n" +
+    "for score in scores:\n    pass\n\n" +
+    "best = \n\nprint(walkable, best)\n",
   checks: [
-    { label: "19.5 was added to the end",
-      code: "expect(expect_defined(globals(), 'scores')[-1], 19.5)" },
-    { label: "the bad value came off the front",
-      code: "expect(scores, [3.5, 14.5, 9.0, 19.5])" },
-    { label: "discarded holds what was removed",
-      code: "expect_close(expect_defined(globals(), 'discarded'), -1.0, 1e-12)" },
-    { label: "the list was changed in place, not reassigned from a method",
+    { label: "walkable holds the scores above 10.5, in order",
+      code: "expect(expect_defined(globals(), 'walkable'), [14.5, 19.5])" },
+    { label: "the missing scores did not raise on the way",
+      code: "expect(None in walkable, False)" },
+    { label: "best is the highest of them",
+      code: "expect_close(expect_defined(globals(), 'best'), 19.5, 1e-12)" },
+    { label: "best was worked out, not typed in",
       code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
-           + "if 'scores = scores.' in code_only:\n"
-           + "    raise CheckFailed('assigning the result of append or pop throws the list away')") }
+           + "if '19.5' in code_only.split('scores =')[-1].split('\\n', 1)[-1]:\n"
+           + "    raise CheckFailed('19.5 is written out rather than found')") }
   ],
   solution:
-    "scores.append(19.5)\n" +
-    "discarded = scores.pop(0)\n\n" +
-    "print(scores, discarded)\n\n" +
-    "# append hands back nothing, so it stands on its own line. pop hands back\n" +
-    "# the value it removed, so that one is worth assigning."
-});
-
-COURSE.exercise("ex3", {
-  id: "s06-unpack", tag: "Exercise 3", title: "One thing, several parts",
-  prompt:
-    "<p><code>place</code> is a tuple: a neighbourhood's identifier, its " +
-    "walkability score, and how many people work there.</p>" +
-    "<p>Unpack it into three names in one statement, then build " +
-    "<code>summary</code> as a tuple of just the identifier and the score.</p>",
-  setup: 'place = ("180973401103", 14.5, 1303)\n',
-  starter: "geoid, score, workers = \n\nsummary = \n\nprint(geoid, score, workers, summary)",
-  checks: [
-    { label: "geoid is the identifier, still text",
-      code: "expect(expect_defined(globals(), 'geoid'), '180973401103')" },
-    { label: "score is the walkability score",
-      code: "expect_close(expect_defined(globals(), 'score'), 14.5, 1e-12)" },
-    { label: "workers is the count",
-      code: "expect(expect_defined(globals(), 'workers'), 1303)" },
-    { label: "summary is a tuple of the first two",
-      code: "expect_type(expect_defined(globals(), 'summary'), tuple)\nexpect(summary, ('180973401103', 14.5))" },
-    { label: "the parts were unpacked rather than indexed one at a time",
-      code: ("if '= place' not in __source__.replace('  ', ' '):\n"
-           + "    raise CheckFailed('unpack the whole tuple in one statement')") }
-  ],
-  solution:
-    "geoid, score, workers = place\n\n" +
-    "summary = (geoid, score)\n\n" +
-    "print(geoid, score, workers, summary)\n\n" +
-    "# Three names on the left, one tuple on the right, and Python matches them\n" +
-    "# up by position. It is an error if the counts do not agree -- which is a\n" +
-    "# feature: a pairing that grew a third part should not quietly still work."
+    "walkable = []\n\n" +
+    "for score in scores:\n" +
+    "    if score is None:\n" +
+    "        continue\n" +
+    "    if score > 10.5:\n" +
+    "        walkable.append(score)\n\n" +
+    "best = max(walkable)\n\n" +
+    "print(walkable, best)\n\n" +
+    "# The None check has to come first. 'score > 10.5' on a None raises a\n" +
+    "# TypeError, the same one step 1 met when text was compared with a number."
 });
 </script>
 </body>
