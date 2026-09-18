@@ -171,6 +171,8 @@ score = 14.5
 <pre>f"{bike} of {workers} cycle"
 f"{bike / workers}"
 f"{name.upper()}"</pre>
+      <div id="exf"></div>
+
       <p>After a colon comes a <b>format spec</b>, which controls how the value
       is written out rather than what it is.</p>
 
@@ -307,7 +309,7 @@ geoid[-1]     <span class="c"># '3'       negative indices count from the end</s
   </div>
 </div>
 
-<script src="../assets/nav.js?v=0748a261"></script>
+<script src="../assets/nav.js?v=7931b038"></script>
 <script src="../assets/runner.js?v=277a066f"></script>
 <script>
 COURSE.quiz("q1", {
@@ -364,10 +366,61 @@ COURSE.exercise("ex0", {
     "# Order matters because each call works on what the last one returned."
 });
 </script>
+<script>
+COURSE.exercise("exf", {
+  id: "s03-interp", tag: "Exercise 2", title: "Write a line about a neighbourhood",
+  prompt:
+    "<p>Build <code>line</code> so it comes out as exactly this:</p>" +
+    "<pre>MERIDIAN-KESSLER scores 14.5, and 21 of 1303 cycle</pre>" +
+    "<p>Use one f-string. Every value in it comes from a name above — none of " +
+    "them is typed out, including the capitals.</p>",
+  starter:
+    'name = "Meridian-Kessler"\n' +
+    "score = 14.5\n" +
+    "bike = 21\n" +
+    "workers = 1303\n\n" +
+    "line = \n\n" +
+    "print(line)\n",
+  checks: [
+    { label: "line reads exactly right",
+      code: "expect(expect_defined(globals(), 'line'), 'MERIDIAN-KESSLER scores 14.5, and 21 of 1303 cycle')" },
+    { label: "it was built with an f-string",
+      code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
+           + "if 'f\"' not in code_only and \"f'\" not in code_only:\n"
+           + "    raise CheckFailed('no f-string here — joining with + is the thing this replaces')") },
+    { label: "no str() needed — an f-string converts for you",
+      code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
+           + "if 'str(' in code_only:\n"
+           + "    raise CheckFailed('str() is what f-strings save you from')") },
+    { label: "the capitals came from the name, not from your keyboard",
+      code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
+           + "if 'MERIDIAN' in code_only:\n"
+           + "    raise CheckFailed('the shouty name is typed out — ask the value for it instead')") },
+    { label: "the numbers came from the names too",
+      code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
+           + "after = code_only.split('workers = 1303', 1)[-1]\n"
+           + "for v in ('14.5', '21', '1303'):\n"
+           + "    if v in after:\n"
+           + "        raise CheckFailed('%s is typed into the line rather than read from a name' % v)") },
+    { label: "it printed",
+      code: "expect(__stdout__, 'MERIDIAN-KESSLER scores 14.5, and 21 of 1303 cycle\\n')" }
+  ],
+  solution:
+    'name = "Meridian-Kessler"\n' +
+    "score = 14.5\n" +
+    "bike = 21\n" +
+    "workers = 1303\n\n" +
+    'line = f"{name.upper()} scores {score}, and {bike} of {workers} cycle"\n\n' +
+    "print(line)\n\n" +
+    "# Braces take an expression, not just a name -- name.upper() is a method\n" +
+    "# call happening inside the string. Nothing is converted by hand: score is\n" +
+    "# a float and the counts are ints, and all three arrive as text."
+});
+</script>
 <script src="../assets/sample.js?v=3b94601e"></script>
 <script>
 COURSE.exercise("ex1", {
-  id: "s03-geoid", tag: "Exercise 2", title: "Build a GEOID that survives",
+  id: "s03-geoid", tag: "Exercise 3", title: "Build a GEOID that survives",
   prompt:
     "<p>Assemble a 12-character block group GEOID from its four parts: state " +
     "(2), county (3), tract (6), block group (1). The parts arrive as a " +
@@ -405,7 +458,7 @@ COURSE.exercise("ex1", {
 });
 
 COURSE.exercise("ex2", {
-  id: "s03-format", tag: "Exercise 3", title: "A line a human can read",
+  id: "s03-format", tag: "Exercise 4", title: "A line a human can read",
   prompt:
     "<p>Produce one summary line for the block group in <code>acs_raw[6]</code>, " +
     "assigned to <code>line</code>, in exactly this shape:</p>" +
@@ -446,7 +499,7 @@ COURSE.exercise("ex2", {
 });
 
 COURSE.exercise("ex3", {
-  id: "s03-parse", tag: "Exercise 4", title: "Pull a NAME apart",
+  id: "s03-parse", tag: "Exercise 5", title: "Pull a NAME apart",
   prompt:
     "<p>The ACS <code>NAME</code> field is a comma-separated description:</p>" +
     "<pre>Block Group 3, Census Tract 3401.1, Marion County, Indiana</pre>" +

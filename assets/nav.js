@@ -12,7 +12,7 @@
     { n: 2, file: "steps/step-02.html", title: "Primitives and assignment",
       ex: ["s02-convert", "s02-geoid", "s02-division"] },
     { n: 3, file: "steps/step-03.html", title: "Methods and strings",
-      ex: ["s03-methods", "s03-geoid", "s03-format", "s03-parse"] },
+      ex: ["s03-methods", "s03-interp", "s03-geoid", "s03-format", "s03-parse"] },
     { n: 4, file: "steps/step-04.html", title: "Blocks and indentation",
       ex: ["s04-move", "s04-syntax"] },
     { n: 5, file: "steps/step-05.html", title: "Conditions and truthiness",
