@@ -69,6 +69,12 @@
 <pre>"  Walk Score  ".strip()           <span class="c"># 'Walk Score'</span>
 "  Walk Score  ".strip().lower()   <span class="c"># 'walk score'</span></pre>
 
+      <p>The value itself is never changed. Text is <b>immutable</b> in
+      Python: <code>name.upper()</code> hands back a new piece of text and
+      leaves <code>name</code> exactly as it was. Writing
+      <code>name.strip()</code> on a line of its own therefore does nothing
+      useful — you have to keep what it hands back.</p>
+
       <div class="note">
         <h4>Tip 💡: read it left to right</h4>
         <p style="margin-bottom:0">A method call is a sentence in that order:
@@ -132,24 +138,6 @@ TypeError: str.upper() takes no arguments (1 given)</span></pre>
 
       <div id="q1"></div>
       <div id="ex0"></div>
-
-      <h2>Methods worth knowing now</h2>
-      <div class="tablewrap">
-      <table>
-        <thead><tr><th>Call</th><th>Gives</th><th>Used for</th></tr></thead>
-        <tbody>
-          <tr><td class="mono">"18".zfill(2)</td><td class="mono">'18'</td><td>Pad a FIPS code with leading zeros</td></tr>
-          <tr><td class="mono">"1".zfill(2)</td><td class="mono">'01'</td><td>…which is the whole point</td></tr>
-          <tr><td class="mono">"a, b".split(",")</td><td class="mono">['a', ' b']</td><td>Cut a NAME field into fields</td></tr>
-          <tr><td class="mono">" b ".strip()</td><td class="mono">'b'</td><td>Remove the whitespace split leaves behind</td></tr>
-          <tr><td class="mono">"Tract 31".startswith("T")</td><td class="mono">True</td><td>Cheap filtering</td></tr>
-          <tr><td class="mono">"18-097".replace("-", "")</td><td class="mono">'18097'</td><td>Normalising before a join</td></tr>
-        </tbody>
-      </table>
-      </div>
-      <p>Strings are <b>immutable</b>: every one of these returns a new string
-      and changes nothing. <code>name.strip()</code> on its own line does
-      precisely nothing useful — you have to assign the result.</p>
 
       <h2>Putting values into text</h2>
       <p>Sooner or later you have some values and you want a piece of text with
@@ -282,6 +270,37 @@ geoid[-1]     <span class="c"># '3'       negative indices count from the end</s
           very first thing tested.</p>
         </div>
       </details>
+
+      <h2>Methods worth knowing now</h2>
+      <div class="tablewrap">
+      <table>
+        <thead><tr><th>Call</th><th>Gives</th><th>Used for</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">"18".zfill(2)</td><td class="mono">'18'</td><td>Pad a FIPS code with leading zeros</td></tr>
+          <tr><td class="mono">"1".zfill(2)</td><td class="mono">'01'</td><td>…which is the whole point</td></tr>
+          <tr><td class="mono">"a, b".split(",")</td><td class="mono">['a', ' b']</td><td>Cut a NAME field into fields</td></tr>
+          <tr><td class="mono">" b ".strip()</td><td class="mono">'b'</td><td>Remove the whitespace split leaves behind</td></tr>
+          <tr><td class="mono">"Tract 31".startswith("T")</td><td class="mono">True</td><td>Cheap filtering</td></tr>
+          <tr><td class="mono">"18-097".replace("-", "")</td><td class="mono">'18097'</td><td>Normalising before a join</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+
+      <div class="note">
+        <h4>Tip 💡: look it up rather than guessing</h4>
+        <p>Text carries 47 methods, and the table above is the handful this
+        project needs. Nobody knows the rest from memory either. The list is
+        written down:</p>
+        <ul>
+          <li><a href="https://docs.python.org/3/library/stdtypes.html#string-methods">docs.python.org
+          — string methods</a>, the whole set with what each one does.</li>
+          <li><code>help(str.zfill)</code>, typed into Python, which prints the
+          same description without leaving what you are doing.</li>
+        </ul>
+        <p style="margin-bottom:0">Knowing that a method probably exists, and
+        where to check, is worth more than remembering its name.</p>
+      </div>
 
       <div id="pager"></div>
     </div>
