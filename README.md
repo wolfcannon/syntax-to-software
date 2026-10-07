@@ -37,17 +37,82 @@ there.
 
 The exercises run Python in your browser via
 [Pyodide](https://pyodide.org). That needs the pages served over HTTP rather
-than opened off the disk, which is one command:
+than opened off the disk — double-clicking `index.html` will show the pages
+but the exercises will not run.
+
+### 1. Check you have Python 3 and git
+
+Open a terminal (macOS: Terminal; Windows: PowerShell; Linux: your terminal)
+and run:
 
 ```sh
-git clone <this repo>
-cd syntax-to-software
-python3 -m http.server 8000
-# open http://localhost:8000
+python3 --version
+git --version
 ```
 
+Each should print a version number. Any Python 3 will do. On Windows the
+command is usually `python` or `py` rather than `python3`; use whichever
+prints a version, here and in step 3.
+
+If either is missing: Python is at
+[python.org/downloads](https://www.python.org/downloads/) and git is at
+[git-scm.com/downloads](https://git-scm.com/downloads). No git? Skip it:
+download
+[the ZIP](https://github.com/wolfcannon/syntax-to-software/archive/refs/heads/main.zip),
+unzip it, and use the folder `syntax-to-software-main` in step 2's `cd`.
+
+### 2. Get the course
+
+```sh
+git clone https://github.com/wolfcannon/syntax-to-software.git
+cd syntax-to-software
+```
+
+The repository is public, so this needs no GitHub account.
+
+### 3. Start the server
+
+Run this from inside the `syntax-to-software` folder — the one containing
+`index.html`:
+
+```sh
+python3 -m http.server 8000
+```
+
+It prints a line starting `Serving HTTP on` and ending `port 8000 ...`, and
+then appears to hang. That is
+it working: leave the terminal window open for as long as you are using the
+course.
+
+If it says `Address already in use`, something else has port 8000. Pick
+another number, and use the same one in the address below:
+
+```sh
+python3 -m http.server 8001
+```
+
+### 4. Open the course
+
+Go to <http://localhost:8000> in your browser. You should see the course home
+page; start with step 1.
+
+### Stopping, and coming back later
+
+Press `Ctrl+C` in the terminal to stop the server. To pick the course up
+again:
+
+```sh
+cd syntax-to-software
+python3 -m http.server 8000
+```
+
+and open <http://localhost:8000> again. To get new steps as they are written,
+run `git pull` in that folder first.
+
 Nothing is installed, no account is needed, and nothing you type leaves the
-machine. Progress and your answers are kept in the browser's `localStorage`.
+machine. Progress and your answers are kept in the browser's `localStorage`,
+which is per address: keep using the same port and the same browser, or your
+progress will look like it has gone.
 
 The first exercise you run downloads the Python runtime (~10 MB) from the
 Pyodide CDN, so step 1 needs an internet connection. After that the browser
@@ -86,49 +151,50 @@ readable, because they eventually get read.
 Adding an exercise means a `<div id="...">` in the page and one
 `COURSE.exercise()` call at the bottom of it. Look at any step page.
 
-## Testing
-
-### Writing a new page
+## Writing a new page
 
 `.claude/skills/course-page/SKILL.md` is the house style — page skeleton, voice,
 the exercise contract, and the rule that nothing may be used before it is
 taught. Claude Code picks it up automatically in this directory; read it
 directly if you're working by hand.
 
-Three checks, all of which must be green before a page is done:
+## Testing
+
+Three checks, all of which must be green before a page is done. Run them from
+the repo root. They need Python 3 and [Node.js](https://nodejs.org): the last
+two call `node scripts/extract_exercises.mjs` to read the exercises and quizzes
+out of the pages. Nothing needs installing with `pip` or `npm`.
 
 ```sh
 python3 scripts/stamp_assets.py       # after editing anything in assets/
 python3 scripts/check_vocabulary.py   # nothing used before the step that teaches it
-python3 scripts/verify_exercises.py   # solutions pass, starters don't, nav ids match,
-                                      # quizzes are answerable, asset stamps current
-python3 -m http.server 8000           # then actually read it
+python3 scripts/verify_exercises.py   # exercises, quizzes, nav ids, asset stamps
 ```
 
-Asset links carry a content hash (`course.css?v=7cf7e96b`) because
-`http.server` sends no cache headers and a browser will otherwise keep serving
-a stale stylesheet after you edit it.
+Then serve the site as in [Running it](#running-it) and actually read the page.
 
+**`stamp_assets.py`** rewrites asset links to carry a content hash
+(`course.css?v=7cf7e96b`), because `http.server` sends no cache headers and a
+browser will otherwise keep serving a stale stylesheet after you edit it.
+
+**`check_vocabulary.py`** enforces the show-before-use rule.
 `scripts/vocabulary.json` is the ledger of which step first shows each piece of
 Python, plus written exemptions where a page deliberately builds something in
 early. An exemption has to describe something the page actually does.
 
+**`verify_exercises.py`** asserts five things:
 
-Two checks, both worth running after touching any page:
+- every hidden check passes against its own published solution;
+- no starter already passes (an exercise with nothing to do is a bug);
+- the exercise ids listed in `assets/nav.js` match the ones the pages actually
+  define — otherwise a progress dot silently never lights up;
+- every quiz has exactly one correct option, and an explanation to show for it;
+- every asset link carries the current stamp.
 
-```sh
-python3 scripts/verify_exercises.py
-```
-
-It asserts three things: every hidden check passes against its own published
-solution, no starter already passes (an exercise with nothing to do is a bug),
-and the exercise ids listed in `assets/nav.js` match the ones the pages
-actually define — otherwise a progress dot silently never lights up.
-
-`verify_exercises.py` lifts the Python harness straight out of `runner.js`, so
-there is one source of truth. It runs under whatever CPython you have; to run
-it under the *exact* interpreter the browser uses, `npm install pyodide@0.26.4`
-and drive `_run_exercise` the same way.
+It lifts the Python harness straight out of `runner.js`, so there is one source
+of truth. It runs under whatever CPython you have; to run it under the *exact*
+interpreter the browser uses, `npm install pyodide@0.26.4` and drive
+`_run_exercise` the same way.
 
 ## The data
 
