@@ -215,6 +215,9 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
 - Every example uses the project's real data. No `foo`, no animals, no shapes.
 - Cross-reference by number — "step 12" — and only backwards or with a
   signpost. Renumbering is scripted; see the git history for the pattern.
+- **A reference to a later step gives its title too**: "which is discussed in
+  step 6, Loops", not "which is step 6". The reader has not been there, and a
+  bare number tells them nothing about what is coming.
 
 Links out of the course open in a new tab:
 `<a href="https://…" target="_blank" rel="noopener noreferrer">`. A learner

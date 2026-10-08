@@ -73,12 +73,32 @@ len(scores)    <span class="c"># 3      how many there are</span></pre>
       <h2>Adding and removing</h2>
       <p>A list can be changed after it exists, which is the main reason to
       choose one.</p>
-<pre>scores.append(19.5)   <span class="c"># puts 19.5 on the end</span>
-scores.pop()          <span class="c"># takes the last one off and hands it back</span>
-scores.pop(0)         <span class="c"># or the one at a position</span></pre>
-      <p><code>append</code> changes the list in place and hands back nothing.
-      <code>pop</code> changes it in place and hands back the value it
-      removed.</p>
+
+      <h3>Adding to the end</h3>
+      <p><code>append</code> puts one value on the end. It changes the list in
+      place and hands back nothing.</p>
+<pre>scores = [3.5, 14.5, 9.0]
+
+scores.append(19.5)
+scores    <span class="c"># [3.5, 14.5, 9.0, 19.5]</span></pre>
+
+      <h3>Removing from the end</h3>
+      <p><code>pop</code> takes the last value off. It changes the list in
+      place and hands back the value it removed.</p>
+<pre>scores = [3.5, 14.5, 9.0]
+
+last = scores.pop()
+last      <span class="c"># 9.0</span>
+scores    <span class="c"># [3.5, 14.5]</span></pre>
+
+      <h3>Removing at a position</h3>
+      <p>Give <code>pop</code> a position and it takes that value instead.
+      Everything after it moves up one place.</p>
+<pre>scores = [3.5, 14.5, 9.0]
+
+first = scores.pop(0)
+first     <span class="c"># 3.5</span>
+scores    <span class="c"># [14.5, 9.0]</span></pre>
 
       <div class="note trap">
         <h4>The one that catches everyone</h4>
@@ -92,7 +112,9 @@ scores.pop(0)         <span class="c"># or the one at a position</span></pre>
 
       <h2>Tuple</h2>
       <p>A fixed group of parts, written in parentheses, which cannot be
-      changed once made.</p>
+      changed once made. The name is the ending of <em>quadruple</em>,
+      <em>quintuple</em> and <em>sextuple</em>: a group of four, of five, of
+      six, and <em>tuple</em> is the word for a group of however many.</p>
 <pre>pair = ("180973401103", 14.5)
 
 geoid, score = pair    <span class="c"># unpacking: one name per part</span>
@@ -105,18 +127,18 @@ pair[0]                <span class="c"># '180973401103'</span></pre>
         parts is fixed by what it means. There is no sensible way to append a
         third item to a pairing.</li>
       </ul>
-      <p>Being unchangeable also makes a tuple usable as a dictionary key,
-      which is step 7.</p>
+      <p>Being unchangeable also makes a tuple usable as a key in a
+      dictionary, which is discussed in step 7, Dictionaries.</p>
 
       <h2>Range</h2>
       <p>A sequence of whole numbers, produced as they are needed rather than
-      stored.</p>
+      stored. A range is for counting, not for holding data.</p>
 <pre>range(5)         <span class="c"># 0, 1, 2, 3, 4</span>
 range(2, 6)      <span class="c"># 2, 3, 4, 5</span>
 list(range(5))   <span class="c"># [0, 1, 2, 3, 4] — if you really want them</span></pre>
       <p>Half-open again: <code>range(5)</code> stops before 5, and has 5
-      numbers in it. A range is for counting, not for holding data, and step 6
-      is where counting starts being useful.</p>
+      numbers in it. Counting starts being useful with repetition, which is
+      discussed in step 6, Loops.</p>
 
       <div id="q1"></div>
 
@@ -142,7 +164,7 @@ list(range(5))   <span class="c"># [0, 1, 2, 3, 4] — if you really want them</
   </div>
 </div>
 
-<script src="../assets/nav.js?v=a0f4b0dc"></script>
+<script src="../assets/nav.js?v=93ed378f"></script>
 <script src="../assets/runner.js?v=277a066f"></script>
 <script>
 COURSE.quiz("q1", {
@@ -176,8 +198,13 @@ COURSE.exercise("ex1", {
     "<li><code>last_two</code> — the last two</li>" +
     "<li><code>middle</code> — everything except the first and the last</li>" +
     "<li><code>count</code> — how many there are altogether</li></ul>",
-  setup: "scores = [3.5, 14.5, 9.0, 19.5, 6.25, 11.0, 15.25, 2.0]\n",
-  starter: "first_three = \nlast_two = \nmiddle = \ncount = \n\nprint(first_three, last_two, middle, count)",
+  starter:
+    "scores = [3.5, 14.5, 9.0, 19.5, 6.25, 11.0, 15.25, 2.0]\n\n" +
+    "first_three = \n" +
+    "last_two = \n" +
+    "middle = \n" +
+    "count = \n\n" +
+    "print(first_three, last_two, middle, count)",
   checks: [
     { label: "first_three is the first three",
       code: "expect(expect_defined(globals(), 'first_three'), [3.5, 14.5, 9.0])" },
@@ -187,12 +214,16 @@ COURSE.exercise("ex1", {
       code: "expect(expect_defined(globals(), 'middle'), [14.5, 9.0, 19.5, 6.25, 11.0, 15.25])" },
     { label: "count is the length",
       code: "expect(expect_defined(globals(), 'count'), 8)" },
+    { label: "scores itself was left alone",
+      code: "expect(scores, [3.5, 14.5, 9.0, 19.5, 6.25, 11.0, 15.25, 2.0])" },
     { label: "the slices were taken, not typed out",
       code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
-           + "if '14.5' in code_only or '15.25' in code_only:\n"
+           + "typed = code_only.replace('[3.5, 14.5, 9.0, 19.5, 6.25, 11.0, 15.25, 2.0]', '')\n"
+           + "if '14.5' in typed or '15.25' in typed:\n"
            + "    raise CheckFailed('values are written out rather than sliced')") }
   ],
   solution:
+    "scores = [3.5, 14.5, 9.0, 19.5, 6.25, 11.0, 15.25, 2.0]\n\n" +
     "first_three = scores[:3]\n" +
     "last_two = scores[-2:]\n" +
     "middle = scores[1:-1]\n" +
