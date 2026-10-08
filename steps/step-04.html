@@ -17,7 +17,7 @@
       <h1>Blocks and conditions</h1>
       <ul class="lede-points">
         <li>Lines that belong together run as one unit.</li>
-        <li>Indentation is what says which lines those are.</li>
+        <li>Indentation marks which lines those are.</li>
         <li>A condition decides whether they run at all.</li>
       </ul>
 
@@ -51,8 +51,8 @@
           <line x1="14" y1="196" x2="706" y2="196" class="svg-line"/>
         </svg>
         <figcaption>Nothing closes these blocks. They end where the
-        indentation stops, which is why the width of the gap on the left is
-        load-bearing information.</figcaption>
+        indentation stops, so the width of the gap on the left changes what the
+        program does.</figcaption>
       </figure>
 
       <h2>Indentation is syntax</h2>
@@ -67,20 +67,19 @@
       </ul>
 
       <div class="note">
-        <h4>Two kinds of wrong</h4>
+        <h4>Two kinds of error</h4>
         <p><b>A syntax error</b> means Python could not read your code as
         Python. Nothing runs. The broken line does not run, and neither do the
         lines above it. You
         find out the moment you run it, and you are told roughly where.</p>
-        <p><b>A logic error</b> means your code read perfectly well and does
+        <p><b>A logic error</b> means your code is valid Python and does
         something other than what you meant. It runs, it produces an answer,
-        and nothing is reported, because from Python's side nothing went
-        wrong.</p>
+        and Python reports nothing, because Python found no error.</p>
         <p style="margin-bottom:0">A misplaced indent can be either. Indent a
         line that opens a block and you get a syntax error. Indent a line
-        <em>inside</em> a block and you usually get the second kind. That is
-        the expensive kind. The result is an analysis that produces a number
-        nobody questions.</p>
+        <em>inside</em> a block and you usually get the second kind. That kind
+        does more harm. The analysis produces a wrong number with no error
+        message, and nobody questions it.</p>
       </div>
       <div id="q1"></div>
 
@@ -98,7 +97,7 @@
           colon.</li>
           <li><code>expected an indented block</code> is the opposite: a colon
           opened a block and nothing was put in it.</li>
-          <li>If an indent looks correct and Python disagrees, you have mixed
+          <li>If an indent looks correct and Python reports an error, you have mixed
           tabs and spaces. They are invisible on screen. Use spaces.</li>
         </ol>
         <p style="margin-bottom:0">Fix one thing and run again. The error
@@ -113,15 +112,15 @@
 score &lt;= 5.75    <span class="c"># less than or equal to</span>
 score == 14.5    <span class="c"># equal to — two equals signs</span>
 score != 14.5    <span class="c"># not equal to</span></pre>
-      <p>One <code>=</code> assigns, as in step 2. Two <code>==</code> asks.</p>
+      <p>One <code>=</code> assigns, as in step 2. Two <code>==</code> compares.</p>
       <p>Comparisons join with <code>and</code>, <code>or</code> and
       <code>not</code>. <code>and</code> is true only when both sides are.
       <code>or</code> is true when either is.</p>
 
       <h2><code>if</code> / <code>elif</code> / <code>else</code></h2>
-      <p>Only the first matching branch runs, and <code>elif</code> is not
-      decoration. A chain of separate <code>if</code>s can fire more than once
-      and give a different answer:</p>
+      <p>Only the first matching branch runs, and <code>elif</code> is the
+      reason. A chain of separate <code>if</code>s can run more than one
+      branch and give a different answer:</p>
 <pre>if score &lt;= 5.75:
     label = "Least Walkable"
 elif score &lt;= 10.5:          <span class="c"># reached only if the first was False</span>
@@ -131,14 +130,15 @@ else:
       <p>Because earlier branches have already excluded the lower ranges, each
       test only needs its upper bound. Writing <code>elif 5.76 &lt;= score &lt;=
       10.5</code> is not wrong, but it states a condition that is already
-      guaranteed. It is also how gaps sneak in.</p>
+      guaranteed. A lower bound that you type can also leave a gap between two
+      ranges, and no error reports the gap.</p>
 
       <h2>Truthiness</h2>
-      <p>Python will treat almost anything as a condition. Zero is false, and
+      <p>Python accepts almost any value as a condition. Zero is false, and
       so are <code>0.0</code>, the empty string <code>""</code>, and
       <code>None</code>. Essentially everything else is true.</p>
       <div class="note trap">
-        <h4>Where truthiness betrays you</h4>
+        <h4>Where truthiness gives the wrong answer</h4>
         <p>A neighbourhood where nobody cycles has a bike count of
         <code>0</code>. That is a figure, and <code>if bike:</code> treats it
         as though there were none:</p>
@@ -155,9 +155,9 @@ if bike is not None:
     print("counted")      <span class="c"># this one runs — 0 is not None</span>
 else:
     print("no figure")</pre>
-        <p style="margin-bottom:0">The first form quietly throws away every
-        place where nobody cycles, and those are precisely the ones the
-        question is about. Use <code>is None</code> when you mean missing. Use
+        <p style="margin-bottom:0">The first form reports every place where
+        nobody cycles as having no figure, and it gives no error. Those are
+        the places the question is about. Use <code>is None</code> when you mean missing. Use
         truthiness when you mean empty.</p>
       </div>
 
@@ -173,7 +173,7 @@ else:
         <ol>
           <li>Whenever you write a threshold, ask what happens exactly
           <em>at</em> it. <code>&lt;</code> and <code>&lt;=</code> disagree on
-          one value, and that value turns up more often than you expect.</li>
+          one value, and that value occurs more often than you expect.</li>
           <li>When you mean "no answer", write <code>is None</code>. When you
           mean "empty", truthiness is fine. They are different questions.</li>
         </ol>
@@ -241,13 +241,14 @@ COURSE.quiz("q2", {
     { html: "<code>\"Below Average\"</code>" },
     { html: "<code>\"Above Average\"</code>", correct: true,
       why: "The second test is <code>&lt; 10.5</code>, and 10.5 is not less " +
-           "than itself. It falls through to <code>else</code> and is reported " +
-           "a whole band too high." },
+           "than itself. Neither test is true, so the <code>else</code> branch " +
+           "runs. The label is one band too high." },
     { html: "Nothing, because no branch matches" }
   ],
   why:
-    "<p>One character from correct. <code>&lt;=</code> would have caught it, " +
-    "and the only score that can tell the two versions apart is 10.5 itself.</p>"
+    "<p>The code differs from the correct version by one character. With " +
+    "<code>&lt;=</code>, 10.5 is labelled Below Average. 10.5 is the only " +
+    "score that gives different labels in the two versions.</p>"
 });
 </script>
 <script>
@@ -295,11 +296,10 @@ COURSE.exercise("ex1", {
 COURSE.exercise("ex2", {
   id: "s04-syntax", tag: "Exercise 2", title: "Two things Python cannot read",
   prompt:
-    "<p>The same code again, typed badly. Nothing here runs. Python cannot " +
-    "read it, so it refuses to start.</p>" +
-    "<p>Fix one thing, run it, read the next error, fix that. Three errors " +
-    "stand between this and a working program, and you have met all three " +
-    "already.</p>",
+    "<p>The same code again, typed with mistakes. Nothing here runs. Python " +
+    "cannot read it, so Python runs none of it.</p>" +
+    "<p>Fix one thing, run it, read the next error, fix that. The code has " +
+    "three errors, and you have seen all three kinds already.</p>",
   starter:
     "score = \"3.5\n" +
     "    label = \"walkable\"\n" +
@@ -363,7 +363,7 @@ COURSE.exercise("ex3", {
     "    label = \"Most Walkable\"\n\n" +
     "print(label)\n",
   checks: [
-    { label: "10.5 lands in the band the EPA puts it in",
+    { label: "10.5 gets the band the EPA puts it in",
       code: "expect(expect_defined(globals(), 'label'), 'Below Average')" },
     { label: "it printed the label",
       code: "expect(__stdout__, 'Below Average\\n')" },
@@ -374,7 +374,7 @@ COURSE.exercise("ex3", {
            + "for l in tests:\n"
            + "    if 'score' not in l:\n"
            + "        raise CheckFailed('this condition never looks at score: %r' % l)") },
-    { label: "the other edges land right too: 5.75, 15.25, and 5.753 in between",
+    { label: "the other edges get the right band too: 5.75, 15.25, and 5.753 in between",
       code: ("if 'score = 10.5' not in __source__:\n"
            + "    raise CheckFailed('leave the line score = 10.5 as it is')\n"
            + "for value, band in ((5.75, 'Least Walkable'), (5.753, 'Below Average'),\n"
@@ -402,7 +402,7 @@ COURSE.exercise("ex3", {
 });
 
 COURSE.exercise("ex4", {
-  id: "s04-truthy", tag: "Exercise 4", title: "Nobody cycles, or nobody counted?",
+  id: "s04-truthy", tag: "Exercise 4", title: "A count of zero and a missing count",
   prompt:
     "<p>A bike count can be one of three things, and each gets its own " +
     "status:</p>" +

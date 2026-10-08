@@ -16,7 +16,7 @@
       <p class="eyebrow">Unit 1 — Foundations · Step 2</p>
       <h1>Primitives and assignment</h1>
       <ul class="lede-points">
-        <li>Five types you will use constantly.</li>
+        <li>Five types you will use often.</li>
         <li>A name refers to a value. It does not contain one.</li>
         <li>Some things that look like numbers must never become numbers.</li>
       </ul>
@@ -49,26 +49,24 @@ score = 14.5
 label = "walkable"</pre>
       <p>Python works out the value on the right, then binds the name on the
       left to it. Nothing is printed. The effect is the point.</p>
-      <p>The <code>=</code> is an instruction, not a question. It does not ask
-      whether two things are equal. That is <code>==</code>, and it comes in
+      <p>The <code>=</code> is an instruction. It does not test whether two
+      things are equal. That is <code>==</code>, and it comes in
       step 4.</p>
 
       <h2>Casting</h2>
-      <p>Converting a value from one type to another. Each of the type names
-      doubles as a way of producing that type.</p>
+      <p>Converting a value from one type to another. Each type name is also a way to produce a value of that type.</p>
 <pre>int("1303")     <span class="c"># 1303     text becomes a whole number</span>
 float("14.5")   <span class="c"># 14.5     text becomes a number with a fraction</span>
 str(1303)       <span class="c"># "1303"   a number becomes text</span></pre>
-      <p>Casting does not change the value you gave it. It produces a new one
-      and leaves the original alone.</p>
-      <p>Two cases are worth meeting now, because both look like mistakes when
-      you first hit them:</p>
+      <p>Casting does not change the value you gave it. It produces a new one, and the original stays as it was.</p>
+      <p>Learn two cases now, because both look like mistakes the first time
+      you see them:</p>
 <pre>int(14.9)       <span class="c"># 14       it cuts the fraction off, it does not round</span>
 int("14.5")     <span class="c"># ValueError: invalid literal for int()</span></pre>
-      <p>The second one refuses because there is no whole number written in
-      <code>"14.5"</code>. Ask for <code>float("14.5")</code> and you get 14.5.
-      Ask for <code>int(float("14.5"))</code> and you get 14, having said
-      out loud that you wanted the fraction discarded.</p>
+      <p>The second one raises an error because there is no whole number
+      written in <code>"14.5"</code>. Write <code>float("14.5")</code> and you
+      get 14.5. Write <code>int(float("14.5"))</code> and you get 14. Your code
+      now states that you want the fraction discarded.</p>
 
       <h2>Referential binding</h2>
       <p>A name does not contain a value. It refers to one.</p>
@@ -105,7 +103,7 @@ workers = int(workers)</pre>
           <line x1="14" y1="182" x2="706" y2="182" class="svg-line"/>
           <text x="14" y="204" class="svg-ink" style="font-size:12px">The name moved. The value it used to refer to was never touched.</text>
         </svg>
-        <figcaption>Rebinding is cheap and you will do it constantly. It is
+        <figcaption>Rebinding takes almost no time and you will do it often. It is
         also why a name can mean text on one line and a number on the next.
         Names have no declared type.</figcaption>
       </figure>
@@ -115,7 +113,7 @@ workers = int(workers)</pre>
 1303 // 8    <span class="c"># 162       floor division, discards the remainder</span>
 1303 % 8     <span class="c"># 7         the remainder itself</span></pre>
       <p>Use <code>/</code> for shares and rates. <code>//</code> and
-      <code>%</code> are for pulling a fixed-width code apart: the first two
+      <code>%</code> are for splitting a fixed-width code into parts: the first two
       digits, the last two digits. You do that in exercise 3.</p>
 
       <div class="note">
@@ -123,16 +121,14 @@ workers = int(workers)</pre>
         <p><code>0.1 + 0.2</code> is <code>0.30000000000000004</code>. A
         computer stores a float in binary and cannot write 0.1 exactly, in the
         same way you cannot write 1/3 exactly as a decimal.</p>
-        <p style="margin-bottom:0">So never ask whether two floats are equal.
-        Ask whether they are close enough: <code>abs(share - 0.05) &lt;
-        1e-9</code>. This bites in step 4, when a score lands right on a
+        <p style="margin-bottom:0">So never test whether two floats are equal. Test whether they are close enough: <code>abs(share - 0.05) &lt;
+        1e-9</code>. This can give a wrong result in step 4, when a score is exactly on a
         category boundary.</p>
       </div>
 
-      <h2>The trap this whole project turns on</h2>
+      <h2>The mistake that matters most in this project</h2>
       <p>A GEOID is the Census Bureau's identifier for a geography. For a block
-      group it is twelve characters: state, county, tract, block group, glued
-      together. It looks like a number. It is not a number.</p>
+      group it is twelve characters: state, county, tract, block group, joined together. It looks like a number. It is not a number.</p>
 
       <figure>
         <svg viewBox="0 0 720 250" role="img" aria-label="Converting a GEOID to an integer drops its leading zero and makes the join fail.">
@@ -164,9 +160,9 @@ workers = int(workers)</pre>
           <text x="396" y="222" class="svg-bad" style="font-size:11px">matches nothing, silently</text>
         </svg>
         <figcaption>Nine states are numbered below 10, and every one of them
-        loses its leading zero the moment a GEOID becomes an integer. Indiana
-        is 18, so this bug is <em>invisible</em> in Marion County and goes off
-        the day you add a second county. That is ticket A in step 20.</figcaption>
+        loses its leading zero when a GEOID becomes an integer. Indiana
+        is 18, so this bug has <em>no effect</em> in Marion County. It first
+        causes failures when you add a second county. That is ticket A in step 20.</figcaption>
       </figure>
 
       <div class="note trap">
@@ -187,11 +183,10 @@ workers = int(workers)</pre>
       <div class="project">
         <h4>Take it further</h4>
         <p>In any editor above, convert the counts from one ACS row to integers
-        and compute that block group's bike share by hand. Then demonstrate the
-        trap to yourself: take the string <code>"010730001001"</code>, convert
+        and compute that block group's bike share by hand. Then reproduce the bug yourself: take the string <code>"010730001001"</code>, convert
         it with <code>int()</code>, convert it back with <code>str()</code>,
-        and compare lengths. Say the rule back in your own words before moving
-        on. You are going to need to have believed it.</p>
+        and compare lengths. State the rule in your own words before moving on. You will need it
+        later.</p>
       </div>
 
       <div class="note">
@@ -200,12 +195,12 @@ workers = int(workers)</pre>
         <ol>
           <li>Two counts add up to a bigger count. It is a number.</li>
           <li>Two scores average to a meaningful score. It is a number.</li>
-          <li>Two zip codes add up to nothing at all. It is text, and it stays
+          <li>The sum of two zip codes means nothing. It is text, and it stays
           text.</li>
         </ol>
         <p style="margin-bottom:0">Getting this wrong raises no error. Rows
-        quietly stop matching and your results change for a reason that has
-        nothing to do with the world.</p>
+        stop matching, with no message. Your results then change for a reason
+        that is not in the data.</p>
       </div>
 
       <div id="pager"></div>
@@ -233,7 +228,7 @@ COURSE.quiz("q1", {
     { html: "<code>\"14.5\"</code>" },
     { html: "<code>\"010730001001\"</code>", correct: true,
       why: "Nothing is ever computed from it. It only has to match the same " +
-           "code in another table. And <code>int()</code> would eat the leading " +
+           "code in another table. And <code>int()</code> would remove the leading " +
            "zero, so it would no longer match anything." }
   ],
   why:
@@ -283,9 +278,9 @@ COURSE.exercise("ex1", {
 });
 
 COURSE.exercise("ex2", {
-  id: "s02-geoid", tag: "Exercise 2", title: "The leading-zero trap",
+  id: "s02-geoid", tag: "Exercise 2", title: "The leading-zero bug",
   prompt:
-    "<p>Show the bug rather than taking my word for it. Starting from the " +
+    "<p>Do not rely on the text. Reproduce the bug. Starting from the " +
     "Alabama GEOID string, produce:</p><ul>" +
     "<li><code>as_int</code>: the same GEOID passed through <code>int()</code></li>" +
     "<li><code>round_tripped</code>: that integer converted back with <code>str()</code></li>" +
@@ -302,11 +297,11 @@ COURSE.exercise("ex2", {
       code: "expect(expect_defined(globals(), 'as_int'), 10730001001)" },
     { label: "round_tripped is that integer back as text",
       code: "expect(expect_defined(globals(), 'round_tripped'), '10730001001')" },
-    { label: "lost_characters counts the damage",
+    { label: "lost_characters is the number of characters lost",
       code: "expect(expect_defined(globals(), 'lost_characters'), 1)" },
     { label: "still_matches records that the join would now fail",
       code: "expect(expect_defined(globals(), 'still_matches'), False)" },
-    { label: "the original was left alone as a string",
+    { label: "the original is still the same string",
       code: "expect(geoid, '010730001001'); expect_type(geoid, str)" }
   ],
   solution:
@@ -321,7 +316,7 @@ COURSE.exercise("ex2", {
 });
 
 COURSE.exercise("ex3", {
-  id: "s02-division", tag: "Exercise 3", title: "Which slash?",
+  id: "s02-division", tag: "Exercise 3", title: "Choose the kind of division",
   prompt:
     "<p>A tract code is six digits, and the last two are the decimal part: " +
     "<code>\"310103\"</code> means tract 3101.03. Use the integer " +

@@ -15,9 +15,9 @@
 
       <p class="eyebrow">Unit 1 — Foundations · Step 9</p>
       <h1>Functions</h1>
-      <p class="lede">Giving names to the three ideas you have now written out
-      by hand a dozen times. This is the point where a pile of working code turns
-      into something that could become software.</p>
+      <p class="lede">This step gives names to three ideas that you have written
+      out by hand many times. After this step, your working code is a set of
+      named functions that later steps build on.</p>
 
       <h2>Definition, arguments, return</h2>
 <pre>def bike_share(bike, workers):
@@ -29,9 +29,9 @@
       statement in the body and is what <code>help(bike_share)</code> prints.
       Write it as a sentence about what comes out, not a restatement of the
       name. <code>return</code> ends the call immediately. The second
-      <code>return</code> is reached only when the first was skipped. And a
-      function that falls off the end without returning gives back
-      <code>None</code>. That is a real source of confusion when you meant to
+      <code>return</code> is reached only when the first was skipped. A
+      function that reaches the end of its body without a <code>return</code>
+      gives back <code>None</code>. That is a real source of confusion when you meant to
       return something.</p>
 
       <h2>Pure functions</h2>
@@ -39,20 +39,22 @@
       changes nothing outside itself. <code>bike_share(21, 1303)</code> is
       0.0161 today, tomorrow, and anywhere else you call it, regardless of what
       ran before it.</p>
-      <p>That is the property that makes the rest of this course possible. A
+      <p>The rest of this course depends on that property. A
       pure function can be tested in isolation (step 19). It can be swapped for
       an equivalent implementation and checked (step 10). It can be moved into
-      another file without dragging context with it (step 14). Impure code
-      reads a global, or mutates a list its caller still holds. It can do none
-      of those cleanly.</p>
+      another file without any of the surrounding code (step 14). Impure code
+      reads a global, or mutates a list its caller still holds. With impure
+      code, each of those three tasks also needs the code around the
+      function.</p>
       <div class="note trap">
-        <h4>The default-argument trap</h4>
+        <h4>Default arguments are evaluated once</h4>
         <p>Default values are evaluated <em>once</em>, when the
         <code>def</code> runs. They are not evaluated again on each call. So
         <code>def collect(rows=[])</code> shares one list across every call
-        that omits the argument, and it accumulates. Use
+        that omits the argument. Items that one call adds are still in the list
+        on the next call. Use
         <code>def collect(rows=None)</code> and build the empty list inside.
-        This costs people an afternoon exactly once.</p>
+        The cause of this fault is hard to find the first time it occurs.</p>
       </div>
 
       <h2>Scope</h2>
@@ -65,18 +67,19 @@
 
       <div class="note">
         <h4>A function has a scope of its own</h4>
-        <p>Names assigned inside a function are local to it and vanish when it
+        <p>Names assigned inside a function are local to it and stop existing when it
         returns. That is what lets you use <code>score</code> inside two
         different functions without them interfering.</p>
         <p style="margin-bottom:0">A function can still <em>read</em> names from
-        the surrounding program, which is convenient. It is also how one ends up
-        secretly depending on something defined elsewhere. The level-up takes
-        that hazard seriously. If a function needs a value, take it as an argument.</p>
+        the surrounding program, which is convenient. It also lets a function
+        depend on something defined elsewhere that its parameters do not show.
+        The level-up examines that risk in detail. If a function needs a value, take it as an argument.</p>
       </div>
 
       <h2>What Unit 1 has actually built</h2>
-      <p>Every piece of the pipeline exists now, scattered across nine steps.
-      Named, they form the shape the rest of the course fills in:</p>
+      <p>Every stage of the pipeline exists now, in code spread across nine steps.
+      As named functions, the stages form the structure that the rest of the
+      course develops:</p>
 
       <figure>
         <svg viewBox="0 0 720 210" role="img" aria-label="The Unit 1 pipeline: raw rows through build_geoid, join, bike_share and walk_category to a summary.">
@@ -122,22 +125,22 @@
       </figure>
 
       <h2>Exercises</h2>
-      <p>These three are the real thing: the functions you carry into Unit 2,
-      and the ones step 19 writes tests for.</p>
+      <p>You use these three functions again in Unit 2, and step 19 writes tests
+      for them.</p>
       <div id="ex1"></div>
       <div id="ex2"></div>
       <div id="ex3"></div>
 
       <div class="project">
         <h4>Take it further</h4>
-        <p>You now have four functions worth keeping. Copy
+        <p>You now have four functions to keep. Copy
         <code>build_geoid()</code>, <code>bike_share()</code>,
         <code>walk_category()</code> and <code>summarize()</code> somewhere
         you will find them again: a scratch file, a note, anywhere. The very
         level-up has you paste them into an environment of your own.</p>
         <p>Check them against the counts you kept in step 4: the same numbers
         should come out. If they do not, extracting the functions changed
-        behaviour. Finding out which one did it is step 11.</p>
+        behaviour. Step 11 shows how to find which function changed it.</p>
         <p style="margin-bottom:0">Then take the level-up. Everything you have
         written so far has run against eleven rows. Marion County has 632, and
         your code does not need to change to handle them.</p>
@@ -146,27 +149,28 @@
       <details class="checkq">
         <summary><span class="q">Can each function be called in isolation, with made-up arguments, and give the right answer?</span></summary>
         <div class="ans">
-          <p>That is the whole test, and it is worth applying deliberately.
-          Start from nothing and call <code>build_geoid("01", "073", "000100",
+          <p>That is the complete test. Apply it on purpose.
+          Start with an empty editor and call <code>build_geoid("01", "073", "000100",
           "1")</code> with no other code around it. See whether it works.</p>
           <p>If it does, the function is self-contained. If it raises
-          <code>NameError</code>, it was secretly reading something from the
-          surrounding code: a header list, a lookup dict, a column index.
+          <code>NameError</code>, it was reading something from the
+          surrounding code that is not a parameter. Examples are a header
+          list, a lookup dict and a column index.
           That dependency needs to become a parameter.</p>
-          <p style="margin-bottom:0">Doing this by hand is tedious, which is
-          the entire argument for step 19. A test file is this check,
-          written down once and run automatically forever. You have been on the
-          receiving end of about forty of them getting here.</p>
+          <p style="margin-bottom:0">Doing this by hand takes a long time, and
+          that is the reason for step 19. A test file is this check,
+          written once and run automatically every time. About forty such
+          checks have run against your code in the steps so far.</p>
         </div>
       </details>
 
       <div class="note">
         <h4>End of Unit 1</h4>
-        <p>You can read the project's data, represent it honestly and join two
+        <p>You can read the project's data, represent it accurately and join two
         sources on a shared key. You can handle the rows that do not match and
         express the result as named functions. All of it uses nothing but the
         core language.
-        Unit 2 stops adding and starts verifying.</p>
+        Unit 2 adds no new stages. It verifies the stages you have.</p>
       </div>
 
       <div id="pager"></div>
@@ -275,9 +279,9 @@ COURSE.exercise("ex2", {
 });
 
 COURSE.exercise("ex3", {
-  id: "s09-pipeline", tag: "Exercise 3", title: "Compose the whole unit",
+  id: "s09-pipeline", tag: "Exercise 3", title: "Compose the three functions",
   prompt:
-    "<p>The finale. Three functions are already defined for you above the " +
+    "<p>This is the last exercise of Unit 1. Three functions are already defined for you above the " +
     "editor: <code>build_geoid</code>, <code>bike_share</code> and " +
     "<code>walk_category</code>. Use them to write " +
     "<code>summarize(acs_raw, walk_raw)</code>. It returns a dict with exactly " +
@@ -291,8 +295,8 @@ COURSE.exercise("ex3", {
     "over usable rows</li>" +
     "<li><code>\"unmatched\"</code>: sorted list of ACS GEOIDs with no score</li>" +
     "</ul>" +
-    "<p>Take both tables as arguments. Reading them from the " +
-    "surrounding code is the habit this step exists to break.</p>",
+    "<p>Take both tables as arguments. Do not read them from the " +
+    "surrounding code.</p>",
   setup: SAMPLE + "\n" +
     "def build_geoid(state, county, tract, block_group):\n" +
     "    \"\"\"Return the 12-character block group GEOID as a string.\"\"\"\n" +

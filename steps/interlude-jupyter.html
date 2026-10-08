@@ -20,14 +20,13 @@
       what you have written against the whole county rather than eleven rows.</p>
 
       <h2>Why here, and not at the start</h2>
-      <p>A notebook is a tool for running Python. Handed one on day one you
-      would have had somewhere to type and nothing to type in it. The
-      genuinely tricky thing about notebooks is that they remember more than
-      they show. That is not a lesson you can learn before you have anything
-      worth remembering.</p>
+      <p>A notebook is a tool for running Python. On day one you would have had a
+      place to type code and no code to type. The difficult part of notebooks
+      is that they keep values in memory that the page does not display. You
+      cannot learn that before you have values that you need to keep.</p>
       <p>You do now. <code>build_geoid</code>, <code>bike_share</code>,
       <code>walk_category</code> and <code>summarize</code> are a real pipeline,
-      and the exercise boxes have got too small for them.</p>
+      and they are now too large for the exercise boxes.</p>
 
       <h2>Getting one running</h2>
 <pre>pip install jupyterlab
@@ -37,8 +36,8 @@ jupyter lab</pre>
       <code>exploration.ipynb</code>.</p>
       <p class="small">If <code>pip</code> is not found, try <code>python3 -m pip
       install jupyterlab</code>. That may install into a Python you did not
-      expect. If so, you have met the problem that the second level-up solves
-      properly with virtual environments. For now, any Jupyter that starts is
+      expect. If so, you have found the problem that the second level-up solves
+      with virtual environments. For now, any Jupyter that starts is
       fine.</p>
 
       <h2>Cells, and the two orders</h2>
@@ -46,16 +45,16 @@ jupyter lab</pre>
       Shift+Enter runs one and shows its output underneath. That much you can
       see.</p>
       <p>What you cannot see is that a notebook has <em>two</em> orders, and
-      they are allowed to disagree:</p>
+      the two can differ:</p>
       <ul>
         <li><b>Document order</b>: top to bottom, the order a reader sees.</li>
-        <li><b>Execution order</b>: the order you actually pressed
-        Shift+Enter, which is whatever your afternoon happened to be.</li>
+        <li><b>Execution order</b>: the order in which you pressed
+        Shift+Enter, which can be any order.</li>
       </ul>
-      <p>Behind the notebook sits a <b>kernel</b>: a Python process that stays
-      alive between cells and remembers every name you have ever assigned in
-      it. The notebook file is a document. The kernel is a memory. Editing the
-      document does not edit the memory.</p>
+      <p>Each notebook is connected to a <b>kernel</b>: a Python process that
+      keeps running between cells and keeps every name you have assigned in
+      it. The notebook file is a document. The kernel holds the values in
+      memory. Editing the document does not change the values in memory.</p>
 
       <figure>
         <svg viewBox="0 0 720 300" role="img" aria-label="A notebook's document order on the left and the kernel's memory on the right; deleting a cell leaves its variable in memory.">
@@ -98,14 +97,14 @@ jupyter lab</pre>
           <text x="424" y="240" class="svg-muted" style="font-size:11px">The document on the left is unchanged.</text>
         </svg>
         <figcaption>The notebook on disk and the kernel in memory are two
-        different things. Everything confusing about notebooks comes from
-        forgetting that.</figcaption>
+        different things. The confusing behaviour of notebooks comes from
+        that difference.</figcaption>
       </figure>
 
       <div class="note trap">
         <h4>The failure this causes</h4>
         <p>Your notebook works. You send it to someone. They run it top to
-        bottom and it dies with <code>NameError: name 'home' is not
+        bottom and it stops with <code>NameError: name 'home' is not
         defined</code>, because the definition only ever existed in
         <em>your</em> kernel. This is the single most common way notebook
         analyses turn out to be irreproducible, and the fix is a habit:
@@ -130,13 +129,13 @@ jupyter lab</pre>
       </table>
       </div>
       <p>Markdown cells hold prose: what you are trying to find out, what a
-      number means, why you threw some rows away. A notebook without them is a
-      transcript. A notebook with them is an argument, and this project is an
-      argument.</p>
+      number means, why you removed some rows. A notebook without them records only
+      what you ran. A notebook with them also gives your reasoning, and this
+      project must give its reasoning.</p>
 
       <h2>Exercises</h2>
-      <p>Two predictions about the kernel, still in the browser. Then the real
-      work moves to your machine.</p>
+      <p>Two predictions about the kernel, still in the browser. Then you do
+      the main work on your machine.</p>
       <div id="ex1"></div>
       <div id="ex2"></div>
 
@@ -161,19 +160,20 @@ jupyter lab</pre>
           block groups were usable? What is the mean bike share across the
           county? Which GEOIDs did not join?</li>
         </ol>
-        <p>Then do the thing the exercise boxes could not: look at the
+        <p>Then do what was not possible in the exercise boxes: look at the
         <em>distribution</em>. Print the mean bike share within each
-        walkability category. Four numbers, and they are the first real
-        evidence about the research question you have ever seen.</p>
-        <p style="margin-bottom:0">Write in a Markdown cell what those four
-        numbers seem to say, and what would have to be true for it to be
-        wrong. Unit 2 spends four steps on exactly that second question.</p>
+        walkability category. These four numbers are the first evidence about
+        the research question that you have seen.</p>
+        <p style="margin-bottom:0">Write in a Markdown cell what you conclude
+        from those four numbers, and what would have to be true for that
+        conclusion to be wrong. Unit 2 uses four steps to answer that second
+        question.</p>
       </div>
 
       <div class="note warn">
         <h4>About <code>%run ../data/marion_full.py</code></h4>
         <p>That file is 632 block groups written out as Python literals, and it
-        is a stopgap. Real data lives in <code>data/*.csv</code>, which is a
+        is a temporary measure. The real data is in <code>data/*.csv</code>, which is a
         quarter of the size and which nothing has to re-parse as source code
         every time. You cannot read it yet because file I/O is step 13.
         Compare the two files' sizes now and you will know why step 13 exists
@@ -194,8 +194,9 @@ jupyter lab</pre>
             a console attached to the same kernel.</li>
           </ul>
           <p style="margin-bottom:0">The check is mechanical: restart, run all,
-          and see whether it survives. If it does not, the notebook was never
-          really working. You could not tell. Do it now, at the end of
+          and see whether it runs to the end without an error. If it does not,
+          the notebook never worked from its document alone. You had no sign
+          of that. Do it now, at the end of
           your first session, because this is exactly when a notebook has
           accumulated the most hidden state.</p>
         </div>
@@ -203,7 +204,7 @@ jupyter lab</pre>
 
       <div class="note">
         <h4>From here on</h4>
-        <p>The project lives on your machine. The step pages keep explaining,
+        <p>The project is now on your machine. The step pages keep explaining,
         and keep checking small things in the browser, but the analysis itself
         is yours now. Unit 2 is about making it trustworthy: proving a
         refactor changed nothing, handling the failure modes in the data, and
@@ -236,7 +237,7 @@ COURSE.exercise("ex1", {
 });
 
 COURSE.exercise("ex2", {
-  id: "int-state", tag: "Exercise 2", title: "Deleted cells, surviving values",
+  id: "int-state", tag: "Exercise 2", title: "Deleted cells, values that remain",
   prompt:
     "<p>Starting from a fresh kernel, you run these three cells in order:</p>" +
     "<pre><span class='c'># Cell A</span>\nbike = 21\n\n<span class='c'># Cell B</span>\nworkers = 1303\n\n<span class='c'># Cell C</span>\nprint(round(bike / workers, 4))</pre>" +

@@ -18,7 +18,7 @@
       <ul class="lede-points">
         <li>Do the same thing once per item, without writing it out.</li>
         <li>Build up an answer as you go.</li>
-        <li>Skip an item, or stop early, when the data says so.</li>
+        <li>Skip an item, or stop early, when the data requires it.</li>
       </ul>
 
       <h2><code>for</code></h2>
@@ -48,12 +48,12 @@ for score in scores:
 print(total / len(scores))   <span class="c"># 9.0 — the mean</span></pre>
       <p>Where the accumulator is set matters. Inside the block it would be
       reset on every pass. After the block it would not exist yet. This is the
-      indentation lesson from step 4 with something at stake.</p>
+      indentation rule from step 4, and here it changes the answer.</p>
 
       <h2>Leaving a loop early</h2>
       <p>Two statements interrupt the normal run of a loop.
-      <code>continue</code> abandons this pass and starts the next.
-      <code>break</code> abandons the loop entirely.</p>
+      <code>continue</code> ends this pass and starts the next.
+      <code>break</code> ends the loop entirely.</p>
 <pre>for score in scores:
     if score is None:
         continue          <span class="c"># no score here — on to the next one</span>
@@ -61,14 +61,14 @@ print(total / len(scores))   <span class="c"># 9.0 — the mean</span></pre>
       <div class="note trap">
         <h4>A <code>continue</code> is a decision about the data</h4>
         <p>Skipping a neighbourhood with no score is not the same as counting
-        it as zero. Zero drags a mean down on the strength of no evidence.
-        Skipping leaves it out of the question entirely.</p>
+        it as zero. A zero lowers the mean, and no measurement supports that
+        zero. Skipping leaves the neighbourhood out of the mean.</p>
         <p style="margin-bottom:0">Either can be right. What is never right is
         skipping without counting how many you skipped, which is exercise 1.</p>
       </div>
 
       <h2><code>while</code></h2>
-      <p><code>for</code> walks a sequence you already have.
+      <p><code>for</code> goes through a sequence you already have.
       <code>while</code> repeats for as long as a condition stays true, which
       means you need to be sure the condition eventually goes false.</p>
 <pre>countdown = 3
@@ -76,8 +76,8 @@ while countdown &gt; 0:
     print(countdown)
     countdown = countdown - 1</pre>
       <p>Delete that last line and the condition never changes, so the loop
-      never ends. Reach for <code>for</code> unless you genuinely do not know
-      how many passes you need.</p>
+      never ends. Use <code>for</code> unless you do not know how many passes
+      you need.</p>
 
       <div id="q1"></div>
 
@@ -93,8 +93,8 @@ while countdown &gt; 0:
           first.</li>
           <li>Is each line inside the block or after it? One of them is almost
           always wrong the first time.</li>
-          <li>What did you skip, and did you count it? A loop that quietly
-          drops rows is how a result ends up describing a population you did
+          <li>What did you skip, and did you count it? A loop that drops rows
+          with no message gives a result that describes a population you did
           not mean.</li>
         </ol>
       </div>
@@ -121,15 +121,15 @@ COURSE.quiz("q1", {
     { html: "<code>27.0</code>: the same as A" },
     { html: "<code>9.0</code>: only the last score", correct: true,
       why: "<code>total = 0</code> is inside the block, so it runs again on " +
-           "every pass and throws away everything added so far. Only the final " +
-           "pass survives." },
+           "every pass and sets the total back to 0. Only the score from the " +
+           "final pass remains." },
     { html: "<code>0</code>" },
     { html: "An error: <code>total</code> is not defined" }
   ],
   why:
     "<p>Both are valid. B resets the answer once per item, so it reports the " +
-    "last score rather than the total. Where you start the accumulator is the " +
-    "whole of the difference.</p>"
+    "last score rather than the total. The only difference is where the " +
+    "accumulator is set.</p>"
 });
 </script>
 <script>
@@ -138,7 +138,7 @@ COURSE.exercise("ex1", {
   prompt:
     "<p>Six neighbourhoods. Two of them were never scored, and those arrive as " +
     "<code>None</code>.</p>" +
-    "<p>Walk the list and set <code>usable</code> to how many have a score, and " +
+    "<p>Loop over the list and set <code>usable</code> to how many have a score, and " +
     "<code>skipped</code> to how many do not. Every score must be accounted " +
     "for by exactly one of them.</p>",
   setup: "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n",
@@ -151,7 +151,7 @@ COURSE.exercise("ex1", {
       code: "expect(expect_defined(globals(), 'usable'), 4)" },
     { label: "skipped counts the ones that do not",
       code: "expect(expect_defined(globals(), 'skipped'), 2)" },
-    { label: "the two add up to every neighbourhood, so nothing vanished",
+    { label: "the two add up to every neighbourhood, so none is missing",
       code: "expect(usable + skipped, len(scores))" },
     { label: "the counters were not reset inside the loop",
       code: ("body = [l for l in __source__.splitlines() if l[:1].isspace()]\n"
@@ -188,7 +188,7 @@ COURSE.exercise("ex2", {
   checks: [
     { label: "walkable holds the scores above 10.5, in order",
       code: "expect(expect_defined(globals(), 'walkable'), [14.5, 19.5])" },
-    { label: "the missing scores did not raise on the way",
+    { label: "the missing scores did not cause an error",
       code: "expect(None in walkable, False)" },
     { label: "best is the highest of them",
       code: "expect_close(expect_defined(globals(), 'best'), 19.5, 1e-12)" },

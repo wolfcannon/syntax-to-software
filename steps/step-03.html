@@ -23,8 +23,8 @@
 
       <h2>Dot notation</h2>
       <p>In step 2 you met five primitive types. One thing every type has in
-      common is the ability to carry <b>methods</b>: things a value of that type
-      knows how to do. Methods are accessed with a dot.</p>
+      common is that it has <b>methods</b>: operations a value of that type
+      can perform. Methods are accessed with a dot.</p>
 
       <figure>
         <svg viewBox="0 0 720 200" role="img" aria-label="A method call marked underneath in three parts — the value, the method name, the arguments in parentheses — with the joining dot picked out, and an arrow down to the value the call returns.">
@@ -52,55 +52,55 @@
       </figure>
 
       <ul class="parts">
-        <li><span class="k v">value</span><span>what you are asking</span></li>
+        <li><span class="k v">value</span><span>what the method works on</span></li>
         <li><span class="k d">dot</span><span>joins the value to the method</span></li>
         <li><span class="k m">method</span><span>what to do to it</span></li>
         <li><span class="k a">arguments</span><span>what it needs in order to do it</span></li>
       </ul>
 
-      <p>Almost every method hands something back. That is the call's
+      <p>Almost every method returns something. That is the call's
       <b>return value</b>, and the call <em>becomes</em> it. In the same way
       that <code>2 + 2</code> is <code>4</code>, the call above is
       <code>'bikeable'</code>. A method call is an expression, as step 1 uses
       the word.</p>
 
-      <p>And because the return value is itself a value, you can ask it to do
-      something too. Each call works on what the one before it handed back:</p>
+      <p>And because the return value is itself a value, you can call a method
+      on it too. Each call works on what the one before it returned:</p>
 <pre>"  Walk Score  ".strip()           <span class="c"># 'Walk Score'</span>
 "  Walk Score  ".strip().lower()   <span class="c"># 'walk score'</span></pre>
 
       <p>The value itself is never changed. Text is <b>immutable</b> in
-      Python: <code>name.upper()</code> hands back a new piece of text and
+      Python: <code>name.upper()</code> returns a new piece of text and
       leaves <code>name</code> exactly as it was. Writing
       <code>name.strip()</code> on a line of its own therefore does nothing
-      useful. You have to keep what it hands back.</p>
+      useful. You have to keep what it returns.</p>
 
       <div class="note">
         <h4>Tip 💡: read it left to right</h4>
-        <p style="margin-bottom:0">A method call is a sentence in that order:
-        take this value, do this to it, using these. Then hand back the
+        <p style="margin-bottom:0">A method call reads in that order:
+        take this value, do this to it, using these. Then return the
         result.</p>
       </div>
 
-      <p>The parentheses surrounding the argument list are not decoration. The
-      method name says which code to run. The parentheses are what tell Python
-      to run it. They are there even when the argument list is empty:</p>
+      <p>The parentheses surrounding the argument list have an effect. The
+      method name identifies which code to run. The parentheses make Python
+      run it. They are there even when the argument list is empty:</p>
 <pre>"walkable".upper()   <span class="c"># 'WALKABLE'</span>
 "WALKABLE".lower()   <span class="c"># 'walkable'</span></pre>
 
       <h3>Argument</h3>
-      <p>A value handed to a method so it can do its work. Arguments go inside
+      <p>A value given to a method so it can do its work. Arguments go inside
       the parentheses, separated by commas.</p>
-      <p>How many a method needs depends on how much it cannot work out for
-      itself:</p>
+      <p>How many a method needs depends on how much information it needs
+      beyond the value:</p>
 <pre>"walkable".upper()                   <span class="c"># 'WALKABLE'   needs nothing — the value is enough</span>
 "walkable".count("a")                <span class="c"># 2            needs to know what to count</span>
 "walkable".replace("walk", "bike")   <span class="c"># 'bikeable'   needs what to replace, and what with</span></pre>
-      <p>Where a method takes more than one, their order is what says which is
-      which. Swap them and you have asked a different question. Here it is one that
-      quietly does nothing at all:</p>
+      <p>Where a method takes more than one, their order determines which
+      is which. Swap them and the call means something different. Here the
+      swapped call changes nothing, and reports no error:</p>
 <pre>"walkable".replace("bike", "walk")   <span class="c"># 'walkable'   there is no "bike" in it to replace</span></pre>
-      <p>Give a method the wrong number of arguments and it says so
+      <p>Give a method the wrong number of arguments and Python raises an error
       immediately:</p>
 <pre><span class="o">"walkable".upper("x")
 TypeError: str.upper() takes no arguments (1 given)</span></pre>
@@ -111,7 +111,7 @@ TypeError: str.upper() takes no arguments (1 given)</span></pre>
 "walkable".upper()   <span class="c"># 'WALKABLE'</span></pre>
         <p style="margin-bottom:0">Without parentheses Python will return the
         method itself rather than executing the code defined in the method. It
-        does this without complaint. If a value prints as something about a
+        does this without an error. If a value prints as something about a
         "method", this is what happened.</p>
       </div>
 
@@ -120,15 +120,15 @@ TypeError: str.upper() takes no arguments (1 given)</span></pre>
       same set. A number has a different set.</p>
 <pre>"18".upper()    <span class="c"># '18'</span>
 (18).upper()    <span class="c"># AttributeError: 'int' object has no attribute 'upper'</span></pre>
-      <p>That error is worth recognising early. It rarely means you typed the
+      <p>Learn to recognise that error early. It rarely means you typed the
       name wrong. It usually means the value is not the type you thought it was,
-      which is step 2's trap wearing a different coat.</p>
+      which is the mistake from step 2 in another form.</p>
 
       <div class="note">
-        <h4>Two shapes that do similar jobs</h4>
-        <p><code>len("18")</code> is a function, handed a value.
+        <h4>Two forms that do similar jobs</h4>
+        <p><code>len("18")</code> is a function, given a value.
         <code>"18".upper()</code> is a method, belonging to one. Both take an
-        input and give something back. They differ in whether the value goes
+        input and return something. They differ in whether the value goes
         before the dot or inside the parentheses.</p>
         <p style="margin-bottom:0">There is no rule to derive here.
         <code>len</code> is a function and <code>upper</code> is a method
@@ -140,7 +140,7 @@ TypeError: str.upper() takes no arguments (1 given)</span></pre>
       <div id="ex0"></div>
 
       <h2>Putting values into text</h2>
-      <p>Sooner or later you have some values and you want a piece of text with
+      <p>Eventually you have some values and you want a piece of text with
       those values in it. It might be a label, a line of output or an
       identifier built from its parts.</p>
       <p>The direct way is to join pieces together with <code>+</code>:</p>
@@ -149,7 +149,7 @@ score = 14.5
 
 "Walkability of " + name + " is " + str(score)
 <span class="c"># 'Walkability of Meridian-Kessler is 14.5'</span></pre>
-      <p>That works, and it is unpleasant. You are counting quotes and spaces,
+      <p>That works, and it is hard to write and to read. You are counting quotes and spaces,
       the sentence is broken into five pieces, and every value that is not
       already text needs <code>str()</code> around it. Forget one and you get:</p>
 <pre><span class="o">TypeError: can only concatenate str (not "float") to str</span></pre>
@@ -157,16 +157,15 @@ score = 14.5
       <h3>String interpolation</h3>
       <p>Writing out the text you want, with gaps in it, and letting values
       fill the gaps when the line runs. The template stays readable because it
-      is the shape of the answer.</p>
+      looks like the result.</p>
 
       <h3>f-string</h3>
       <p>Python's way of doing that. An <code>f</code> before the opening quote,
       and an expression inside each pair of braces.</p>
 <pre>f"Walkability of {name} is {score}"
 <span class="c"># 'Walkability of Meridian-Kessler is 14.5'</span></pre>
-      <p>Three things come free. The line now looks like what it produces, so
-      you can check it by reading it. Values are converted for you, so
-      <code>str()</code> disappears. And anything can go in the braces, because
+      <p>You get three things without extra work. The line now looks like what it produces, so
+      you can check it by reading it. Values are converted for you, so you do not need <code>str()</code>. And anything can go in the braces, because
       what is in there is an expression:</p>
 <pre>f"{bike} of {workers} cycle"
 f"{bike / workers}"
@@ -195,8 +194,8 @@ line = f"{percent}%"              <span class="c"># '1.6%'</span></pre>
           <li><code>.1</code>: keep one digit after the decimal point</li>
         </ul>
         <p style="margin-bottom:0">Nothing in a spec is text. Every character
-        in it is an instruction, which is why they are so short and so
-        unguessable.</p>
+        in it is an instruction, which is why a spec is short and hard to
+        guess.</p>
       </div>
 
       <figure>
@@ -243,10 +242,10 @@ line = f"{percent}%"              <span class="c"># '1.6%'</span></pre>
       </ul>
 
       <p>Two stages, always in that order. The expression is worked out first,
-      and only then does the spec decide how to write the answer down. That
-      is why <code>.1%</code> can say "as a percentage to one decimal" without
-      knowing or caring where the number came from.</p>
-      <h2>The specs you will use constantly</h2>
+      and only then does the spec set how the answer is written. That
+      is why <code>.1%</code> means "as a percentage to one decimal" for any
+      number, whatever expression produced it.</p>
+      <h2>The specs you will use most often</h2>
 
       <h3>Percentage</h3>
       <p><code>%</code> multiplies by 100 and adds the sign. The digit after
@@ -268,8 +267,8 @@ f"{21:,}"     <span class="c"># '21'      nothing to separate</span></pre>
 
       <h3>Width and alignment</h3>
       <p>A number is how many columns the value takes up.
-      <code>&gt;</code> pushes the value to the right of them and
-      <code>&lt;</code> to the left. The gap is filled with spaces.</p>
+      <code>&gt;</code> puts the value at the right of them and
+      <code>&lt;</code> at the left. The gap is filled with spaces.</p>
 <pre>f"{14.5:&gt;8}"          <span class="c"># '    14.5'</span>
 f"{'3101.03':&lt;10}|"   <span class="c"># '3101.03   |'</span>
 f"{14.4667:&gt;8.1f}"    <span class="c"># '    14.5'      width first, then decimals</span></pre>
@@ -282,19 +281,19 @@ f"{14.4667:&gt;8.1f}"    <span class="c"># '    14.5'      width first, then dec
 f"{340:0&gt;3}"   <span class="c"># '340'   already 3 wide, so nothing is added</span></pre>
 
       <div class="note">
-        <h4>The debugging one</h4>
+        <h4>A spec for debugging</h4>
         <p><code>f"{workers=}"</code> prints <code>workers=1303</code>: name
-        and value together. It is the fastest print-debugging tool in the
-        language and you will use it in step 11 more than you expect.</p>
+        and value together. It is the shortest way to print a name with its value,
+        and you will use it often in step 11.</p>
       </div>
 
       <h2>Indexing and slicing</h2>
       <p>A string is a sequence of characters, indexed from zero. A slice
       <code>s[a:b]</code> takes from <code>a</code> up to but <em>not
       including</em> <code>b</code>, so the length of the slice is always
-      <code>b - a</code>. That half-open convention is the same one that makes
-      <code>range</code> and array slicing behave, and it is worth accepting
-      early rather than fighting.</p>
+      <code>b - a</code>. That half-open convention is the same one that
+      <code>range</code> and array slicing follow. Learn it now, and do not try
+      to work around it.</p>
 <pre>geoid = "180973401103"
 geoid[0:2]    <span class="c"># '18'      state</span>
 geoid[2:5]    <span class="c"># '097'     county</span>
@@ -313,10 +312,10 @@ geoid[-1]     <span class="c"># '3'       negative indices count from the end</s
         <thead><tr><th>Call</th><th>Gives</th><th>Used for</th></tr></thead>
         <tbody>
           <tr><td class="mono">"18".zfill(2)</td><td class="mono">'18'</td><td>Pad a FIPS code with leading zeros</td></tr>
-          <tr><td class="mono">"1".zfill(2)</td><td class="mono">'01'</td><td>…which is the whole point</td></tr>
-          <tr><td class="mono">"a, b".split(",")</td><td class="mono">['a', ' b']</td><td>Cut a NAME field into fields</td></tr>
+          <tr><td class="mono">"1".zfill(2)</td><td class="mono">'01'</td><td>Add the leading zero a one-digit code lacks</td></tr>
+          <tr><td class="mono">"a, b".split(",")</td><td class="mono">['a', ' b']</td><td>Split a NAME field into fields</td></tr>
           <tr><td class="mono">" b ".strip()</td><td class="mono">'b'</td><td>Remove the whitespace split leaves behind</td></tr>
-          <tr><td class="mono">"Tract 31".startswith("T")</td><td class="mono">True</td><td>Cheap filtering</td></tr>
+          <tr><td class="mono">"Tract 31".startswith("T")</td><td class="mono">True</td><td>Filtering by how the text starts</td></tr>
           <tr><td class="mono">"18-097".replace("-", "")</td><td class="mono">'18097'</td><td>Normalising before a join</td></tr>
         </tbody>
       </table>
@@ -325,8 +324,8 @@ geoid[-1]     <span class="c"># '3'       negative indices count from the end</s
 
       <div class="note">
         <h4>Tip 💡: look it up rather than guessing</h4>
-        <p>Text carries 47 methods, and the table above is the handful this
-        project needs. Nobody knows the rest from memory either. The list is
+        <p>Text has 47 methods, and the table above shows the few this
+        project needs. Few people know the rest from memory. The list is
         written down:</p>
         <ul>
           <li><a href="https://docs.python.org/3/library/stdtypes.html#string-methods" target="_blank" rel="noopener noreferrer">docs.python.org:
@@ -335,7 +334,7 @@ geoid[-1]     <span class="c"># '3'       negative indices count from the end</s
           same description without leaving what you are doing.</li>
         </ul>
         <p style="margin-bottom:0">Knowing that a method probably exists, and
-        where to check, is worth more than remembering its name.</p>
+        where to check, is more useful than remembering its name.</p>
       </div>
 
       <div id="pager"></div>
@@ -348,7 +347,7 @@ geoid[-1]     <span class="c"># '3'       negative indices count from the end</s
 <script>
 COURSE.quiz("q1", {
   id: "s03-chain", tag: "Your turn", title: "One after another",
-  retry: "Not that one. Work out what the first call hands back, then read the second.",
+  retry: "Not that one. Work out what the first call returns, then read the second.",
   question:
     "<pre>'walk'.replace('walk', 'bike').replace('bike', 'cycle')</pre>" +
     "<p>What is the result?</p>",
@@ -361,17 +360,17 @@ COURSE.quiz("q1", {
     { html: "An error: you cannot put two methods on one line" }
   ],
   why:
-    "<p>Each call runs on whatever the one before it handed back, left to " +
+    "<p>Each call runs on whatever the one before it returned, left to " +
     "right. Swap the two and you get <code>'bike'</code> instead. There is no " +
     "<code>\"bike\"</code> in <code>'walk'</code> for the first call to find, " +
-    "so it does nothing, and then the second one does.</p>"
+    "so it changes nothing. The second call then makes the replacement.</p>"
 });
 </script>
 <script>
 COURSE.exercise("ex0", {
   id: "s03-methods", tag: "Exercise 1", title: "Call some methods",
   prompt:
-    "<p>A heading arrives with stray spaces around it and capitals in it.</p>" +
+    "<p>A heading arrives with extra spaces around it and capitals in it.</p>" +
     "<p>Turn it into <code>walk-score-index</code>: no surrounding spaces, all " +
     "lower case, and spaces between words replaced with hyphens.</p>" +
     "<p class='small'>Three methods, in some order. You have met all of " +
@@ -386,7 +385,7 @@ COURSE.exercise("ex0", {
            + "    raise CheckFailed('the answer is written out rather than built')\n"
            + "if 'title' not in code_only:\n"
            + "    raise CheckFailed('start from title')") },
-    { label: "the original was left alone, because methods hand back a new value",
+    { label: "the original is unchanged, because methods return a new value",
       code: "expect(title, '  Walk Score Index  ')" },
     { label: "it printed the result",
       code: "expect(__stdout__, 'walk-score-index\\n')" }
@@ -416,7 +415,7 @@ COURSE.exercise("exf", {
     "line = \n\n" +
     "print(line)\n",
   checks: [
-    { label: "line reads exactly right",
+    { label: "line is exactly the text shown",
       code: "expect(expect_defined(globals(), 'line'), 'MERIDIAN-KESSLER scores 14.5, and 21 of 1303 cycle')" },
     { label: "it was built with an f-string",
       code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
@@ -426,7 +425,7 @@ COURSE.exercise("exf", {
       code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
            + "if 'str(' in code_only:\n"
            + "    raise CheckFailed('str() is what f-strings save you from')") },
-    { label: "the capitals came from the name, not from your keyboard",
+    { label: "the capitals came from the name, and you did not type them",
       code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
            + "if 'MERIDIAN' in code_only:\n"
            + "    raise CheckFailed('the shouty name is typed out — ask the value for it instead')") },
@@ -452,9 +451,9 @@ COURSE.exercise("exf", {
 });
 
 COURSE.exercise("ex1", {
-  id: "s03-slice", tag: "Exercise 3", title: "Take a GEOID apart",
+  id: "s03-slice", tag: "Exercise 3", title: "Split a GEOID into its parts",
   prompt:
-    "<p>A block group GEOID is four codes run together: state (2 characters), " +
+    "<p>A block group GEOID is four codes joined together: state (2 characters), " +
     "county (3), tract (6), block group (1).</p>" +
     "<p>Slice each one out of <code>geoid</code>. The first is done.</p>" +
     "<p class='small'>Each slice starts at the number the last one stopped " +
@@ -522,11 +521,11 @@ COURSE.exercise("ex2", {
       code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
            + "if code_only.count('f\"') + code_only.count(\"f'\") < 2:\n"
            + "    raise CheckFailed('one f-string for each code')") },
-    { label: "the zeros came from the format spec, not from your keyboard",
+    { label: "the zeros came from the format spec, and you did not type them",
       code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
            + "if '\"0' in code_only or \"'0\" in code_only:\n"
            + "    raise CheckFailed('a zero is typed in as text — a spec would add it for any number')") },
-    { label: "the numbers themselves were left alone",
+    { label: "the numbers themselves are unchanged",
       code: "expect(state, 1); expect(county, 73)" }
   ],
   solution:
@@ -541,9 +540,9 @@ COURSE.exercise("ex2", {
 });
 
 COURSE.exercise("ex3", {
-  id: "s03-geoid", tag: "Exercise 5", title: "Build a GEOID that survives",
+  id: "s03-geoid", tag: "Exercise 5", title: "Build a GEOID that keeps its zeros",
   prompt:
-    "<p>Now the other direction. Assemble a 12-character GEOID from its four " +
+    "<p>Now do the reverse. Assemble a 12-character GEOID from its four " +
     "parts: state (2), county (3), tract (6), block group (1). State and " +
     "county arrive as integers. The tract is already text.</p>" +
     "<p>Build <code>geoid_al</code> from the Alabama parts and " +

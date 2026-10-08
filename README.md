@@ -3,7 +3,7 @@
 A Python course that starts at what a statement is and ends with a tested
 project under version control. It has 22 steps and two level-ups. It assumes
 no programming experience and no maths beyond arithmetic. Every step teaches
-one layer of the language or of the development process. Every step also
+one part of the language or of the development process. Every step also
 advances the same project: **does neighbourhood walkability predict bike
 commuting, and what explains the places that do not fit the trend?**
 
@@ -11,7 +11,7 @@ The last unit is the part most courses leave out. It covers git, pytest, two
 real bug reports worked end to end, project layout, and a capstone that reports
 its own uncertainty.
 
-### Shape
+### Course outline
 
 | | Where the work happens |
 | --- | --- |
@@ -23,21 +23,21 @@ its own uncertainty.
 | **Unit 4 — Development practice** (steps 18–22) | " |
 
 The two level-ups are deliberate. Each is a change of environment, and each
-lands *after* the learner has something worth putting there. Jupyter arrives
-once there is a pipeline to run in it. Virtual environments arrive once
-there are dependencies to isolate. Putting either at the front would be
-teaching a tool before the problem it solves.
+comes *after* the learner has work that needs it. The course introduces
+Jupyter once there is a pipeline to run in it. It introduces virtual
+environments once there are dependencies to isolate. Putting either first
+would teach a tool before the problem it solves.
 
 Units 2–4 are outlined on the course home page and not yet written. To add a
 step, write `steps/step-NN.html`. Then give it a `file:` in the `ITEMS`
-array in `assets/nav.js`. The sidebar, progress bar and pager all follow from
-there.
+array in `assets/nav.js`. The sidebar, progress bar and pager are all built from
+that array.
 
 ## Running it
 
 The exercises run Python in your browser via
 [Pyodide](https://pyodide.org). That needs the pages served over HTTP rather
-than opened off the disk. Double-clicking `index.html` will show the pages,
+than opened as files from the disk. Double-clicking `index.html` will show the pages,
 but the exercises will not run.
 
 ### 1. Check you have Python 3 and git
@@ -50,13 +50,13 @@ python3 --version
 git --version
 ```
 
-Each should print a version number. Any Python 3 will do. On Windows the
+Each should print a version number. Any version of Python 3 works. On Windows the
 command is usually `python` or `py` rather than `python3`. Use whichever
 prints a version, here and in step 3.
 
 If either is missing: Python is at
 [python.org/downloads](https://www.python.org/downloads/) and git is at
-[git-scm.com/downloads](https://git-scm.com/downloads). No git? Skip it.
+[git-scm.com/downloads](https://git-scm.com/downloads). If you have no git, skip it.
 Download
 [the ZIP](https://github.com/wolfcannon/syntax-to-software/archive/refs/heads/main.zip)
 and unzip it. Then use the folder `syntax-to-software-main` in step 2's `cd`.
@@ -80,11 +80,10 @@ python3 -m http.server 8000
 ```
 
 It prints a line starting `Serving HTTP on` and ending `port 8000 ...`, and
-then appears to hang. That is
-it working: leave the terminal window open for as long as you are using the
-course.
+then prints nothing more. The server is now running. Leave the terminal window
+open for as long as you are using the course.
 
-If it says `Address already in use`, something else has port 8000. Pick
+If it says `Address already in use`, another program is using port 8000. Pick
 another number. Use the same one in the address below:
 
 ```sh
@@ -98,8 +97,8 @@ page. Start with step 1.
 
 ### Stopping, and coming back later
 
-Press `Ctrl+C` in the terminal to stop the server. To pick the course up
-again:
+Press `Ctrl+C` in the terminal to stop the server. To continue the course
+later:
 
 ```sh
 cd syntax-to-software
@@ -109,14 +108,14 @@ python3 -m http.server 8000
 and open <http://localhost:8000> again. To get new steps as they are written,
 run `git pull` in that folder first.
 
-Nothing is installed, no account is needed, and nothing you type leaves the
+Nothing is installed, no account is needed, and nothing you type is sent from your
 machine. Progress and your answers are kept in the browser's `localStorage`,
-which is per address. Keep using the same port and the same browser, or your
-progress will look like it has gone.
+which is per address. Keep using the same port and the same browser, or the
+course will show no saved progress.
 
 The first exercise you run downloads the Python runtime (~10 MB) from the
 Pyodide CDN. So step 1 needs an internet connection. After that the browser
-caches it, and nothing else phones home.
+caches it, and the course makes no other network request.
 
 ## What's here
 
@@ -138,15 +137,15 @@ scripts/              data preparation and the repo's own tests
 
 ### The exercise harness
 
-Each exercise is a starter stub plus a handful of Python assertions the learner
+Each exercise is a starter stub plus a few Python assertions the learner
 never sees. `assets/runner.js` runs their code in a fresh namespace, then runs
 the assertions against it, and reports each one separately. A failed one reads `got '1731001'
-(str), expected '017300001001' (str)` rather than a bare red traceback.
+(str), expected '017300001001' (str)` rather than only a red traceback.
 
-That is a setup for **step 19**, where the harness stops being hidden. The
-assertions grading the learner turn out to be ordinary `pytest`-style
-assertions, and they start writing their own. Keep the checks honest and
-readable, because they eventually get read.
+That prepares for **step 19**, which shows the harness to the learner. The
+assertions that grade the learner are ordinary `pytest`-style
+assertions, and the learner starts writing their own. Keep the checks accurate
+and readable, because the learner reads them in step 19.
 
 Adding an exercise means a `<div id="...">` in the page and one
 `COURSE.exercise()` call at the bottom of it. Look at any step page.
@@ -155,12 +154,12 @@ Adding an exercise means a `<div id="...">` in the page and one
 
 `.claude/skills/course-page/SKILL.md` is the house style: page skeleton, voice,
 the exercise contract, and the rule that nothing may be used before it is
-taught. Claude Code picks it up automatically in this directory. Read it
-directly if you are working by hand.
+taught. Claude Code loads it automatically in this directory. Read it
+directly if you are working without Claude Code.
 
 ## Testing
 
-Four checks, all of which must be green before a page is done. Run them from
+Four checks, all of which must pass before a page is done. Run them from
 the repo root. They need Python 3 and [Node.js](https://nodejs.org): the last
 three call `node scripts/extract_exercises.mjs` to read the exercises and
 quizzes out of the pages. Nothing needs installing with `pip` or `npm`.
@@ -179,7 +178,7 @@ Then serve the site as in [Running it](#running-it) and actually read the page.
 browser will otherwise keep serving a stale stylesheet after you edit it.
 
 **`check_vocabulary.py`** enforces the show-before-use rule.
-`scripts/vocabulary.json` is the ledger of which step first shows each piece of
+`scripts/vocabulary.json` records which step first shows each piece of
 Python, plus written exemptions where a page deliberately builds something in
 early. An exemption has to describe something the page actually does.
 
@@ -194,14 +193,14 @@ semicolons. Instructions are active. The script's own header has the detail.
 - No starter already passes. An exercise with nothing to do is a bug.
 
 - The exercise ids listed in `assets/nav.js` match the ones the pages actually
-  define. Otherwise a progress dot silently never lights up.
+  define. Otherwise a progress dot never shows the exercise as done, and no error is reported.
 - Every quiz has exactly one correct option, and an explanation to show for it.
 
 - Every asset link carries the current stamp.
 
-It lifts the Python harness straight out of `runner.js`, so there is one source
-of truth. It runs under whatever CPython you have. To run it under the *exact*
-interpreter the browser uses, `npm install pyodide@0.26.4` and drive
+It extracts the Python harness from `runner.js`, so the harness is defined in
+one place only. It runs under whatever CPython you have. To run it under the *exact*
+interpreter the browser uses, `npm install pyodide@0.26.4` and call
 `_run_exercise` the same way.
 
 ## The data
@@ -230,17 +229,17 @@ Both datasets are committed, so Unit 1 needs no downloads and no API key.
 > ```
 >
 > Several exercises assert on specific values from the sample rows, so
-> `verify_exercises.py` will tell you exactly which prompts need their numbers
+> `verify_exercises.py` reports exactly which prompts need their numbers
 > updated. **The capstone's findings are not meaningful until this is done.**
 > The correlation currently in the data is one that was put there on purpose.
 
-The two files deliberately do not line up. Of the block groups, 7 have a
+The two files deliberately do not cover the same block groups. Of the block groups, 7 have a
 walkability score and no commute data, and 5 the reverse. In the commute file,
-14 have no workers, and 9 carry the Census "estimate unavailable" sentinel. Those are not blemishes. They are
-the curriculum. Steps 5, 6, 8 and 12 each exist partly to deal with one of them.
+14 have no workers, and 9 carry the Census "estimate unavailable" sentinel. Those gaps are not defects. They are
+teaching material. Steps 5, 6, 8 and 12 each exist partly to deal with one of them.
 
 Use the **2015–2019** ACS release (`/data/2019/acs/acs5`). Later releases use
-2020 block group boundaries and will not join cleanly to the EPA file, which is
+2020 block group boundaries and will not join correctly to the EPA file, which is
 ticket B in step 20.
 
 ## Texts

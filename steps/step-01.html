@@ -16,8 +16,8 @@
       <p class="eyebrow">Unit 1 — Foundations · Step 1</p>
       <h1>Keywords, types, and syntax</h1>
       <ul class="lede-points">
-        <li>35 words Python keeps for itself.</li>
-        <li>Every value has a type, and some of them lie about it.</li>
+        <li>Python reserves 35 words.</li>
+        <li>Every value has a type, and a value can look like a different type.</li>
         <li>A <code>SyntaxError</code> means nothing ran at all.</li>
       </ul>
 
@@ -40,7 +40,7 @@
       <p>Syntax governs arrangement: which characters may follow which, where a
       colon is required, what must be indented. Python checks all of it before
       running any of it.</p>
-      <p>It says nothing about whether a program is correct. Code that obeys
+      <p>Syntax does not decide whether a program is correct. Code that follows
       every rule can still provide an incorrect result.</p>
 
       <h3>Statement</h3>
@@ -71,16 +71,15 @@
           <line x1="14" y1="164" x2="706" y2="164" class="svg-line"/>
           <text x="14" y="186" class="svg-muted" style="font-size:12px">The statement is the instruction. The expression is the value it works with.</text>
         </svg>
-        <figcaption>An expression can be as small as a literal or as large as
-        you like. What makes it an expression is that it has a value. What
+        <figcaption>An expression can be as small as a literal or much larger. What makes it an expression is that it has a value. What
         makes the line a statement is that it does something with it.</figcaption>
       </figure>
 
       <div class="note">
-        <h4>Nothing is shown unless you ask</h4>
+        <h4>Nothing is shown unless you print it</h4>
         <p><code>bike = 21</code> displays nothing. A statement has no value.
         <code>bike / workers</code> displays nothing either: the value is
-        computed, then discarded. To see it, ask for it:
+        computed, then discarded. To see it, print it:
         <code>print(bike / workers)</code>.</p>
       </div>
 
@@ -88,10 +87,10 @@
 
       <h2>Reading a SyntaxError</h2>
       <p>A <code>SyntaxError</code> is raised before a single line of your code
-      runs. Python could not even parse it. Two things about the message
+      runs. Python could not parse it. Two things about the message
       matter:</p>
       <ul>
-        <li>The caret <code>^</code> points at where the parser gave up, which
+        <li>The caret <code>^</code> points at where the parser stopped, which
         is often <em>after</em> the real mistake. An unclosed parenthesis on line 4
         reports an error on line 5.</li>
         <li>So when the flagged line looks fine, look at the line above it.</li>
@@ -110,8 +109,8 @@ type("1303")   <span class="c"># str — text</span></pre>
       <p><code>1303</code> and <code>"1303"</code> are different values. The
       quotes are what make the second one text: a run of characters that
       happens to contain digits. You cannot do arithmetic with it.</p>
-      <p>A value that looks like a number need not be one, and nothing on
-      screen will tell you which you have. <code>type()</code> will.</p>
+      <p>A value that looks like a number need not be one, and the screen does
+      not show which you have. <code>type()</code> does.</p>
 
       <h2>Exercises</h2>
       <p>Two short ones. Run each before changing it.</p>
@@ -120,7 +119,7 @@ type("1303")   <span class="c"># str — text</span></pre>
       <div id="ex2"></div>
 
       <div class="note">
-        <h4>Tip 💡: Standard operating procedure for clearing syntax errors</h4>
+        <h4>Tip 💡: a procedure for clearing syntax errors</h4>
         <ol>
           <li>Read the last line of the message. It names the problem:
           <code>expected ':'</code>, <code>unexpected indent</code>,
@@ -128,8 +127,9 @@ type("1303")   <span class="c"># str — text</span></pre>
           <li>Look at the line it points to. If that line looks fine, look at
           the line above: an unclosed quote or parenthesis is only noticed
           later.</li>
-          <li>If an indent looks correct and Python disagrees, you have mixed
-          tabs and spaces. They are invisible on screen. Use spaces.</li>
+          <li>If an indent looks correct and Python reports an indentation error,
+          you have mixed tabs and spaces. They look the same on screen. Use
+          spaces.</li>
         </ol>
         <p style="margin-bottom:0">Fix one thing and run again. The error
         changes as you go, and each new one is progress.</p>
@@ -155,7 +155,7 @@ type("1303")   <span class="c"># str — text</span></pre>
     ["assert", "Stop unless a condition holds. How you check your own work.", "Steps 10 and 18"],
     ["async", "Marks code that can pause while it waits for something.", null],
     ["await", "Waits for that kind of code to finish.", null],
-    ["break", "Leave the loop entirely, right now.", "Step 6"],
+    ["break", "Leave the loop immediately.", "Step 6"],
     ["class", "Define a new kind of object.", "Step 15"],
     ["continue", "Skip to the next pass of the loop.", "Step 6"],
     ["def", "Define a function.", "Step 9"],
@@ -169,15 +169,15 @@ type("1303")   <span class="c"># str — text</span></pre>
     ["global", "Let a function reassign a name defined outside it.", null],
     ["if", "Do something only when a condition holds.", "Step 4"],
     ["import", "Load a module so you can use what is in it.", "Step 14"],
-    ["in", "Membership: is this item in that collection?", "Steps 5 and 6"],
-    ["is", "Identity: are these two names the same object? Usually seen as <code>is None</code>.", "Step 4"],
+    ["in", "Membership: tests whether an item is in a collection.", "Steps 5 and 6"],
+    ["is", "Identity: tests whether two names refer to the same object. Usually seen as <code>is None</code>.", "Step 4"],
     ["lambda", "A small unnamed function, written where it is used.", "Step 5"],
     ["nonlocal", "Like <code>global</code>, but for an enclosing function.", null],
-    ["not", "Flips a condition.", "Step 4"],
+    ["not", "Gives the opposite of a condition.", "Step 4"],
     ["or", "True when either side is true.", "Step 4"],
     ["pass", "Do nothing. A placeholder where the syntax requires a body.", "The starters below"],
     ["raise", "Signal an error yourself.", "Step 12"],
-    ["return", "Hand a value back out of a function.", "Step 9"],
+    ["return", "Send a value out of a function.", "Step 9"],
     ["try", "Attempt something that might fail.", "Step 12"],
     ["while", "Repeat for as long as a condition stays true.", "Step 6"],
     ["with", "Use a resource and clean it up afterwards, even on failure.", "Step 13"],
@@ -218,7 +218,7 @@ COURSE.quiz("q1", {
   id: "s01-kinds", tag: "Your turn", title: "Statement or expression?",
   retry: "Not that one. Ask whether it has a value, or an effect.",
   question:
-    "<p>One of these does something. The other three are worth something.</p>" +
+    "<p>One of these does something. The other three have a value.</p>" +
     "<pre>workers = 1303\nlen(\"walkable\")\n21 / 1303\nworkers &gt; 0</pre>" +
     "<p>Which one is a statement?</p>",
   options: [
@@ -230,21 +230,21 @@ COURSE.quiz("q1", {
     { html: "<code>workers &gt; 0</code>" }
   ],
   why:
-    "<p>The other three are expressions. Ask for any of them and something " +
-    "comes back: 8, 0.0161, and <code>False</code>. Expressions are the parts " +
-    "statements are built from.</p>"
+    "<p>The other three are expressions. Each of them has a value: 8, 0.0161, " +
+    "and <code>False</code>. Expressions are the parts statements are built " +
+    "from.</p>"
 });
 </script>
 <script>
 COURSE.exercise("ex1", {
-  id: "s01-unterminated", tag: "Exercise 1", title: "Make it readable",
+  id: "s01-unterminated", tag: "Exercise 1", title: "Make it valid Python",
   prompt:
-    "<p>Run it first and read the error. Python cannot read this as Python, so " +
-    "nothing runs at all. Not even the first line.</p>" +
+    "<p>Run it first and read the error. This text is not valid Python, so no " +
+    "line runs. That includes the first line.</p>" +
     "<p>Fix it so it prints the score.</p>",
   starter: "score = \"3.5\nprint(score)\n",
   checks: [
-    { label: "Python can read it now",
+    { label: "it is valid Python now",
       code: "expect_defined(globals(), 'score')" },
     { label: "it printed the score",
       code: "expect(__stdout__, '3.5\\n')" },
@@ -262,8 +262,8 @@ COURSE.exercise("ex2", {
   id: "s01-number", tag: "Exercise 2", title: "Text that looks like a number",
   prompt:
     "<p>Run it first. <code>score * 2</code> gives <code>3.53.5</code>. " +
-    "Python repeated the text instead of doubling a number, and did not " +
-    "consider that an error.</p>" +
+    "Python repeated the text instead of doubling a number, and raised no " +
+    "error.</p>" +
     "<p>Make <code>doubled</code> come out as <code>7.0</code>.</p>",
   starter: "score = \"3.5\"\ndoubled = score * 2\nprint(doubled)\n",
   checks: [

@@ -65,7 +65,7 @@ len(scores)    <span class="c"># 3      how many there are</span></pre>
           <text x="14" y="152" class="svg-ink" style="font-size:12px">The indices are the cut points, not the boxes. Three values lie between cut 1 and cut 4.</text>
           <text x="14" y="170" class="svg-muted" style="font-size:12px">Which is why scores[1:] means "everything after the first" and never needs a length.</text>
         </svg>
-        <figcaption>The half-open convention pays for itself:
+        <figcaption>The half-open convention has a practical benefit:
         <code>scores[:k]</code> and <code>scores[k:]</code> split a list with no
         overlap and no gap, for any k.</figcaption>
       </figure>
@@ -101,9 +101,9 @@ first     <span class="c"># 3.5</span>
 scores    <span class="c"># [14.5, 9.0]</span></pre>
 
       <div class="note trap">
-        <h4>The one that catches everyone</h4>
+        <h4>Assigning the result of <code>append</code></h4>
         <p><code>scores = scores.append(19.5)</code> looks reasonable and
-        destroys your list. <code>append</code> has already done its work by
+        replaces your list with <code>None</code>. <code>append</code> has already done its work by
         changing the list. What it hands back is <code>None</code>, and that is
         what the name now refers to.</p>
         <p style="margin-bottom:0">Call it on its own line. The same applies to
@@ -151,11 +151,11 @@ list(range(5))   <span class="c"># [0, 1, 2, 3, 4] — if you really want them</
       <div class="note">
         <h4>Tip 💡: picking the right one</h4>
         <ol>
-          <li>Will it grow or shrink? List.</li>
-          <li>Is it one thing with named parts that always come together?
-          Tuple.</li>
-          <li>Do you only need the numbers 0 to n? Range. Do not turn it
-          into a list unless something makes you.</li>
+          <li>If it will grow or shrink, use a list.</li>
+          <li>If it is one thing with named parts that always come together,
+          use a tuple.</li>
+          <li>If you only need the numbers 0 to n, use a range. Do not turn
+          it into a list unless you need a list.</li>
         </ol>
       </div>
 
@@ -178,14 +178,14 @@ COURSE.quiz("q1", {
     { html: "<code>[3.5, 14.5]</code>: the append was ignored" },
     { html: "<code>None</code>", correct: true,
       why: "<code>append</code> added 19.5 to the list, then handed back " +
-           "nothing. Assigning that nothing to <code>scores</code> threw the " +
-           "list away." },
+           "nothing. After the assignment, <code>scores</code> refers to " +
+           "<code>None</code> and no name refers to the list." },
     { html: "<code>19.5</code>" }
   ],
   why:
     "<p>The list really was extended. The mistake is assigning the result, " +
-    "because a method that changes something in place has nothing left to " +
-    "give you. Write <code>scores.append(19.5)</code> on its own line.</p>"
+    "because a method that changes a list in place hands back " +
+    "<code>None</code>. Write <code>scores.append(19.5)</code> on its own line.</p>"
 });
 </script>
 <script>

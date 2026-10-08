@@ -15,12 +15,12 @@
 
       <p class="eyebrow">Unit 1 — Foundations · Step 7</p>
       <h1>Dictionaries</h1>
-      <p class="lede">The type that turns two unrelated tables into one dataset.
-      This is the step where the project stops being exercises and starts
-      being an analysis.</p>
+      <p class="lede">The type that lets you combine two unrelated tables into one
+      dataset. In this step the project changes from separate exercises to
+      an analysis.</p>
 
       <h2>Lookup by key, not by position</h2>
-      <p>A dictionary maps keys to values. Looking one up costs the same
+      <p>A dictionary maps keys to values. A lookup takes the same time
       whether it holds ten entries or ten million, which is the property the
       rest of this step depends on.</p>
 <pre>row = {"geoid": "180973401103", "workers": 1303, "bike": 21}
@@ -37,20 +37,21 @@ row.get("walk_index", 0)  <span class="c"># 0 — with a default of your choosin
 
       <h2>From positional rows to named fields</h2>
       <p><code>zip</code> pairs up two sequences. <code>dict</code> turns pairs
-      into a mapping. Together they convert a row you have to count your way
-      through into one you can read:</p>
+      into a mapping. Together they convert a row you read by counting positions
+      into one you read by field name:</p>
 <pre>header = acs_raw[0]
 row = dict(zip(header, acs_raw[1]))
 row["B08301_001E"]    <span class="c"># '401' — no more row[1]</span></pre>
-      <p>This is worth doing immediately and permanently.
-      <code>row[8] + row[9]</code> was fine for two steps. It is unreadable in
-      a hundred lines and it breaks silently if the API reorders its
-      columns.</p>
+      <p>Do this conversion now, and keep it for the rest of the project.
+      <code>row[8] + row[9]</code> was fine for two steps. It is hard to read
+      in a hundred lines. If the API reorders its columns, it reads the wrong
+      columns and reports no error.</p>
 
       <h2>The join</h2>
       <p>You have two tables describing the same block groups, and no
       relationship between them except a shared identifier. Joining means:
-      build a lookup from one, then walk the other asking questions of it.</p>
+      build a lookup from one table, then walk the other and look up each
+      row's identifier.</p>
 
       <figure>
         <svg viewBox="0 0 720 300" role="img" aria-label="Joining ACS rows to walkability scores by GEOID, with unmatched rows on both sides.">
@@ -91,10 +92,10 @@ row["B08301_001E"]    <span class="c"># '401' — no more row[1]</span></pre>
           <text x="14" y="274" class="svg-ink" style="font-size:12px">A join is a question asked once per row on the left. The rows that get no answer are the finding.</text>
           <text x="14" y="292" class="svg-muted" style="font-size:12px">Silently dropping them is how an analysis ends up describing a population that isn't the one you meant.</text>
         </svg>
-        <figcaption>Which side you iterate decides what you get: walking the
-        ACS rows gives you a left join and tells you about missing walkability
-        scores. Walking the walkability table tells you the opposite. Neither
-        is "the" join.</figcaption>
+        <figcaption>The side you iterate decides the result. Walking the
+        ACS rows gives you a left join and shows which walkability scores are
+        missing. Walking the walkability table shows which ACS rows are
+        missing. Neither is the only correct join.</figcaption>
       </figure>
 
       <div class="note">
@@ -102,8 +103,8 @@ row["B08301_001E"]    <span class="c"># '401' — no more row[1]</span></pre>
         <p>Within one county you do not strictly need a 12-character string.
         The tuple <code>(tract, block_group)</code> identifies a block group
         just as well, and tuples are hashable so they work as keys directly.
-        Build the full GEOID anyway. The moment you add a second county, a
-        tract number alone stops being unique. That is step 21, ticket A. Code
+        Build the full GEOID anyway. When you add a second county, a
+        tract number alone is no longer unique. That is step 21, ticket A. Code
         that assumed otherwise fails in a way that looks like a data problem
         rather than a code problem.</p>
       </div>
@@ -122,10 +123,10 @@ for geoid, score in lookup.items():   <span class="c"># both, unpacked</span>
       <div class="project">
         <h4>Take it further</h4>
         <p>Convert both raw tables into lists of dictionaries. Build a lookup
-        from GEOID to walkability score. Then perform the join by hand. For
+        from GEOID to walkability score. Then write the join yourself with a loop. For
         each ACS row, look up its walkability score. Report three numbers:
         how many joined, how many ACS rows found no score, and how many
-        walkability rows nobody asked for.</p>
+        walkability rows matched no ACS row.</p>
         <p style="margin-bottom:0">Write those three numbers down somewhere. At
         the level-up you will run the same code against all 632 block groups
         and they will change. You want the sample's numbers recorded so you
@@ -136,18 +137,18 @@ for geoid, score in lookup.items():   <span class="c"># both, unpacked</span>
         <summary><span class="q">What happens when a GEOID exists in one dataset but not the other, and how does <code>.get()</code> change that?</span></summary>
         <div class="ans">
           <p>With square brackets, a missing GEOID raises <code>KeyError</code>
-          and stops the loop dead on the first unmatched row. That is loud and
-          unhelpful: you learn that one row failed, not how many.</p>
+          and stops the loop on the first unmatched row. The error tells you
+          that one row failed. It does not tell you how many rows failed.</p>
           <p>With <code>.get()</code>, the lookup returns <code>None</code> and
-          the loop continues. Now the absence is a value you can hold onto.
-          Count it, list it, look at a few and work out why. Roughly: square brackets
-          for keys you believe in, <code>.get()</code> for keys the data is
-          allowed to withhold.</p>
+          the loop continues. Now the absence is a value you can store.
+          Count the missing rows, list them, examine a few and work out the
+          cause. As a guide, use square brackets for keys that must exist. Use
+          <code>.get()</code> for keys that the data can legitimately lack.</p>
           <p style="margin-bottom:0">The mistake is the third option:
           <code>.get(geoid, 0)</code>. A default of zero turns "we do not know
           this block group's walkability" into "this block group has the lowest
-          possible walkability". That is now in your correlation with no
-          trace that it was ever missing. Default to <code>None</code>, and
+          possible walkability". That value is now in your correlation, and nothing
+          records that it was missing. Default to <code>None</code>, and
           decide what to do about it deliberately.</p>
         </div>
       </details>
@@ -162,7 +163,7 @@ for geoid, score in lookup.items():   <span class="c"># both, unpacked</span>
 <script src="../assets/sample.js?v=3b94601e"></script>
 <script>
 COURSE.exercise("ex1", {
-  id: "s07-zip", tag: "Exercise 1", title: "Rows with names on them",
+  id: "s07-zip", tag: "Exercise 1", title: "Rows with named fields",
   prompt:
     "<p>Turn both raw tables into lists of dictionaries named <code>acs_rows</code> " +
     "and <code>walk_rows</code>. Use the header row for the keys. Do not " +
@@ -234,7 +235,7 @@ COURSE.exercise("ex2", {
 });
 
 COURSE.exercise("ex3", {
-  id: "s07-join", tag: "Exercise 3", title: "The join, by hand",
+  id: "s07-join", tag: "Exercise 3", title: "Write the join with a loop",
   prompt:
     "<p>Walk the ACS rows and attach each one's walkability score. Produce:</p>" +
     "<ul>" +
@@ -244,11 +245,11 @@ COURSE.exercise("ex3", {
     "there was no match)</li>" +
     "<li><code>n_matched</code>: how many got a score</li>" +
     "<li><code>unmatched_geoids</code>: the GEOIDs that got none</li>" +
-    "<li><code>orphan_geoids</code>: walkability GEOIDs no ACS row asked for</li>" +
+    "<li><code>orphan_geoids</code>: walkability GEOIDs that match no ACS row</li>" +
     "</ul>" +
-    "<p class='small'>Leave the sentinel <code>-666666666</code> alone for now. " +
-    "Converting it is step 12's job, and pretending it is a real count until " +
-    "then is a useful discomfort.</p>",
+    "<p class='small'>Do not convert the sentinel <code>-666666666</code> yet. " +
+    "Step 12 converts it. Until then, treat it as a real count. The incorrect " +
+    "results that follow are useful to see.</p>",
   setup: SAMPLE,
   starter:
     "# given: the lookup from exercise 2, written compactly (step 8 explains how)\n" +
@@ -263,18 +264,18 @@ COURSE.exercise("ex3", {
       code: "expect(sorted(joined[0].keys()), ['bike', 'geoid', 'walk_index', 'workers'])" },
     { label: "workers and bike are ints",
       code: "expect(sorted({type(r['workers']).__name__ for r in joined}), ['int'])\nexpect(sorted({type(r['bike']).__name__ for r in joined}), ['int'])" },
-    { label: "unmatched rows carry None, not a stand-in number",
+    { label: "unmatched rows hold None, not a substitute number",
       code: ("miss = [r for r in joined if r['walk_index'] is None]\n"
            + "expect(len(miss), 1)\n"
            + "expect(0 in [r['walk_index'] for r in joined], False)") },
     { label: "the matched scores are right",
       code: ("lk = {r[0]+r[1]+r[2]+r[3]: float(r[4]) for r in walk_raw[1:]}\n"
            + "expect([r['walk_index'] for r in joined], [lk.get(r['geoid']) for r in joined])") },
-    { label: "n_matched counts the rows that found a score",
+    { label: "n_matched counts the rows that have a score",
       code: "expect(expect_defined(globals(), 'n_matched'), sum(1 for r in joined if r['walk_index'] is not None))" },
-    { label: "unmatched_geoids names the ACS row with no score",
+    { label: "unmatched_geoids contains the ACS row with no score",
       code: "expect(sorted(expect_defined(globals(), 'unmatched_geoids')), ['180973103083'])" },
-    { label: "orphan_geoids names the walkability row nobody asked for",
+    { label: "orphan_geoids contains the walkability row that matches no ACS row",
       code: "expect(sorted(expect_defined(globals(), 'orphan_geoids')), ['180973201071'])" }
   ],
   solution:

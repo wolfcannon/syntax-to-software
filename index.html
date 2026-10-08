@@ -23,7 +23,7 @@
         <li>No programming experience, and no maths beyond arithmetic.</li>
       </ul>
 
-      <p>Most courses stop once the language is covered. This one keeps going.
+      <p>Most courses stop once the language is covered. This course continues after that.
       The last unit is version control, tests, two real bug reports worked end
       to end, and a layout you could clone.</p>
 
@@ -39,21 +39,21 @@
         lesson</li>
       </ul>
 
-      <h2>The shape of it</h2>
+      <h2>Course outline</h2>
 
       <h3>Unit 1 — Foundations <span class="small">(steps 1–9 · available now)</span></h3>
       <ul class="tight">
         <li>Keywords, types, and reading an error</li>
-        <li>Assignment, casting, and text that lies about being a number</li>
+        <li>Assignment, casting, and text that contains digits but is not a number</li>
         <li>Calling methods, and building strings from values</li>
         <li>Blocks and conditions, then lists and tuples, then loops</li>
-        <li>Dictionaries, comprehensions, and the functions they add up to</li>
+        <li>Dictionaries, comprehensions, and the functions that combine them</li>
       </ul>
 
       <h3>↑ Level up: Jupyter notebooks <span class="small">(available now)</span></h3>
       <ul class="tight">
         <li>A real, working Python environment</li>
-        <li>Basic usage, and what trips people up</li>
+        <li>Basic usage, and the common mistakes</li>
       </ul>
 
       <h3>Unit 2 — Correctness <span class="small">(steps 10–13)</span></h3>
@@ -61,7 +61,7 @@
         <li>One computation, four ways, proved identical</li>
         <li>Reading a traceback, and refactoring without changing the answer</li>
         <li>Exceptions, and the failure modes this data actually has</li>
-        <li>Real files, which retire the pasted-in sample</li>
+        <li>Real files, which replace the pasted-in sample</li>
       </ul>
 
       <h3>Unit 3 — Structure and the ecosystem <span class="small">(steps 14–17)</span></h3>
@@ -78,14 +78,14 @@
         <li>Virtual environments and pinned dependencies</li>
         <li>One notebook becomes <code>fetch</code> / <code>clean</code> /
         <code>analyze</code> / <code>run</code></li>
-        <li>Delete the environment, rebuild it, find out what you secretly
-        depended on</li>
+        <li>Delete the environment, rebuild it, and find the dependencies you
+        did not record</li>
       </ul>
 
       <h3>Unit 4 — Development practice <span class="small">(steps 18–22)</span></h3>
       <ul class="tight">
         <li>Git</li>
-        <li>Writing tests with <code>pytest</code>, so the code checks itself</li>
+        <li>Writing tests with <code>pytest</code>, which check the code automatically</li>
         <li>Two real bug reports: reproduce, test, fix, commit</li>
         <li>Project layout someone else can clone</li>
         <li>Capstone: answer the question, uncertainty included</li>
@@ -109,14 +109,14 @@
         <li><b>Census Bureau commute survey</b>: counts how people in each
         block group get to work</li>
       </ul>
-      <p>Join them on the block group and the question becomes arithmetic.</p>
+      <p>Join them on the block group, and arithmetic can answer the question.</p>
       <p>The course tests it on Marion County, Indiana, which has 632 block
-      groups. It spends as much time on the places that break the pattern as on
-      the pattern. A neighbourhood that scores 18 and cycles nothing is telling you
-      something the correlation is not.</p>
+      groups. It spends as much time on the places that do not fit the pattern as on
+      the pattern. A neighbourhood that scores 18 and has no cycle commuters
+      holds information that the correlation does not show.</p>
       <p>Each step advances that project. By step 3 you are building census
       block group identifiers. By step 8 you are working out why 12 of them
-      refuse to join. By the capstone you are reporting a correlation alongside
+      have no match in the other dataset. By the capstone you are reporting a correlation alongside
       how much of it could be noise.</p>
 
       <h2>The data</h2>
@@ -137,16 +137,16 @@
         </tbody>
       </table>
       </div>
-      <p>They do not line up. Of the block groups, 7 have a walkability score
+      <p>The datasets do not cover the same block groups. Of the block groups, 7 have a walkability score
       and no commute data, and 5 have commute data and no score. In the commute
-      data, 14 have no workers at all, and 9 carry the census "estimate
-      unavailable" sentinel <code>-666666666</code>. You meet all four in Unit 1.</p>
+      data, 14 have no workers at all, and 9 contain the census "estimate
+      unavailable" sentinel <code>-666666666</code>. Unit 1 covers all four.</p>
 
       <div class="note warn">
-        <h4>One honest caveat</h4>
+        <h4>A caveat about the commute data</h4>
         <p>The walkability data is real. The commute data is
-        <b>synthetic</b>. It is shaped like the real thing and plausibly related
-        to the real scores, but generated. Units 1–3 are unaffected. The
+        <b>synthetic</b>. It has the format of the real data and a plausible relationship
+        to the real scores, but it is generated. Units 1–3 are unaffected. The
         capstone's findings are not meaningful until it is replaced.
         <code>README.md</code> has the three commands.</p>
       </div>
