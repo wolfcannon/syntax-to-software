@@ -37,7 +37,7 @@
       <div class="note">
         <h4>Tip 💡: <code>None</code> has a special meaning</h4>
         <p style="margin-bottom:0">In Python, <code>None</code> is a distinct
-        concept that can be used to indicate data is missing, or that a name
+        concept. It can be used to indicate data is missing, or that a name
         exists but a value has not yet been assigned to it.</p>
       </div>
 
@@ -50,7 +50,7 @@ label = "walkable"</pre>
       <p>Python works out the value on the right, then binds the name on the
       left to it. Nothing is printed. The effect is the point.</p>
       <p>The <code>=</code> is an instruction, not a question. It does not ask
-      whether two things are equal — that is <code>==</code>, and it comes in
+      whether two things are equal. That is <code>==</code>, and it comes in
       step 4.</p>
 
       <h2>Casting</h2>
@@ -66,8 +66,8 @@ str(1303)       <span class="c"># "1303"   a number becomes text</span></pre>
 <pre>int(14.9)       <span class="c"># 14       it cuts the fraction off, it does not round</span>
 int("14.5")     <span class="c"># ValueError: invalid literal for int()</span></pre>
       <p>The second one refuses because there is no whole number written in
-      <code>"14.5"</code>. Ask for <code>float("14.5")</code> and you get 14.5;
-      ask for <code>int(float("14.5"))</code> and you get 14, having said
+      <code>"14.5"</code>. Ask for <code>float("14.5")</code> and you get 14.5.
+      Ask for <code>int(float("14.5"))</code> and you get 14, having said
       out loud that you wanted the fraction discarded.</p>
 
       <h2>Referential binding</h2>
@@ -106,8 +106,8 @@ workers = int(workers)</pre>
           <text x="14" y="204" class="svg-ink" style="font-size:12px">The name moved. The value it used to refer to was never touched.</text>
         </svg>
         <figcaption>Rebinding is cheap and you will do it constantly. It is
-        also why a name can mean text on one line and a number on the next —
-        names have no declared type.</figcaption>
+        also why a name can mean text on one line and a number on the next.
+        Names have no declared type.</figcaption>
       </figure>
 
       <h2>Three kinds of division</h2>
@@ -115,8 +115,8 @@ workers = int(workers)</pre>
 1303 // 8    <span class="c"># 162       floor division, discards the remainder</span>
 1303 % 8     <span class="c"># 7         the remainder itself</span></pre>
       <p>Use <code>/</code> for shares and rates. <code>//</code> and
-      <code>%</code> are for pulling a fixed-width code apart — the first two
-      digits, the last two digits — which you do in exercise 3.</p>
+      <code>%</code> are for pulling a fixed-width code apart: the first two
+      digits, the last two digits. You do that in exercise 3.</p>
 
       <div class="note">
         <h4>Floats are approximate</h4>
@@ -191,7 +191,7 @@ workers = int(workers)</pre>
         trap to yourself: take the string <code>"010730001001"</code>, convert
         it with <code>int()</code>, convert it back with <code>str()</code>,
         and compare lengths. Say the rule back in your own words before moving
-        on — you are going to need to have believed it.</p>
+        on. You are going to need to have believed it.</p>
       </div>
 
       <div class="note">
@@ -220,8 +220,8 @@ COURSE.quiz("q1", {
   id: "s02-identifier", tag: "Your turn", title: "Which one must stay text?",
   retry: "Not that one. Ask what adding two of them together would mean.",
   question:
-    "<p>All four of these arrive from the survey as text. Three of them should " +
-    "be converted to numbers before you use them.</p>" +
+    "<p>All four of these arrive from the survey as text. You should convert " +
+    "three of them to numbers before you use them.</p>" +
     "<pre>\"1303\"            <span class='c'># workers in this neighbourhood</span>\n" +
     "\"21\"              <span class='c'># of them who cycle</span>\n" +
     "\"14.5\"            <span class='c'># its walkability score</span>\n" +
@@ -232,7 +232,7 @@ COURSE.quiz("q1", {
     { html: "<code>\"21\"</code>" },
     { html: "<code>\"14.5\"</code>" },
     { html: "<code>\"010730001001\"</code>", correct: true,
-      why: "Nothing is ever computed from it — it only has to match the same " +
+      why: "Nothing is ever computed from it. It only has to match the same " +
            "code in another table. And <code>int()</code> would eat the leading " +
            "zero, so it would no longer match anything." }
   ],
@@ -247,7 +247,7 @@ COURSE.quiz("q1", {
 COURSE.exercise("ex1", {
   id: "s02-convert", tag: "Exercise 1", title: "Text in, numbers out",
   prompt:
-    "<p>Three values, exactly as they arrive from the survey — all of them " +
+    "<p>Three values, exactly as they arrive from the survey. All of them are " +
     "text, including the two that read as numbers.</p>" +
     "<p>Convert <code>workers</code> and <code>bike</code> to whole numbers, " +
     "and <code>score</code> to a number with a fractional part. Then set " +
@@ -269,7 +269,7 @@ COURSE.exercise("ex1", {
       code: "expect_type(expect_defined(globals(), 'score'), float)\nexpect_close(score, 14.5, 1e-12)" },
     { label: "share is bike divided by workers",
       code: "expect_close(expect_defined(globals(), 'share'), 21 / 1303, 1e-12)" },
-    { label: "share is a float — '/' never gives a whole number",
+    { label: "share is a float, because '/' never gives a whole number",
       code: "expect_type(share, float)" }
   ],
   solution:
@@ -287,10 +287,10 @@ COURSE.exercise("ex2", {
   prompt:
     "<p>Show the bug rather than taking my word for it. Starting from the " +
     "Alabama GEOID string, produce:</p><ul>" +
-    "<li><code>as_int</code> — the same GEOID passed through <code>int()</code></li>" +
-    "<li><code>round_tripped</code> — that integer converted back with <code>str()</code></li>" +
-    "<li><code>lost_characters</code> — how many characters were lost, as an <code>int</code></li>" +
-    "<li><code>still_matches</code> — whether <code>round_tripped</code> still equals the original</li>" +
+    "<li><code>as_int</code>: the same GEOID passed through <code>int()</code></li>" +
+    "<li><code>round_tripped</code>: that integer converted back with <code>str()</code></li>" +
+    "<li><code>lost_characters</code>: how many characters were lost, as an <code>int</code></li>" +
+    "<li><code>still_matches</code>: whether <code>round_tripped</code> still equals the original</li>" +
     "</ul>",
   setup: SAMPLE,
   starter:
@@ -324,9 +324,9 @@ COURSE.exercise("ex3", {
   id: "s02-division", tag: "Exercise 3", title: "Which slash?",
   prompt:
     "<p>A tract code is six digits, and the last two are the decimal part: " +
-    "<code>\"310103\"</code> means tract 3101.03. Using the integer " +
-    "<code>code</code> and arithmetic only — no string methods this time — " +
-    "produce <code>whole</code> (the 3101 part) and <code>decimal</code> (the " +
+    "<code>\"310103\"</code> means tract 3101.03. Use the integer " +
+    "<code>code</code> and arithmetic only, with no string methods this time. " +
+    "Produce <code>whole</code> (the 3101 part) and <code>decimal</code> (the " +
     "3 part), both as <code>int</code>.</p>" +
     "<p>Then set <code>printable</code> to the tract number as a " +
     "<code>float</code>: 3101.03.</p>",

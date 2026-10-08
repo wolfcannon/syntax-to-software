@@ -29,8 +29,8 @@
 for score in scores:
     print(score)</pre>
       <p>The name after <code>for</code> is yours to choose. It exists only
-      because the loop put a value in it, and it is rebound on every pass —
-      which is step 2's referential binding, happening automatically.</p>
+      because the loop put a value in it, and it is rebound on every pass.
+      That is step 2's referential binding, happening automatically.</p>
       <p>A <code>range</code> works the same way, which is what makes it useful
       for counting rather than for holding data:</p>
 <pre>for i in range(3):
@@ -47,7 +47,7 @@ for score in scores:
 
 print(total / len(scores))   <span class="c"># 9.0 — the mean</span></pre>
       <p>Where the accumulator is set matters. Inside the block it would be
-      reset on every pass; after the block it would not exist yet. This is the
+      reset on every pass. After the block it would not exist yet. This is the
       indentation lesson from step 4 with something at stake.</p>
 
       <h2>Leaving a loop early</h2>
@@ -61,8 +61,8 @@ print(total / len(scores))   <span class="c"># 9.0 — the mean</span></pre>
       <div class="note trap">
         <h4>A <code>continue</code> is a decision about the data</h4>
         <p>Skipping a neighbourhood with no score is not the same as counting
-        it as zero. Zero drags a mean down on the strength of no evidence;
-        skipping leaves it out of the question entirely.</p>
+        it as zero. Zero drags a mean down on the strength of no evidence.
+        Skipping leaves it out of the question entirely.</p>
         <p style="margin-bottom:0">Either can be right. What is never right is
         skipping without counting how many you skipped, which is exercise 1.</p>
       </div>
@@ -118,13 +118,13 @@ COURSE.quiz("q1", {
     "</div>" +
     "<p>With <code>scores = [3.5, 14.5, 9.0]</code>, what does B print?</p>",
   options: [
-    { html: "<code>27.0</code> — the same as A" },
-    { html: "<code>9.0</code> — only the last score", correct: true,
+    { html: "<code>27.0</code>: the same as A" },
+    { html: "<code>9.0</code>: only the last score", correct: true,
       why: "<code>total = 0</code> is inside the block, so it runs again on " +
            "every pass and throws away everything added so far. Only the final " +
            "pass survives." },
     { html: "<code>0</code>" },
-    { html: "An error — <code>total</code> is not defined" }
+    { html: "An error: <code>total</code> is not defined" }
   ],
   why:
     "<p>Both are valid. B resets the answer once per item, so it reports the " +
@@ -151,7 +151,7 @@ COURSE.exercise("ex1", {
       code: "expect(expect_defined(globals(), 'usable'), 4)" },
     { label: "skipped counts the ones that do not",
       code: "expect(expect_defined(globals(), 'skipped'), 2)" },
-    { label: "the two add up to every neighbourhood — nothing vanished",
+    { label: "the two add up to every neighbourhood, so nothing vanished",
       code: "expect(usable + skipped, len(scores))" },
     { label: "the counters were not reset inside the loop",
       code: ("body = [l for l in __source__.splitlines() if l[:1].isspace()]\n"
@@ -179,7 +179,7 @@ COURSE.exercise("ex2", {
     "above 10.5, in the order they appear.</p>" +
     "<p>Then set <code>best</code> to the highest score in that list.</p>" +
     "<p class='small'>Remember that <code>None</code> cannot be compared with " +
-    "a number — deal with it before you test it.</p>",
+    "a number. Deal with it before you test it.</p>",
   setup: "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n",
   starter:
     "walkable = []\n\n" +

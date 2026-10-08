@@ -18,7 +18,7 @@
       <ul class="lede-points">
         <li>A loop that builds a list, written on one line.</li>
         <li>The same three pieces, moved left to right.</li>
-        <li>Shorter is not always clearer — and there are cases it cannot
+        <li>Shorter is not always clearer. There are cases it cannot
         express at all.</li>
       </ul>
 
@@ -59,7 +59,7 @@ shares = [row["bike"] / row["workers"] for row in joined]</pre>
           <rect x="470" y="200" width="196" height="20" rx="4" fill="var(--warn-wash)" stroke="var(--warn)" opacity=".9"/>
         </svg>
         <figcaption>Green is what you collect, accent is what you walk, amber
-        is which rows you keep. The loop puts them top to bottom; the
+        is which rows you keep. The loop puts them top to bottom. The
         comprehension puts them left to right. Nothing else changes.</figcaption>
       </figure>
 
@@ -78,7 +78,7 @@ shares = [row["bike"] / row["workers"] for row in joined]</pre>
         <p>If two rows produce the same key, the later one silently wins and
         your lookup is quietly shorter than your input. Comparing
         <code>len(lookup)</code> with <code>len(rows)</code> after building it
-        is a one-line check worth making a habit — and it is what catches a
+        is a one-line check worth making a habit. It is what catches a
         duplicated GEOID in the real file.</p>
       </div>
 
@@ -94,7 +94,7 @@ both      = acs_ids &amp; walk_ids       <span class="c"># the actual analysis s
       <p>Membership in a set is fast in the way dictionary lookup is fast, so
       <code>if geoid in walk_ids</code> stays cheap no matter how large the
       data gets. The same test against a <em>list</em> scans it from the start
-      every time — fine for 632 rows, ruinous for the 220,000 block groups in
+      every time. That is fine for 632 rows and ruinous for the 220,000 block groups in
       the national file you get to in the capstone.</p>
 
       <h2>When a loop is the better answer</h2>
@@ -102,7 +102,7 @@ both      = acs_ids &amp; walk_ids       <span class="c"># the actual analysis s
       loop when you are doing anything else:</p>
       <ul>
         <li>Building several things at once, or counting as you go.</li>
-        <li>Anything with <code>try</code>/<code>except</code> in it — you
+        <li>Anything with <code>try</code>/<code>except</code> in it. You
         cannot put one inside a comprehension, and step 12 will want to.</li>
         <li>When the line stops fitting on one line. A comprehension with two
         <code>for</code>s and a conditional expression is not clever, it is a
@@ -116,8 +116,8 @@ both      = acs_ids &amp; walk_ids       <span class="c"># the actual analysis s
 
       <div class="project">
         <h4>Take it further</h4>
-        <p>Rewrite the lookups from step 7 as dict comprehensions, and confirm
-        they are identical to what the loops produced — <code>==</code> on two
+        <p>Rewrite the lookups from step 7 as dict comprehensions. Confirm
+        they are identical to what the loops produced. <code>==</code> on two
         dicts compares contents, so this is a one-line proof.</p>
         <p style="margin-bottom:0">Then use set differences to diagnose the
         join, and actually look at the unmatched GEOIDs. Report how many failed
@@ -134,7 +134,7 @@ both      = acs_ids &amp; walk_ids       <span class="c"># the actual analysis s
           <p>Plausible reasons, and they are all real:</p>
           <ul>
             <li>The EPA excludes block groups with no population or no
-            households — parks, airports, industrial land, water.</li>
+            households: parks, airports, industrial land, water.</li>
             <li>The two datasets were cut from census geography at slightly
             different times, so a block group split or merged in between.</li>
             <li>A block group exists in the ACS release but had no reportable
@@ -142,7 +142,7 @@ both      = acs_ids &amp; walk_ids       <span class="c"># the actual analysis s
           </ul>
           <p style="margin-bottom:0">What is <em>not</em> a reason here is the
           leading-zero bug, because Indiana is state 18. That is exactly why it
-          stays invisible until step 20 — the join rate looks fine, so nobody
+          stays invisible until step 20. The join rate looks fine, so nobody
           checks.</p>
         </div>
       </details>
@@ -160,9 +160,9 @@ COURSE.exercise("ex1", {
   id: "s08-dictcomp", tag: "Exercise 1", title: "Same lookup, one line",
   prompt:
     "<p>Build all three in comprehension form:</p><ul>" +
-    "<li><code>acs_rows</code> — a list of dicts, header zipped onto each row</li>" +
-    "<li><code>walk_lookup</code> — GEOID string to score as a float</li>" +
-    "<li><code>pop_lookup</code> — GEOID string to <code>TotPop</code> as an int</li>" +
+    "<li><code>acs_rows</code>: a list of dicts, header zipped onto each row</li>" +
+    "<li><code>walk_lookup</code>: GEOID string to score as a float</li>" +
+    "<li><code>pop_lookup</code>: GEOID string to <code>TotPop</code> as an int</li>" +
     "</ul><p>Then set <code>no_duplicate_keys</code> to whether " +
     "<code>walk_lookup</code> has as many entries as there were rows.</p>",
   setup: SAMPLE,
@@ -196,11 +196,11 @@ COURSE.exercise("ex2", {
   id: "s08-sets", tag: "Exercise 2", title: "Diagnose the join with sets",
   prompt:
     "<p>Build <code>acs_ids</code> and <code>walk_ids</code> as sets of GEOID " +
-    "strings, then answer the three join questions with set operations — no " +
-    "loops, no <code>if</code>:</p><ul>" +
-    "<li><code>unmatched</code> — in the ACS, with no walkability score</li>" +
-    "<li><code>orphans</code> — scored, but no ACS row</li>" +
-    "<li><code>sample</code> — in both, i.e. the rows the analysis can use</li>" +
+    "strings. Then answer the three join questions with set operations. Use no " +
+    "loops and no <code>if</code>:</p><ul>" +
+    "<li><code>unmatched</code>: in the ACS, with no walkability score</li>" +
+    "<li><code>orphans</code>: scored, but no ACS row</li>" +
+    "<li><code>sample</code>: in both, i.e. the rows the analysis can use</li>" +
     "</ul><p>Then set <code>coverage</code> to the fraction of ACS block groups " +
     "that found a score, as a float.</p>",
   setup: SAMPLE,
@@ -242,10 +242,10 @@ COURSE.exercise("ex3", {
   prompt:
     "<p>Build <code>usable</code>: a list of <code>(geoid, share, walk_index)</code> " +
     "tuples for the block groups the analysis can actually use. A row qualifies " +
-    "only if it has a walkability score, has at least one worker, and its bike " +
-    "count is not the Census sentinel <code>-666666666</code>.</p>" +
-    "<p>Then set <code>n_dropped</code> to how many ACS rows didn't make it, " +
-    "and <code>mean_share</code> to the mean bike share across the ones that " +
+    "only if it has a walkability score and at least one worker. Its bike " +
+    "count must also not be the Census sentinel <code>-666666666</code>.</p>" +
+    "<p>Then set <code>n_dropped</code> to how many ACS rows did not make it. " +
+    "Set <code>mean_share</code> to the mean bike share across the ones that " +
     "did.</p>",
   setup: SAMPLE + "\n" +
     "walk_lookup = {r[0]+r[1]+r[2]+r[3]: float(r[4]) for r in walk_raw[1:]}\n" +

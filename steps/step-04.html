@@ -24,8 +24,8 @@
       <h2>Block</h2>
 
       <p>A run of consecutive statements that belong together and are handled
-      as one unit — run them all, run them ten times, run none of them. Python
-      marks a block with indentation.</p>
+      as one unit. All of them run, all of them run ten times, or none of them
+      run. Python marks a block with indentation.</p>
       <p>A block is always introduced by a line ending in a colon. That line
       says what the block is for, and the lines indented beneath it are its
       contents. Blocks nest, and the indentation is what tells you how
@@ -61,7 +61,7 @@
         <li>A colon opens a block.</li>
         <li>The indented lines under it <em>are</em> the block.</li>
         <li>Nothing closes a block. Change a line's indentation and you have
-        moved it into a different block — it now runs at a different time, or a
+        moved it into a different block. It now runs at a different time, or a
         different number of times. That is not a style problem. It is a
         different program.</li>
       </ul>
@@ -69,7 +69,8 @@
       <div class="note">
         <h4>Two kinds of wrong</h4>
         <p><b>A syntax error</b> means Python could not read your code as
-        Python. Nothing runs — not the broken line, not the lines above it. You
+        Python. Nothing runs. The broken line does not run, and neither do the
+        lines above it. You
         find out the moment you run it, and you are told roughly where.</p>
         <p><b>A logic error</b> means your code read perfectly well and does
         something other than what you meant. It runs, it produces an answer,
@@ -77,9 +78,9 @@
         wrong.</p>
         <p style="margin-bottom:0">A misplaced indent can be either. Indent a
         line that opens a block and you get a syntax error. Indent a line
-        <em>inside</em> a block and you usually get the second kind, which is
-        the expensive one — an analysis that produces a number nobody
-        questions.</p>
+        <em>inside</em> a block and you usually get the second kind. That is
+        the expensive kind. The result is an analysis that produces a number
+        nobody questions.</p>
       </div>
       <div id="q1"></div>
 
@@ -114,12 +115,12 @@ score == 14.5    <span class="c"># equal to — two equals signs</span>
 score != 14.5    <span class="c"># not equal to</span></pre>
       <p>One <code>=</code> assigns, as in step 2. Two <code>==</code> asks.</p>
       <p>Comparisons join with <code>and</code>, <code>or</code> and
-      <code>not</code>. <code>and</code> is true only when both sides are;
-      <code>or</code> when either is.</p>
+      <code>not</code>. <code>and</code> is true only when both sides are.
+      <code>or</code> is true when either is.</p>
 
       <h2><code>if</code> / <code>elif</code> / <code>else</code></h2>
       <p>Only the first matching branch runs, and <code>elif</code> is not
-      decoration — a chain of separate <code>if</code>s can fire more than once
+      decoration. A chain of separate <code>if</code>s can fire more than once
       and give a different answer:</p>
 <pre>if score &lt;= 5.75:
     label = "Least Walkable"
@@ -130,7 +131,7 @@ else:
       <p>Because earlier branches have already excluded the lower ranges, each
       test only needs its upper bound. Writing <code>elif 5.76 &lt;= score &lt;=
       10.5</code> is not wrong, but it states a condition that is already
-      guaranteed — and it is how gaps sneak in.</p>
+      guaranteed. It is also how gaps sneak in.</p>
 
       <h2>Truthiness</h2>
       <p>Python will treat almost anything as a condition. Zero is false, and
@@ -202,8 +203,8 @@ COURSE.quiz("q1", {
       question: "What does A print?",
       options: [
         { html: "Nothing at all", correct: true,
-          why: "The <code>print</code> is indented, so it is inside the block — " +
-               "and the block never runs." },
+          why: "The <code>print</code> is indented, so it is inside the block. " +
+               "The block never runs." },
         { html: "<code>walkable</code>" },
         { html: "<code>not walkable</code>" }
       ]
@@ -217,7 +218,7 @@ COURSE.quiz("q1", {
         { html: "Nothing at all" },
         { html: "<code>walkable</code>", correct: true,
           why: "The <code>print</code> is back at the margin, outside the block, " +
-               "so it runs whatever the score is — and <code>label</code> is " +
+               "so it runs whatever the score is. <code>label</code> is " +
                "still what line 2 set it to." },
         { html: "<code>not walkable</code>" }
       ]
@@ -242,7 +243,7 @@ COURSE.quiz("q2", {
       why: "The second test is <code>&lt; 10.5</code>, and 10.5 is not less " +
            "than itself. It falls through to <code>else</code> and is reported " +
            "a whole band too high." },
-    { html: "Nothing — no branch matches" }
+    { html: "Nothing, because no branch matches" }
   ],
   why:
     "<p>One character from correct. <code>&lt;=</code> would have caught it, " +
@@ -294,7 +295,7 @@ COURSE.exercise("ex1", {
 COURSE.exercise("ex2", {
   id: "s04-syntax", tag: "Exercise 2", title: "Two things Python cannot read",
   prompt:
-    "<p>The same code again, typed badly. Nothing here runs — Python cannot " +
+    "<p>The same code again, typed badly. Nothing here runs. Python cannot " +
     "read it, so it refuses to start.</p>" +
     "<p>Fix one thing, run it, read the next error, fix that. Three errors " +
     "stand between this and a working program, and you have met all three " +
@@ -341,10 +342,10 @@ COURSE.exercise("ex3", {
     "<p>The EPA sorts walkability scores into four bands. A score exactly on " +
     "a boundary belongs to the lower band.</p>" +
     "<ul>" +
-    "<li>up to 5.75 — <code>Least Walkable</code></li>" +
-    "<li>up to 10.5 — <code>Below Average</code></li>" +
-    "<li>up to 15.25 — <code>Above Average</code></li>" +
-    "<li>anything higher — <code>Most Walkable</code></li>" +
+    "<li>up to 5.75: <code>Least Walkable</code></li>" +
+    "<li>up to 10.5: <code>Below Average</code></li>" +
+    "<li>up to 15.25: <code>Above Average</code></li>" +
+    "<li>anything higher: <code>Most Walkable</code></li>" +
     "</ul>" +
     "<p>The chain is written and the labels are in place. The three " +
     "conditions are missing: write one between each <code>if</code> or " +
@@ -406,13 +407,13 @@ COURSE.exercise("ex4", {
     "<p>A bike count can be one of three things, and each gets its own " +
     "status:</p>" +
     "<ul>" +
-    "<li>no figure was reported — <code>no figure</code></li>" +
-    "<li>the survey counted, and found zero — <code>counted, none found</code></li>" +
-    "<li>the survey counted some — <code>counted</code></li>" +
+    "<li>no figure was reported: <code>no figure</code></li>" +
+    "<li>the survey counted, and found zero: <code>counted, none found</code></li>" +
+    "<li>the survey counted some: <code>counted</code></li>" +
     "</ul>" +
     "<p>The chain is written and the labels are in place. The two conditions " +
-    "are missing: write one between the <code>if</code> and its colon, and " +
-    "one between the <code>elif</code> and its colon. Change nothing else.</p>" +
+    "are missing. Write one between the <code>if</code> and its colon. Write " +
+    "the other between the <code>elif</code> and its colon. Change nothing else.</p>" +
     "<p class='small'>This neighbourhood's count is 0, which is a figure.</p>",
   starter:
     "bike = 0\n\n" +

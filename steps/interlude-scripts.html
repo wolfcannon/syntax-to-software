@@ -16,15 +16,15 @@
       <p class="eyebrow">Level up · Between Unit 3 and Unit 4</p>
       <h1>Notebooks to scripts</h1>
       <p class="lede">The second change of environment. The notebook got you an
-      answer; this gets you something that can produce that answer again
+      answer. This gets you something that can produce that answer again
       tomorrow, on another machine, without you in the room.</p>
 
       <h2>Why here, and not earlier</h2>
       <p>The same argument as the first level-up. A virtual environment solves
       a problem you have to have had, and until Unit 3 you had installed
       nothing. Now you have <code>pandas</code>, <code>matplotlib</code>,
-      <code>scipy</code> and <code>requests</code> in the mix, an API key in
-      your shell, and a notebook that quietly depends on all of it.</p>
+      <code>scipy</code> and <code>requests</code> in the mix and an API key in
+      your shell. Your notebook quietly depends on all of it.</p>
       <p>Three questions you cannot currently answer, and all three are about
       to matter:</p>
       <ul>
@@ -46,15 +46,15 @@ pip install pandas requests matplotlib scipy jupyter
 pip freeze &gt; requirements.txt</pre>
       <p>This is why <code>.venv/</code> is in the repo's
       <code>.gitignore</code> and <code>requirements.txt</code> is not. The
-      directory is a few hundred megabytes of rebuildable artefact; the file is
+      directory is a few hundred megabytes of rebuildable artefact. The file is
       the twelve lines that describe it.</p>
       <div class="note warn">
         <h4>The one that catches everyone</h4>
-        <p>Jupyter runs whichever Python started it — not whichever one your
+        <p>Jupyter runs whichever Python started it, not whichever one your
         shell has activated. Start <code>jupyter lab</code> from inside the
-        activated environment, and if a notebook can't find a package you know
+        activated environment. If a notebook cannot find a package you know
         you installed, run <code>import sys; print(sys.executable)</code> in a
-        cell. It will be pointing somewhere you didn't expect, and that is the
+        cell. It will be pointing somewhere you did not expect, and that is the
         whole diagnosis.</p>
       </div>
 
@@ -73,7 +73,7 @@ pip freeze &gt; requirements.txt</pre>
       </table>
       </div>
       <p>The test of the split is whether <code>clean.py</code> can be imported
-      and used with no network and no API key. If it can't, something that
+      and used with no network and no API key. If it cannot, something that
       fetches has leaked into something that parses.</p>
 
       <figure>
@@ -116,7 +116,7 @@ pip freeze &gt; requirements.txt</pre>
           <text x="500" y="181" class="svg-muted" style="font-size:10.5px">the order, written down</text>
           <text x="376" y="212" class="svg-muted" style="font-size:11px">notebooks/ keeps exploring — it just stops being the pipeline.</text>
         </svg>
-        <figcaption>The notebook doesn't get deleted. It stops being load-bearing,
+        <figcaption>The notebook does not get deleted. It stops being load-bearing,
         which is a different thing, and it becomes a much better notebook for
         it.</figcaption>
       </figure>
@@ -140,41 +140,41 @@ python -m bikewalk.clean     <span class="c"># one module, if it has a __main__ 
       <div class="project">
         <h4>The level-up: make it run without you</h4>
         <ol>
-          <li>Create and activate <code>.venv</code>, install what you need,
-          and write <code>requirements.txt</code>.</li>
+          <li>Create and activate <code>.venv</code>. Install what you need.
+          Write <code>requirements.txt</code>.</li>
           <li>Split your module into <code>fetch.py</code>,
-          <code>clean.py</code> and <code>analyze.py</code>, and add
-          <code>run.py</code> that executes the pipeline end to end from raw
+          <code>clean.py</code> and <code>analyze.py</code>. Add
+          <code>run.py</code>, which executes the pipeline end to end from raw
           data to saved figures.</li>
           <li>Make <code>run.py</code> print the numbers that matter as it
           goes: rows in, rows joined, coverage, rows dropped and why. A
           pipeline that prints nothing is a pipeline you cannot debug.</li>
           <li>Move the API key out of every file and into
-          <code>os.environ</code>. Then grep your own repo for it and confirm
+          <code>os.environ</code>. Then grep your own repo for it. Confirm
           it is gone.</li>
         </ol>
-        <p style="margin-bottom:0">Then the real test, and don't skip it:
-        <b>delete <code>.venv</code> entirely</b>, recreate it from
-        <code>requirements.txt</code>, and run <code>python run.py</code>. If
-        it works, you have a project. If it doesn't, you have just found out
-        what your analysis secretly depended on — which is exactly what the
+        <p style="margin-bottom:0">Then the real test, and do not skip it.
+        <b>Delete <code>.venv</code> entirely</b>. Recreate it from
+        <code>requirements.txt</code>. Run <code>python run.py</code>. If
+        it works, you have a project. If it does not, you have found out
+        what your analysis secretly depended on. That is exactly what the
         next unit is for.</p>
       </div>
 
       <details class="checkq">
-        <summary><span class="q">You deleted the environment and rebuilt it — what usually breaks, and what does that tell you?</span></summary>
+        <summary><span class="q">You deleted the environment and rebuilt it. What usually breaks, and what does that tell you?</span></summary>
         <div class="ans">
           <p>Four things, in rough order of how often they happen:</p>
           <ul>
             <li><b>A package you never installed deliberately.</b> It came in
             as someone else's dependency and you imported it anyway.
-            <code>pip freeze</code> caught it; a hand-written requirements list
+            <code>pip freeze</code> caught it. A hand-written requirements list
             would not have.</li>
-            <li><b>A file that isn't in the repo.</b> A CSV sitting in your
+            <li><b>A file that is not in the repo.</b> A CSV sitting in your
             Downloads folder, referenced by absolute path. The fix is
             <code>data/raw/</code> and a documented fetch step.</li>
             <li><b>An environment variable.</b> Your API key is in your shell
-            profile, not in the project — correct, and worth stating in the
+            profile, not in the project. That is correct, and worth stating in the
             README rather than discovering.</li>
             <li><b>Import order.</b> The notebook defined something before it
             was used because of the order you ran cells in, and
@@ -182,7 +182,7 @@ python -m bikewalk.clean     <span class="c"># one module, if it has a __main__ 
           </ul>
           <p style="margin-bottom:0">Every one of those is the same failure as
           the deleted-cell trap from the first level-up, one level up the
-          stack: something worked because of state that isn't written down.
+          stack. Something worked because of state that is not written down.
           Unit 4 is largely about removing the remaining places that can
           hide.</p>
         </div>
@@ -191,8 +191,8 @@ python -m bikewalk.clean     <span class="c"># one module, if it has a __main__ 
       <div class="note">
         <h4>From here on</h4>
         <p>You have a project rather than a document. Unit 4 puts it under
-        version control, writes the tests that have been grading you all
-        along, runs two real tickets through the fix-and-commit cycle, and
+        version control and writes the tests that have been grading you all
+        along. It runs two real tickets through the fix-and-commit cycle, and
         then answers the research question.</p>
       </div>
 
@@ -207,12 +207,12 @@ python -m bikewalk.clean     <span class="c"># one module, if it has a __main__ 
 COURSE.exercise("ex1", {
   id: "scr-layout", tag: "Exercise 1", title: "Which file does it belong in?",
   prompt:
-    "<p>Sort each function into the module it belongs in, by filling in " +
+    "<p>Sort each function into the module it belongs in. Fill in " +
     "<code>layout</code>: a dict mapping each function name to " +
     "<code>\"fetch\"</code>, <code>\"clean\"</code> or <code>\"analyze\"</code>.</p>" +
-    "<p>The rule from the table above: <b>fetch</b> talks to the outside world, " +
-    "<b>clean</b> is pure functions over data already in hand, <b>analyze</b> " +
-    "produces statistics and figures.</p>",
+    "<p>The table above gives the rule. Code in <b>fetch</b> talks to the outside " +
+    "world. Code in <b>clean</b> is pure functions over data already in hand. " +
+    "Code in <b>analyze</b> produces statistics and figures.</p>",
   setup:
     'functions = [\n' +
     '    "build_geoid", "download_acs", "spearman_walk_bike", "drop_sentinels",\n' +
@@ -272,10 +272,10 @@ COURSE.exercise("ex2", {
     "<p>Write <code>parse_requirements(text)</code>, returning a dict of " +
     "package name to pinned version.</p>" +
     "<p>Real <code>requirements.txt</code> files are messier than the docs " +
-    "suggest: comments, blank lines, trailing whitespace, an editable install " +
+    "suggest. Expect comments, blank lines, trailing whitespace, an editable install " +
     "of the project itself, and the occasional package with no pin. Skip any " +
-    "line that isn't a <code>name==version</code> pin. Package names are " +
-    "case-insensitive — lowercase them.</p>",
+    "line that is not a <code>name==version</code> pin. Package names are " +
+    "case-insensitive, so lowercase them.</p>",
   setup:
     'REQUIREMENTS = """\n' +
     '# generated by pip freeze\n' +
@@ -309,7 +309,7 @@ COURSE.exercise("ex2", {
            + "expect(len(got), 4)\n"
            + "expect('matplotlib' in got, False)\n"
            + "expect(any(k.startswith('-') or k.startswith('#') for k in got), False)") },
-    { label: "whitespace around a line doesn't leak into the name or version",
+    { label: "whitespace around a line does not leak into the name or version",
       code: ("got = parse_requirements(REQUIREMENTS)\n"
            + "expect([k for k in got if k != k.strip()], [])\n"
            + "expect([v for v in got.values() if v != v.strip()], [])") },
@@ -339,13 +339,13 @@ COURSE.exercise("ex3", {
   id: "scr-order", tag: "Exercise 3", title: "What run.py is actually for",
   prompt:
     "<p>A notebook's run order lives in your head. <code>run.py</code> writes it " +
-    "down — and the order isn't a preference, it's forced by what each stage " +
-    "needs.</p>" +
-    "<p>Write <code>run_order(needs)</code>, taking a dict that maps each stage " +
-    "to the stages that must finish first, and returning a list of every stage " +
+    "down. The order is not a preference. What each stage needs forces " +
+    "it.</p>" +
+    "<p>Write <code>run_order(needs)</code>. It takes a dict that maps each stage " +
+    "to the stages that must finish first. It returns a list of every stage " +
     "in a runnable sequence.</p>" +
     "<p class='small'>Repeatedly take any stage whose prerequisites have all " +
-    "run. Break ties however you like — several orders are valid and the checks " +
+    "run. Break ties however you like. Several orders are valid and the checks " +
     "accept any of them. Raise <code>ValueError</code> if no order exists.</p>",
   setup:
     'PIPELINE = {\n' +
@@ -375,7 +375,7 @@ COURSE.exercise("ex3", {
            + "                              f'{p} which runs at {pos[p]}')") },
     { label: "the report is last, because everything feeds it",
       code: "expect(run_order(PIPELINE)[-1], 'write_report')" },
-    { label: "it works on a different pipeline, not just this one",
+    { label: "it works on a different pipeline, not only this one",
       code: ("other = {'a': [], 'b': ['a'], 'c': ['a'], 'd': ['b', 'c']}\n"
            + "out = run_order(other)\n"
            + "expect(sorted(out), ['a', 'b', 'c', 'd'])\n"

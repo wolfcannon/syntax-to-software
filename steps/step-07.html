@@ -15,9 +15,9 @@
 
       <p class="eyebrow">Unit 1 — Foundations · Step 7</p>
       <h1>Dictionaries</h1>
-      <p class="lede">The type that turns two unrelated tables into one dataset
-      — and the step where the project stops being exercises and starts being
-      an analysis.</p>
+      <p class="lede">The type that turns two unrelated tables into one dataset.
+      This is the step where the project stops being exercises and starts
+      being an analysis.</p>
 
       <h2>Lookup by key, not by position</h2>
       <p>A dictionary maps keys to values. Looking one up costs the same
@@ -30,20 +30,20 @@ row.get("walk_index")     <span class="c"># None — the polite version</span>
 row.get("walk_index", 0)  <span class="c"># 0 — with a default of your choosing</span></pre>
       <p>The difference between <code>[]</code> and <code>.get()</code> is a
       decision about whether a missing key is a bug or a fact. For a column
-      name you wrote yourself, missing means you typo'd it and you want the
+      name you wrote yourself, missing means you mistyped it and you want the
       <code>KeyError</code> immediately. For a GEOID that may legitimately not
       exist in the other dataset, missing is data, and <code>.get()</code> lets
       you record it.</p>
 
       <h2>From positional rows to named fields</h2>
-      <p><code>zip</code> pairs up two sequences; <code>dict</code> turns pairs
+      <p><code>zip</code> pairs up two sequences. <code>dict</code> turns pairs
       into a mapping. Together they convert a row you have to count your way
       through into one you can read:</p>
 <pre>header = acs_raw[0]
 row = dict(zip(header, acs_raw[1]))
 row["B08301_001E"]    <span class="c"># '401' — no more row[1]</span></pre>
       <p>This is worth doing immediately and permanently.
-      <code>row[8] + row[9]</code> was fine for two steps; it is unreadable in
+      <code>row[8] + row[9]</code> was fine for two steps. It is unreadable in
       a hundred lines and it breaks silently if the API reorders its
       columns.</p>
 
@@ -99,13 +99,13 @@ row["B08301_001E"]    <span class="c"># '401' — no more row[1]</span></pre>
 
       <div class="note">
         <h4>Composite keys</h4>
-        <p>Within one county you do not strictly need a 12-character string:
-        the tuple <code>(tract, block_group)</code> identifies a block group
+        <p>Within one county you do not strictly need a 12-character string.
+        The tuple <code>(tract, block_group)</code> identifies a block group
         just as well, and tuples are hashable so they work as keys directly.
-        Build the full GEOID anyway. The moment you add a second county — step
-        21, ticket A — a tract number alone stops being unique, and code that
-        assumed otherwise fails in a way that looks like a data problem rather
-        than a code problem.</p>
+        Build the full GEOID anyway. The moment you add a second county, a
+        tract number alone stops being unique. That is step 21, ticket A. Code
+        that assumed otherwise fails in a way that looks like a data problem
+        rather than a code problem.</p>
       </div>
 
       <h2>Iterating a dictionary</h2>
@@ -122,13 +122,13 @@ for geoid, score in lookup.items():   <span class="c"># both, unpacked</span>
       <div class="project">
         <h4>Take it further</h4>
         <p>Convert both raw tables into lists of dictionaries. Build a lookup
-        from GEOID to walkability score. Then perform the join by hand — for
-        each ACS row, look up its walkability score — and report three numbers:
+        from GEOID to walkability score. Then perform the join by hand. For
+        each ACS row, look up its walkability score. Report three numbers:
         how many joined, how many ACS rows found no score, and how many
         walkability rows nobody asked for.</p>
         <p style="margin-bottom:0">Write those three numbers down somewhere. At
         the level-up you will run the same code against all 632 block groups
-        and they will change; you want the sample's numbers recorded so you
+        and they will change. You want the sample's numbers recorded so you
         can tell the difference between "more data" and "new bug".</p>
       </div>
 
@@ -139,14 +139,14 @@ for geoid, score in lookup.items():   <span class="c"># both, unpacked</span>
           and stops the loop dead on the first unmatched row. That is loud and
           unhelpful: you learn that one row failed, not how many.</p>
           <p>With <code>.get()</code>, the lookup returns <code>None</code> and
-          the loop continues. Now the absence is a value you can hold onto —
-          count it, list it, look at a few and work out why. Roughly: square brackets
+          the loop continues. Now the absence is a value you can hold onto.
+          Count it, list it, look at a few and work out why. Roughly: square brackets
           for keys you believe in, <code>.get()</code> for keys the data is
           allowed to withhold.</p>
           <p style="margin-bottom:0">The mistake is the third option:
-          <code>.get(geoid, 0)</code>. A default of zero turns "we don't know
+          <code>.get(geoid, 0)</code>. A default of zero turns "we do not know
           this block group's walkability" into "this block group has the lowest
-          possible walkability", and that is now in your correlation with no
+          possible walkability". That is now in your correlation with no
           trace that it was ever missing. Default to <code>None</code>, and
           decide what to do about it deliberately.</p>
         </div>
@@ -164,9 +164,9 @@ for geoid, score in lookup.items():   <span class="c"># both, unpacked</span>
 COURSE.exercise("ex1", {
   id: "s07-zip", tag: "Exercise 1", title: "Rows with names on them",
   prompt:
-    "<p>Turn both raw tables into lists of dictionaries — <code>acs_rows</code> " +
-    "and <code>walk_rows</code> — using the header row for the keys. Do not " +
-    "type the field names out; <code>zip</code> them.</p>" +
+    "<p>Turn both raw tables into lists of dictionaries named <code>acs_rows</code> " +
+    "and <code>walk_rows</code>. Use the header row for the keys. Do not " +
+    "type the field names out. <code>zip</code> them.</p>" +
     "<p>Then set <code>first_workers</code> to the worker count of the first " +
     "ACS row, looked up <em>by name</em>, as an <code>int</code>.</p>",
   setup: SAMPLE,
@@ -202,8 +202,8 @@ COURSE.exercise("ex2", {
     "<p>Build <code>walk_lookup</code>: a dictionary mapping each " +
     "12-character GEOID string to that block group's walkability score as a " +
     "<code>float</code>.</p>" +
-    "<p>Then answer two questions with it: set <code>score_of</code> to the " +
-    "score for <code>\"180973401103\"</code>, and <code>has_310308_3</code> to " +
+    "<p>Then answer two questions with it. Set <code>score_of</code> to the " +
+    "score for <code>\"180973401103\"</code>. Set <code>has_310308_3</code> to " +
     "whether GEOID <code>\"180973103083\"</code> is present at all.</p>",
   setup: SAMPLE,
   starter:
@@ -238,16 +238,16 @@ COURSE.exercise("ex3", {
   prompt:
     "<p>Walk the ACS rows and attach each one's walkability score. Produce:</p>" +
     "<ul>" +
-    "<li><code>joined</code> — a list of dicts, one per ACS row, each with keys " +
+    "<li><code>joined</code>: a list of dicts, one per ACS row. Each has keys " +
     "<code>\"geoid\"</code>, <code>\"workers\"</code> (int), <code>\"bike\"</code> " +
     "(int) and <code>\"walk_index\"</code> (a float, or <code>None</code> if " +
     "there was no match)</li>" +
-    "<li><code>n_matched</code> — how many got a score</li>" +
-    "<li><code>unmatched_geoids</code> — the GEOIDs that got none</li>" +
-    "<li><code>orphan_geoids</code> — walkability GEOIDs no ACS row asked for</li>" +
+    "<li><code>n_matched</code>: how many got a score</li>" +
+    "<li><code>unmatched_geoids</code>: the GEOIDs that got none</li>" +
+    "<li><code>orphan_geoids</code>: walkability GEOIDs no ACS row asked for</li>" +
     "</ul>" +
     "<p class='small'>Leave the sentinel <code>-666666666</code> alone for now. " +
-    "Converting it is step 12's job, and pretending it's a real count until " +
+    "Converting it is step 12's job, and pretending it is a real count until " +
     "then is a useful discomfort.</p>",
   setup: SAMPLE,
   starter:

@@ -23,8 +23,8 @@
         <li>No programming experience, and no maths beyond arithmetic.</li>
       </ul>
 
-      <p>Most courses stop once the language is covered, this one keeps going:
-      the last unit is version control, tests, two real bug reports worked end
+      <p>Most courses stop once the language is covered. This one keeps going.
+      The last unit is version control, tests, two real bug reports worked end
       to end, and a layout you could clone.</p>
 
       <h2>How it works</h2>
@@ -59,7 +59,7 @@
       <h3>Unit 2 — Correctness <span class="small">(steps 10–13)</span></h3>
       <ul class="tight">
         <li>One computation, four ways, proved identical</li>
-        <li>Reading a traceback; refactoring without changing the answer</li>
+        <li>Reading a traceback, and refactoring without changing the answer</li>
         <li>Exceptions, and the failure modes this data actually has</li>
         <li>Real files, which retire the pasted-in sample</li>
       </ul>
@@ -69,8 +69,8 @@
         <li>Modules and classes</li>
         <li>Choosing third-party packages: pandas, matplotlib, scipy</li>
         <li>Rebuilding your own join with one, to check it</li>
-        <li>Fetching the commute data yourself — needs a free
-        <a href="https://api.census.gov/data/key_signup.html" target="_blank" rel="noopener noreferrer">Census key</a></li>
+        <li>Fetching the commute data yourself. It needs a free
+        <a href="https://api.census.gov/data/key_signup.html" target="_blank" rel="noopener noreferrer">Census key</a>.</li>
       </ul>
 
       <h3>↑ Level up: Notebooks to scripts <span class="small">(available now)</span></h3>
@@ -104,20 +104,20 @@
       <p>Two public datasets can test that, because both describe the same
       unit of geography: a census block group, a few hundred households.</p>
       <ul class="tight">
-        <li><b>EPA National Walkability Index</b> — scores every block group in
+        <li><b>EPA National Walkability Index</b>: scores every block group in
         the country from 1 to 20</li>
-        <li><b>Census Bureau commute survey</b> — counts how people in each
+        <li><b>Census Bureau commute survey</b>: counts how people in each
         block group get to work</li>
       </ul>
       <p>Join them on the block group and the question becomes arithmetic.</p>
-      <p>The course tests it on Marion County, Indiana — 632 block groups — and
-      spends as much time on the places that break the pattern as on the
-      pattern. A neighbourhood that scores 18 and cycles nothing is telling you
+      <p>The course tests it on Marion County, Indiana, which has 632 block
+      groups. It spends as much time on the places that break the pattern as on
+      the pattern. A neighbourhood that scores 18 and cycles nothing is telling you
       something the correlation is not.</p>
       <p>Each step advances that project. By step 3 you are building census
-      block group identifiers, by step 8 working out why 12 of them refuse to
-      join, and by the capstone you are reporting a correlation alongside how
-      much of it could be noise.</p>
+      block group identifiers. By step 8 you are working out why 12 of them
+      refuse to join. By the capstone you are reporting a correlation alongside
+      how much of it could be noise.</p>
 
       <h2>The data</h2>
       <p>Both datasets are in <code>data/</code>. Nothing to download.</p>
@@ -137,16 +137,16 @@
         </tbody>
       </table>
       </div>
-      <p>They do not line up. 7 block groups have a walkability score and no
-      commute data, 5 have commute data and no score, 14 have no workers at
-      all, and 9 carry the census "estimate unavailable" sentinel
-      <code>-666666666</code>. You meet all four in Unit 1.</p>
+      <p>They do not line up. Of the block groups, 7 have a walkability score
+      and no commute data, and 5 have commute data and no score. In the commute
+      data, 14 have no workers at all, and 9 carry the census "estimate
+      unavailable" sentinel <code>-666666666</code>. You meet all four in Unit 1.</p>
 
       <div class="note warn">
         <h4>One honest caveat</h4>
         <p>The walkability data is real. The commute data is
-        <b>synthetic</b> — shaped like the real thing and plausibly related to
-        the real scores, but generated. Units 1–3 are unaffected; the
+        <b>synthetic</b>. It is shaped like the real thing and plausibly related
+        to the real scores, but generated. Units 1–3 are unaffected. The
         capstone's findings are not meaningful until it is replaced.
         <code>README.md</code> has the three commands.</p>
       </div>
@@ -154,9 +154,9 @@
       <h2>Texts</h2>
       <ul>
         <li><a href="https://allendowney.github.io/ThinkPython/" target="_blank" rel="noopener noreferrer"><i>Think Python</i>, 3rd ed.</a>
-        (Allen Downey, 2024) — free, and covers Unit 1 through Unit 3.</li>
+        (Allen Downey, 2024). It is free, and covers Unit 1 through Unit 3.</li>
         <li><a href="https://third-bit.com/py-rse/" target="_blank" rel="noopener noreferrer"><i>Research Software Engineering with Python</i></a>
-        (Irving et al., 2021) — free, and covers the second level-up and Unit 4.</li>
+        (Irving et al., 2021). It is free, and covers the second level-up and Unit 4.</li>
         <li><a href="https://docs.python.org/3/tutorial/" target="_blank" rel="noopener noreferrer">The official Python tutorial</a>,
         <a href="https://inventwithpython.com/" target="_blank" rel="noopener noreferrer"><i>Beyond the Basic Stuff with Python</i></a>,
         and <a href="https://missing.csail.mit.edu/" target="_blank" rel="noopener noreferrer">The Missing Semester of Your CS Education</a>.</li>

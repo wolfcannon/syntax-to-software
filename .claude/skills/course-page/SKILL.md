@@ -210,7 +210,22 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
 - **One word per idea.** Once a term is defined, use it and no synonym. Step 1
   defines *syntax*, so nothing says "grammar" — a reader cannot tell whether a
   new word is a new concept, and has to hold both open until they find out.
-- British spelling, Oxford comma off, em dashes fine.
+- British spelling, Oxford comma off.
+- **Five plain-writing rules, enforced by `scripts/check_style.py`.** They are
+  the countable part of Simplified Technical English, kept for a reader who
+  is new to programming or reading in a second language:
+  1. A sentence is at most 25 words. Where it tells the reader what to do
+     (an exercise prompt, a quiz question) the limit is 20.
+  2. No contractions: "it is", not "it's".
+  3. No dash joining two ideas. Write two sentences. A label and its gloss
+     take a colon: "`count`: how many there are".
+  4. No semicolon. Write two sentences.
+  5. Instructions are active and one to a sentence: "Write the condition",
+     not "the condition should be written".
+
+  These limit sentence shape, not vocabulary. Named failures and their
+  consequences stay as vivid as before. Headings, tables, code and code
+  comments are outside the rules.
 - Never flatter the learner and never say "simply", "just", or "obviously".
 - Every example uses the project's real data. No `foo`, no animals, no shapes.
 - Cross-reference by number — "step 12" — and only backwards or with a
@@ -301,11 +316,12 @@ The sample deliberately contains every failure mode: a zero-worker row, a
 `-666666666` sentinel, one block group in the ACS and not the EPA, and one the
 other way round. Exercises should meet them rather than route around them.
 
-## Verification — run all three, every time
+## Verification — run all four, every time
 
 ```sh
 python3 scripts/stamp_assets.py        # after ANY edit under assets/
 python3 scripts/check_vocabulary.py    # nothing used before it is taught
+python3 scripts/check_style.py         # sentence length, contractions, dashes, semicolons
 python3 scripts/verify_exercises.py    # checks pass on solutions, starters don't,
                                        # nav.js ids match the pages
 python3 -m http.server 8000            # then read the page

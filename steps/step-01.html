@@ -23,10 +23,10 @@
 
       <h2>A very small reserved vocabulary</h2>
       <p>Python reserves 35 words. You cannot use any of them as a name, and
-      that is the whole of the language's fixed vocabulary — every other word
-      you will meet, including <code>print</code>, <code>len</code> and
-      <code>int</code>, is an ordinary name that happens to come
-      pre-assigned.</p>
+      that is the whole of the language's fixed vocabulary. Every other word
+      you will meet is an ordinary name that happens to come pre-assigned.
+      That includes <code>print</code>, <code>len</code> and
+      <code>int</code>.</p>
       <p>Pick one to see what it does. The faded ones are real keywords this
       course never needs.</p>
 
@@ -72,15 +72,15 @@
           <text x="14" y="186" class="svg-muted" style="font-size:12px">The statement is the instruction. The expression is the value it works with.</text>
         </svg>
         <figcaption>An expression can be as small as a literal or as large as
-        you like. What makes it an expression is that it has a value; what
+        you like. What makes it an expression is that it has a value. What
         makes the line a statement is that it does something with it.</figcaption>
       </figure>
 
       <div class="note">
         <h4>Nothing is shown unless you ask</h4>
-        <p><code>bike = 21</code> displays nothing — a statement has no value.
+        <p><code>bike = 21</code> displays nothing. A statement has no value.
         <code>bike / workers</code> displays nothing either: the value is
-        computed, then discarded. To see it, ask for it —
+        computed, then discarded. To see it, ask for it:
         <code>print(bike / workers)</code>.</p>
       </div>
 
@@ -88,7 +88,7 @@
 
       <h2>Reading a SyntaxError</h2>
       <p>A <code>SyntaxError</code> is raised before a single line of your code
-      runs — Python could not even parse it. Two things about the message
+      runs. Python could not even parse it. Two things about the message
       matter:</p>
       <ul>
         <li>The caret <code>^</code> points at where the parser gave up, which
@@ -122,7 +122,7 @@ type("1303")   <span class="c"># str — text</span></pre>
       <div class="note">
         <h4>Tip 💡: Standard operating procedure for clearing syntax errors</h4>
         <ol>
-          <li>Read the last line of the message. It names the problem —
+          <li>Read the last line of the message. It names the problem:
           <code>expected ':'</code>, <code>unexpected indent</code>,
           <code>unterminated string literal</code>.</li>
           <li>Look at the line it points to. If that line looks fine, look at
@@ -148,7 +148,7 @@ type("1303")   <span class="c"># str — text</span></pre>
 (function () {
   const KEYWORDS = [
     ["False", "The boolean false value.", "Step 2"],
-    ["None", "No value at all — which is not the same as zero or empty.", "Step 2"],
+    ["None", "No value at all, which is not the same as zero or empty.", "Step 2"],
     ["True", "The boolean true value.", "Step 2"],
     ["and", "True only when both sides are true.", "Step 4"],
     ["as", "Gives the thing on its left a name.", "Steps 12 and 13"],
@@ -230,8 +230,8 @@ COURSE.quiz("q1", {
     { html: "<code>workers &gt; 0</code>" }
   ],
   why:
-    "<p>The other three are expressions: ask for any of them and something " +
-    "comes back — 8, 0.0161, and <code>False</code>. Expressions are the parts " +
+    "<p>The other three are expressions. Ask for any of them and something " +
+    "comes back: 8, 0.0161, and <code>False</code>. Expressions are the parts " +
     "statements are built from.</p>"
 });
 </script>
@@ -240,7 +240,7 @@ COURSE.exercise("ex1", {
   id: "s01-unterminated", tag: "Exercise 1", title: "Make it readable",
   prompt:
     "<p>Run it first and read the error. Python cannot read this as Python, so " +
-    "nothing runs at all — not even the first line.</p>" +
+    "nothing runs at all. Not even the first line.</p>" +
     "<p>Fix it so it prints the score.</p>",
   starter: "score = \"3.5\nprint(score)\n",
   checks: [
@@ -248,7 +248,7 @@ COURSE.exercise("ex1", {
       code: "expect_defined(globals(), 'score')" },
     { label: "it printed the score",
       code: "expect(__stdout__, '3.5\\n')" },
-    { label: "the score is still text — nothing here asked you to change that",
+    { label: "the score is still text, because nothing here asked you to change that",
       code: "expect(score, '3.5')\nexpect_type(score, str)" }
   ],
   solution:
@@ -261,7 +261,7 @@ COURSE.exercise("ex1", {
 COURSE.exercise("ex2", {
   id: "s01-number", tag: "Exercise 2", title: "Text that looks like a number",
   prompt:
-    "<p>Run it first. <code>score * 2</code> gives <code>3.53.5</code> — " +
+    "<p>Run it first. <code>score * 2</code> gives <code>3.53.5</code>. " +
     "Python repeated the text instead of doubling a number, and did not " +
     "consider that an error.</p>" +
     "<p>Make <code>doubled</code> come out as <code>7.0</code>.</p>",

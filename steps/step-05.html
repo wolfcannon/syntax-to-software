@@ -23,7 +23,7 @@
 
       <h2>List</h2>
       <p>An ordered collection of values, written in square brackets. Every
-      value so far has been one thing; a list is however many you like, kept in
+      value so far has been one thing. A list is however many you like, kept in
       order.</p>
 <pre>scores = [3.5, 14.5, 9.0]
 
@@ -104,7 +104,7 @@ scores    <span class="c"># [14.5, 9.0]</span></pre>
         <h4>The one that catches everyone</h4>
         <p><code>scores = scores.append(19.5)</code> looks reasonable and
         destroys your list. <code>append</code> has already done its work by
-        changing the list; what it hands back is <code>None</code>, and that is
+        changing the list. What it hands back is <code>None</code>, and that is
         what the name now refers to.</p>
         <p style="margin-bottom:0">Call it on its own line. The same applies to
         every method that changes a list in place.</p>
@@ -114,7 +114,7 @@ scores    <span class="c"># [14.5, 9.0]</span></pre>
       <p>A fixed group of parts, written in parentheses, which cannot be
       changed once made. The name is the ending of <em>quadruple</em>,
       <em>quintuple</em> and <em>sextuple</em>: a group of four, of five, of
-      six, and <em>tuple</em> is the word for a group of however many.</p>
+      six. <em>Tuple</em> is the word for a group of however many.</p>
 <pre>pair = ("180973401103", 14.5)
 
 geoid, score = pair    <span class="c"># unpacking: one name per part</span>
@@ -154,7 +154,7 @@ list(range(5))   <span class="c"># [0, 1, 2, 3, 4] — if you really want them</
           <li>Will it grow or shrink? List.</li>
           <li>Is it one thing with named parts that always come together?
           Tuple.</li>
-          <li>Do you just need the numbers 0 to n? Range — and do not turn it
+          <li>Do you only need the numbers 0 to n? Range. Do not turn it
           into a list unless something makes you.</li>
         </ol>
       </div>
@@ -175,7 +175,7 @@ COURSE.quiz("q1", {
     "<p>After those two lines, what is <code>scores</code>?</p>",
   options: [
     { html: "<code>[3.5, 14.5, 19.5]</code>" },
-    { html: "<code>[3.5, 14.5]</code> — the append was ignored" },
+    { html: "<code>[3.5, 14.5]</code>: the append was ignored" },
     { html: "<code>None</code>", correct: true,
       why: "<code>append</code> added 19.5 to the list, then handed back " +
            "nothing. Assigning that nothing to <code>scores</code> threw the " +
@@ -192,12 +192,12 @@ COURSE.quiz("q1", {
 COURSE.exercise("ex1", {
   id: "s05-split", tag: "Exercise 1", title: "Cut a list up",
   prompt:
-    "<p>Eight walkability scores. Take them apart with slices — no numbers " +
-    "other than positions, and no typing values out.</p>" +
-    "<ul><li><code>first_three</code> — the first three</li>" +
-    "<li><code>last_two</code> — the last two</li>" +
-    "<li><code>middle</code> — everything except the first and the last</li>" +
-    "<li><code>count</code> — how many there are altogether</li></ul>",
+    "<p>Eight walkability scores. Take them apart with slices. Use no numbers " +
+    "other than positions. Do not type values out.</p>" +
+    "<ul><li><code>first_three</code>: the first three</li>" +
+    "<li><code>last_two</code>: the last two</li>" +
+    "<li><code>middle</code>: everything except the first and the last</li>" +
+    "<li><code>count</code>: how many there are altogether</li></ul>",
   starter:
     "scores = [3.5, 14.5, 9.0, 19.5, 6.25, 11.0, 15.25, 2.0]\n\n" +
     "first_three = \n" +
@@ -269,8 +269,8 @@ COURSE.exercise("ex3", {
   prompt:
     "<p><code>place</code> is a tuple: a neighbourhood's identifier, its " +
     "walkability score, and how many people work there.</p>" +
-    "<p>Unpack it into three names in one statement, then build " +
-    "<code>summary</code> as a tuple of just the identifier and the score.</p>",
+    "<p>Unpack it into three names in one statement. Then build " +
+    "<code>summary</code> as a tuple of the identifier and the score only.</p>",
   setup: 'place = ("180973401103", 14.5, 1303)\n',
   starter: "geoid, score, workers = \n\nsummary = \n\nprint(geoid, score, workers, summary)",
   checks: [
