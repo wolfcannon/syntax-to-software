@@ -34,6 +34,17 @@ len(scores)    <span class="c"># 3      how many there are</span></pre>
       <p>Indexing and slicing work exactly as they did on text in step 3. A
       slice <code>scores[a:b]</code> runs from <code>a</code> up to but not
       including <code>b</code>, so its length is always <code>b - a</code>.</p>
+      <p>Leave a position out and the slice runs to that end of the list. A
+      negative position counts back from the end, as it does for one
+      value.</p>
+<pre>scores = [3.5, 14.5, 9.0, 19.5, 6.25]
+
+scores[1:4]    <span class="c"># [14.5, 9.0, 19.5]        positions 1, 2 and 3</span>
+scores[:2]     <span class="c"># [3.5, 14.5]              the first two</span>
+scores[2:]     <span class="c"># [9.0, 19.5, 6.25]        everything from position 2</span>
+scores[-3:]    <span class="c"># [9.0, 19.5, 6.25]        the last three</span>
+scores[:-1]    <span class="c"># [3.5, 14.5, 9.0, 19.5]   everything except the last</span>
+scores[2:-1]   <span class="c"># [9.0, 19.5]              from position 2, stopping before the last</span></pre>
 
       <figure>
         <svg viewBox="0 0 720 180" role="img" aria-label="Slice indices sit between list elements, not on them.">
@@ -242,8 +253,10 @@ COURSE.exercise("ex2", {
     "<p>Put <code>19.5</code> on the end, then take the first value off and " +
     "keep it in <code>discarded</code>. Leave <code>scores</code> holding what " +
     "is left, in order.</p>",
-  setup: "scores = [-1.0, 3.5, 14.5, 9.0]\n",
-  starter: "discarded = \n\nprint(scores, discarded)",
+  starter:
+    "scores = [-1.0, 3.5, 14.5, 9.0]\n\n" +
+    "discarded = \n\n" +
+    "print(scores, discarded)",
   checks: [
     { label: "19.5 was added to the end",
       code: "expect(expect_defined(globals(), 'scores')[-1], 19.5)" },
@@ -257,6 +270,7 @@ COURSE.exercise("ex2", {
            + "    raise CheckFailed('assigning the result of append replaces the list with None')") }
   ],
   solution:
+    "scores = [-1.0, 3.5, 14.5, 9.0]\n\n" +
     "scores.append(19.5)\n" +
     "discarded = scores.pop(0)\n\n" +
     "print(scores, discarded)\n\n" +
@@ -271,8 +285,9 @@ COURSE.exercise("ex3", {
     "walkability score, and how many people work there.</p>" +
     "<p>Unpack it into three names in one statement. Then build " +
     "<code>summary</code> as a tuple of the identifier and the score only.</p>",
-  setup: 'place = ("180973401103", 14.5, 1303)\n',
-  starter: "geoid, score, workers = \n\nsummary = \n\nprint(geoid, score, workers, summary)",
+  starter:
+    'place = ("180973401103", 14.5, 1303)\n' + "\n" +
+    "geoid, score, workers = \n\nsummary = \n\nprint(geoid, score, workers, summary)",
   checks: [
     { label: "geoid is the identifier, still text",
       code: "expect(expect_defined(globals(), 'geoid'), '180973401103')" },
@@ -287,6 +302,7 @@ COURSE.exercise("ex3", {
            + "    raise CheckFailed('unpack the whole tuple in one statement')") }
   ],
   solution:
+    'place = ("180973401103", 14.5, 1303)\n' + "\n" +
     "geoid, score, workers = place\n\n" +
     "summary = (geoid, score)\n\n" +
     "print(geoid, score, workers, summary)\n\n" +

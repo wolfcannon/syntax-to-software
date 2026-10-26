@@ -247,11 +247,10 @@ COURSE.exercise("ex1", {
     "<p>Convert <code>workers</code> and <code>bike</code> to whole numbers, " +
     "and <code>score</code> to a number with a fractional part. Then set " +
     "<code>share</code> to the fraction of workers who cycle.</p>",
-  setup:
+  starter:
     "workers_text = \"1303\"\n" +
     "bike_text = \"21\"\n" +
-    "score_text = \"14.5\"\n",
-  starter:
+    "score_text = \"14.5\"\n" + "\n" +
     "workers = \nbike = \nscore = \n\n" +
     "share = \n\n" +
     "print(workers, bike, score, share)",
@@ -268,6 +267,9 @@ COURSE.exercise("ex1", {
       code: "expect_type(share, float)" }
   ],
   solution:
+    "workers_text = \"1303\"\n" +
+    "bike_text = \"21\"\n" +
+    "score_text = \"14.5\"\n" + "\n" +
     "workers = int(workers_text)\n" +
     "bike = int(bike_text)\n" +
     "score = float(score_text)\n\n" +

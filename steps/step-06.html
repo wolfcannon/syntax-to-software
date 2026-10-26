@@ -141,8 +141,8 @@ COURSE.exercise("ex1", {
     "<p>Loop over the list and set <code>usable</code> to how many have a score, and " +
     "<code>skipped</code> to how many do not. Every score must be accounted " +
     "for by exactly one of them.</p>",
-  setup: "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n",
   starter:
+    "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n" + "\n" +
     "usable = 0\nskipped = 0\n\n" +
     "for score in scores:\n    pass\n\n" +
     "print(usable, skipped)\n",
@@ -160,6 +160,7 @@ COURSE.exercise("ex1", {
            + "        raise CheckFailed('%r is inside the loop, so it resets every pass' % l.strip())") }
   ],
   solution:
+    "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n" + "\n" +
     "usable = 0\nskipped = 0\n\n" +
     "for score in scores:\n" +
     "    if score is None:\n" +
@@ -180,8 +181,8 @@ COURSE.exercise("ex2", {
     "<p>Then set <code>best</code> to the highest score in that list.</p>" +
     "<p class='small'>Remember that <code>None</code> cannot be compared with " +
     "a number. Deal with it before you test it.</p>",
-  setup: "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n",
   starter:
+    "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n" + "\n" +
     "walkable = []\n\n" +
     "for score in scores:\n    pass\n\n" +
     "best = \n\nprint(walkable, best)\n",
@@ -198,6 +199,7 @@ COURSE.exercise("ex2", {
            + "    raise CheckFailed('19.5 is written out rather than found')") }
   ],
   solution:
+    "scores = [3.5, None, 14.5, 9.0, None, 19.5]\n" + "\n" +
     "walkable = []\n\n" +
     "for score in scores:\n" +
     "    if score is None:\n" +
