@@ -26,7 +26,7 @@
 <pre>row = {"geoid": "180973401103", "workers": 1303, "bike": 21}
 row["workers"]            <span class="c"># 1303</span>
 row["walk_index"]         <span class="c"># KeyError — it isn't there</span>
-row.get("walk_index")     <span class="c"># None — the polite version</span>
+row.get("walk_index")     <span class="c"># None, and no error</span>
 row.get("walk_index", 0)  <span class="c"># 0 — with a default of your choosing</span></pre>
       <p>The difference between <code>[]</code> and <code>.get()</code> is a
       decision about whether a missing key is a bug or a fact. For a column
@@ -90,7 +90,7 @@ row["B08301_001E"]    <span class="c"># '401' — no more row[1]</span></pre>
 
           <line x1="14" y1="252" x2="706" y2="252" class="svg-line"/>
           <text x="14" y="274" class="svg-ink" style="font-size:12px">A join is a question asked once per row on the left. The rows that get no answer are the finding.</text>
-          <text x="14" y="292" class="svg-muted" style="font-size:12px">Silently dropping them is how an analysis ends up describing a population that isn't the one you meant.</text>
+          <text x="14" y="292" class="svg-muted" style="font-size:12px">Dropping them with no message gives an analysis of a population you did not mean.</text>
         </svg>
         <figcaption>The side you iterate decides the result. Walking the
         ACS rows gives you a left join and shows which walkability scores are

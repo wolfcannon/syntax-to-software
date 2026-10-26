@@ -289,7 +289,7 @@ COURSE.exercise("ex3", {
     "mean_share = sum(share for geoid, share, walk in usable) / len(usable)\n\n" +
     "print(len(usable), n_dropped, round(mean_share, 5))\n" +
     "# Notice how often the GEOID expression repeats, and how the conditions\n" +
-    "# are piling up. That is the comprehension telling you it has had enough.\n" +
+    "# are piling up. That repetition means the comprehension is now too long to read.\n" +
     "# Step 9 gives each of these pieces a name."
 });
 </script>

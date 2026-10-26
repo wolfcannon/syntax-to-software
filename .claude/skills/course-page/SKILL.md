@@ -194,10 +194,10 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
 - Say the thing, then show it working. No tours of what's coming.
 - Concrete over general: `int("01073…")` drops Alabama's zero, not "be careful
   with type conversion".
-- Name the failure and its consequence. The best moments in this course are
-  where a plausible-looking answer is wrong — a `.get(geoid, 0)` that turns a
-  missing score into the lowest score, a string sort that puts `"9"` after
-  `"1303"`. Hunt for those.
+- Name the failure and its consequence. The most useful examples in this
+  course are where a plausible-looking answer is wrong — a `.get(geoid, 0)`
+  that turns a missing score into the lowest score, a string sort that puts
+  `"9"` after `"1303"`. Look for those.
 - **No comparisons to other languages.** Not "unlike C", not "most languages
   use braces", not "if you know Java". The reader may not know them, and if
   they do it is still a detour. Say what Python does. This extends to borrowed
@@ -223,9 +223,18 @@ list its exercise ids in `ex:`. Sidebar, progress dots and pager all follow.
   5. Instructions are active and one to a sentence: "Write the condition",
      not "the condition should be written".
 
-  These limit sentence shape, not vocabulary. Named failures and their
-  consequences stay as vivid as before. Headings, tables, code and code
-  comments are outside the rules.
+  These limit sentence shape, not vocabulary. Headings, tables, code and
+  code comments are outside them.
+- **Literal language only.** Say what happens, not what it is like. No
+  metaphor ("load-bearing"), no personification ("truthiness betrays you",
+  "Python complains"), no idiom ("the one that catches everyone"), no
+  dramatic wording ("destroys your list"), and no adverbs of intent
+  ("quietly", "silently"). Name the consequence instead: "replaces your list
+  with `None`", "stops matching, and no error is reported". This applies
+  everywhere the reader looks — headings, note and exercise titles, diagram
+  text, code comments and check failure messages included. Technical terms
+  that began as metaphors (sentinel, slice, pipeline, harness) are terms, not
+  figures of speech, and stay.
 - Never flatter the learner and never say "simply", "just", or "obviously".
 - Every example uses the project's real data. No `foo`, no animals, no shapes.
 - Cross-reference by number — "step 12" — and only backwards or with a

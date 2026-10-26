@@ -76,7 +76,7 @@ len(scores)    <span class="c"># 3      how many there are</span></pre>
 
       <h3>Adding to the end</h3>
       <p><code>append</code> puts one value on the end. It changes the list in
-      place and hands back nothing.</p>
+      place and returns nothing.</p>
 <pre>scores = [3.5, 14.5, 9.0]
 
 scores.append(19.5)
@@ -84,7 +84,7 @@ scores    <span class="c"># [3.5, 14.5, 9.0, 19.5]</span></pre>
 
       <h3>Removing from the end</h3>
       <p><code>pop</code> takes the last value off. It changes the list in
-      place and hands back the value it removed.</p>
+      place and returns the value it removed.</p>
 <pre>scores = [3.5, 14.5, 9.0]
 
 last = scores.pop()
@@ -104,7 +104,7 @@ scores    <span class="c"># [14.5, 9.0]</span></pre>
         <h4>Assigning the result of <code>append</code></h4>
         <p><code>scores = scores.append(19.5)</code> looks reasonable and
         replaces your list with <code>None</code>. <code>append</code> has already done its work by
-        changing the list. What it hands back is <code>None</code>, and that is
+        changing the list. What it returns is <code>None</code>, and that is
         what the name now refers to.</p>
         <p style="margin-bottom:0">Call it on its own line. The same applies to
         every method that changes a list in place.</p>
@@ -169,7 +169,7 @@ list(range(5))   <span class="c"># [0, 1, 2, 3, 4] — if you really want them</
 <script>
 COURSE.quiz("q1", {
   id: "s05-append", tag: "Your turn", title: "What is scores now?",
-  retry: "Not that one. Ask what append hands back, not what it does.",
+  retry: "Not that one. Ask what append returns, not what it does.",
   question:
     "<pre>scores = [3.5, 14.5]\nscores = scores.append(19.5)</pre>" +
     "<p>After those two lines, what is <code>scores</code>?</p>",
@@ -177,14 +177,14 @@ COURSE.quiz("q1", {
     { html: "<code>[3.5, 14.5, 19.5]</code>" },
     { html: "<code>[3.5, 14.5]</code>: the append was ignored" },
     { html: "<code>None</code>", correct: true,
-      why: "<code>append</code> added 19.5 to the list, then handed back " +
+      why: "<code>append</code> added 19.5 to the list, then returned " +
            "nothing. After the assignment, <code>scores</code> refers to " +
            "<code>None</code> and no name refers to the list." },
     { html: "<code>19.5</code>" }
   ],
   why:
     "<p>The list really was extended. The mistake is assigning the result, " +
-    "because a method that changes a list in place hands back " +
+    "because a method that changes a list in place returns " +
     "<code>None</code>. Write <code>scores.append(19.5)</code> on its own line.</p>"
 });
 </script>
@@ -254,13 +254,13 @@ COURSE.exercise("ex2", {
     { label: "the list was changed in place, not reassigned from a method",
       code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
            + "if 'scores = scores.' in code_only:\n"
-           + "    raise CheckFailed('assigning the result of append or pop throws the list away')") }
+           + "    raise CheckFailed('assigning the result of append replaces the list with None')") }
   ],
   solution:
     "scores.append(19.5)\n" +
     "discarded = scores.pop(0)\n\n" +
     "print(scores, discarded)\n\n" +
-    "# append hands back nothing, so it stands on its own line. pop hands back\n" +
+    "# append returns nothing, so it goes on its own line. pop returns\n" +
     "# the value it removed, so that one is worth assigning."
 });
 
@@ -291,8 +291,8 @@ COURSE.exercise("ex3", {
     "summary = (geoid, score)\n\n" +
     "print(geoid, score, workers, summary)\n\n" +
     "# Three names on the left, one tuple on the right, and Python matches them\n" +
-    "# up by position. It is an error if the counts do not agree -- which is a\n" +
-    "# feature: a pairing that grew a third part should not quietly still work."
+    "# up by position. It is an error if the counts do not agree. That is\n" +
+    "# useful: a pairing that gains a third part raises an error, not a wrong answer."
 });
 </script>
 </body>

@@ -428,7 +428,7 @@ COURSE.exercise("exf", {
     { label: "the capitals came from the name, and you did not type them",
       code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
            + "if 'MERIDIAN' in code_only:\n"
-           + "    raise CheckFailed('the shouty name is typed out — ask the value for it instead')") },
+           + "    raise CheckFailed('the upper-case name is typed out. Get it from the value with a method')") },
     { label: "the numbers came from the names too",
       code: ("code_only = '\\n'.join(l.split('#')[0] for l in __source__.splitlines())\n"
            + "after = code_only.split('workers = 1303', 1)[-1]\n"
@@ -593,7 +593,7 @@ COURSE.exercise("ex3", {
     "print(geoid_al, len(geoid_al))\n" +
     "print(geoid_in, len(geoid_in))\n\n" +
     "# The two lines are the same template. 0>2 adds a zero to 1 and leaves 18\n" +
-    "# alone, so nothing has to know in advance which state it has been handed.\n" +
+    "# alone, so nothing has to know in advance which state code it receives.\n" +
     "# The tract needs no spec: it arrived as text, with its zeros."
 });
 </script>

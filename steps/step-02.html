@@ -157,7 +157,7 @@ workers = int(workers)</pre>
           <text x="396" y="154" class="svg-bad mono" style="font-size:11px">int(geoid)</text>
           <text x="396" y="182" class="svg-ink mono" style="font-size:15px; letter-spacing:.1em">10730001001</text>
           <text x="396" y="206" class="svg-muted" style="font-size:11px">11 characters — the leading zero is gone</text>
-          <text x="396" y="222" class="svg-bad" style="font-size:11px">matches nothing, silently</text>
+          <text x="396" y="222" class="svg-bad" style="font-size:11px">matches nothing, no error</text>
         </svg>
         <figcaption>Nine states are numbered below 10, and every one of them
         loses its leading zero when a GEOID becomes an integer. Indiana
@@ -274,7 +274,7 @@ COURSE.exercise("ex1", {
     "share = bike / workers\n\n" +
     "print(workers, bike, score, share)\n" +
     "# int() for a count, float() for anything with a decimal point.\n" +
-    "# int(\"14.5\") does not round -- it refuses."
+    "# int(\"14.5\") does not round. It raises ValueError."
 });
 
 COURSE.exercise("ex2", {
@@ -311,8 +311,8 @@ COURSE.exercise("ex2", {
     "lost_characters = len(geoid) - len(round_tripped)\n" +
     "still_matches = round_tripped == geoid\n\n" +
     "print(geoid, \"->\", round_tripped, \"| lost:\", lost_characters)\n" +
-    "# One character. No exception, no warning. Every Alabama row silently\n" +
-    "# stops joining -- which is exactly the ticket you get handed in step 20."
+    "# One character. No exception, no warning. Every Alabama row stops\n" +
+    "# joining. That is the bug report you work on in step 20."
 });
 
 COURSE.exercise("ex3", {
@@ -344,7 +344,7 @@ COURSE.exercise("ex3", {
   ],
   solution:
     "code = 310103\n\n" +
-    "whole = code // 100      # floor division throws away the remainder\n" +
+    "whole = code // 100      # floor division discards the remainder\n" +
     "decimal = code % 100     # the remainder is what it threw away\n" +
     "printable = code / 100   # true division keeps both, as a float\n\n" +
     "print(whole, decimal, printable)"

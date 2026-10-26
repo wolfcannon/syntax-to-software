@@ -92,7 +92,7 @@ pip freeze &gt; requirements.txt</pre>
             <text x="38" y="147" class="svg-bad">gpd.read_file("walkability")</text>
             <rect x="28" y="160" width="272" height="22" rx="4" fill="var(--warn-wash)" stroke="var(--warn)"/>
             <text x="38" y="175" class="svg-ink">drop sentinel rows</text>
-            <text x="38" y="199" class="svg-muted" style="font-size:10px">run order lives in your head</text>
+            <text x="38" y="199" class="svg-muted" style="font-size:10px">run order is only in your memory</text>
           </g>
 
           <path class="svg-line" d="M322 124 h42" marker-end="url(#s1)"/>
@@ -102,7 +102,7 @@ pip freeze &gt; requirements.txt</pre>
           <text x="376" y="22" class="svg-muted" style="font-size:11px; letter-spacing:.08em">AFTER — FOUR FILES, ONE JOB EACH</text>
           <rect x="376" y="34" width="330" height="34" rx="6" fill="var(--bad-wash)" stroke="var(--bad)"/>
           <text x="392" y="55" class="svg-bad mono" style="font-size:11px">fetch.py</text>
-          <text x="500" y="55" class="svg-muted" style="font-size:10.5px">talks to the outside world</text>
+          <text x="500" y="55" class="svg-muted" style="font-size:10.5px">uses the network or the disk</text>
 
           <rect x="376" y="76" width="330" height="34" rx="6" fill="var(--warn-wash)" stroke="var(--warn)"/>
           <text x="392" y="97" class="svg-ink mono" style="font-size:11px">clean.py</text>
@@ -115,7 +115,7 @@ pip freeze &gt; requirements.txt</pre>
           <rect x="376" y="160" width="330" height="34" rx="6" fill="var(--ok-wash)" stroke="var(--ok)"/>
           <text x="392" y="181" class="svg-ok mono" style="font-size:11px">run.py</text>
           <text x="500" y="181" class="svg-muted" style="font-size:10.5px">the order, written down</text>
-          <text x="376" y="212" class="svg-muted" style="font-size:11px">notebooks/ keeps exploring — it just stops being the pipeline.</text>
+          <text x="376" y="212" class="svg-muted" style="font-size:11px">notebooks/ is still for exploring. It is no longer the pipeline.</text>
         </svg>
         <figcaption>The notebook does not get deleted. The pipeline no longer
         depends on it, and the notebook is better as a result.</figcaption>
@@ -261,8 +261,8 @@ COURSE.exercise("ex1", {
     "}\n\n" +
     "# coefficient_of_variation is the arguable one: it is a pure function, so\n" +
     "# clean.py would run. It goes in analyze.py because of what it is FOR --\n" +
-    "# it is a judgement about whether an estimate is reportable, which is the\n" +
-    "# analysis talking. Splitting by 'what changes this file' beats splitting\n" +
+    "# it is a judgement about whether an estimate is reportable, so it is part\n" +
+    "# of the analysis. Splitting by 'what changes this file' beats splitting\n" +
     "# by 'what does this file technically do'."
 });
 
@@ -332,7 +332,7 @@ COURSE.exercise("ex2", {
     "    print(f\"{name:<12} {version}\")\n" +
     "# Stripping the comment before testing for '==' is what makes the jupyter\n" +
     "# line work. Doing it the other way round leaves '1.0.0  # pinned\n" +
-    "# deliberately' as the version, and nothing complains."
+    "# deliberately' as the version, and no error is raised."
 });
 
 COURSE.exercise("ex3", {
