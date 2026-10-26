@@ -64,6 +64,10 @@
       <code>'bikeable'</code>. A method call is an expression, as step 1 uses
       the word.</p>
 
+      <p>Python writes text back with single quotes. Single and double quotes
+      make the same string:</p>
+<pre>'walkable' == "walkable"   <span class="c"># True</span></pre>
+
       <p>And because the return value is itself a value, you can call a method
       on it too. Each call works on what the one before it returned:</p>
 <pre>"  Walk Score  ".strip()           <span class="c"># 'Walk Score'</span>
@@ -120,14 +124,18 @@ TypeError: str.upper() takes no arguments (1 given)</span></pre>
       same set. A number has a different set.</p>
 <pre>"18".upper()    <span class="c"># '18'</span>
 (18).upper()    <span class="c"># AttributeError: 'int' object has no attribute 'upper'</span></pre>
+      <p>The parentheses around <code>18</code> are required. Without them,
+      <code>18.upper()</code> is a <code>SyntaxError</code>, because Python
+      reads <code>18.</code> as the start of a number.</p>
       <p>Learn to recognise that error early. It rarely means you typed the
       name wrong. It usually means the value is not the type you thought it was,
       which is the mistake from step 2 in another form.</p>
 
       <div class="note">
         <h4>Two forms that do similar jobs</h4>
-        <p><code>len("18")</code> is a function, given a value.
-        <code>"18".upper()</code> is a method, belonging to one. Both take an
+<pre>len("18")      <span class="c"># 2      a function, given a value</span>
+"18".upper()   <span class="c"># '18'   a method, belonging to one</span></pre>
+        <p>Both take an
         input and return something. They differ in whether the value goes
         before the dot or inside the parentheses.</p>
         <p style="margin-bottom:0">There is no rule to derive here.
@@ -146,6 +154,8 @@ TypeError: str.upper() takes no arguments (1 given)</span></pre>
       <p>The direct way is to join pieces together with <code>+</code>:</p>
 <pre>name = "Meridian-Kessler"
 score = 14.5
+bike = 21
+workers = 1303
 
 "Walkability of " + name + " is " + str(score)
 <span class="c"># 'Walkability of Meridian-Kessler is 14.5'</span></pre>
@@ -167,9 +177,10 @@ score = 14.5
       <p>You get three things without extra work. The line now looks like what it produces, so
       you can check it by reading it. Values are converted for you, so you do not need <code>str()</code>. And anything can go in the braces, because
       what is in there is an expression:</p>
-<pre>f"{bike} of {workers} cycle"
-f"{bike / workers}"
-f"{name.upper()}"</pre>
+<pre>f"{bike} of {workers} cycle"   <span class="c"># '21 of 1303 cycle'</span>
+f"{bike / workers}"            <span class="c"># '0.016116653875671526'</span>
+f"{name.upper()}"              <span class="c"># 'MERIDIAN-KESSLER'</span>
+f"{bike}{workers}"             <span class="c"># '211303'   two pairs of braces, nothing between them</span></pre>
       <div id="exf"></div>
 
       <h3>Format spec</h3>
@@ -269,6 +280,8 @@ f"{21:,}"     <span class="c"># '21'      nothing to separate</span></pre>
       <p>A number is how many columns the value takes up.
       <code>&gt;</code> puts the value at the right of them and
       <code>&lt;</code> at the left. The gap is filled with spaces.</p>
+      <p>A string inside an f-string uses the other kind of quote. A second
+      double quote would end the f-string.</p>
 <pre>f"{14.5:&gt;8}"          <span class="c"># '    14.5'</span>
 f"{'3101.03':&lt;10}|"   <span class="c"># '3101.03   |'</span>
 f"{14.4667:&gt;8.1f}"    <span class="c"># '    14.5'      width first, then decimals</span></pre>

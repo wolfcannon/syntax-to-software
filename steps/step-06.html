@@ -35,6 +35,11 @@ for score in scores:
       for counting rather than for holding data:</p>
 <pre>for i in range(3):
     print(i)        <span class="c"># 0, then 1, then 2</span></pre>
+      <p><code>pass</code> is a statement that does nothing. It holds the
+      place of a block you have not written yet. Replace it with the real
+      lines.</p>
+<pre>for score in scores:
+    pass            <span class="c"># runs once per score and does nothing</span></pre>
 
       <h2>Building up an answer</h2>
       <p>Most loops exist to accumulate something. Start with an empty answer
@@ -46,18 +51,55 @@ for score in scores:
     total = total + score
 
 print(total / len(scores))   <span class="c"># 9.0 — the mean</span></pre>
+      <p>The answer can be a list. Start with an empty list and
+      <code>append</code> to it inside the loop.</p>
+<pre>scores = [3.5, 14.5, 9.0, 2.0]
+
+low = []
+for score in scores:
+    if score &lt;= 5.75:
+        low.append(score)
+
+print(low)    <span class="c"># [3.5, 2.0]</span></pre>
       <p>Where the accumulator is set matters. Inside the block it would be
       reset on every pass. After the block it would not exist yet. This is the
       indentation rule from step 4, and here it changes the answer.</p>
+
+      <h3>Two answers Python works out for you</h3>
+      <p><code>sum</code> adds up a list of numbers. <code>max</code> finds
+      the highest. Each loops over the list for you.</p>
+<pre>scores = [3.5, 14.5, 9.0]
+
+sum(scores)                 <span class="c"># 27.0</span>
+max(scores)                 <span class="c"># 14.5</span>
+sum(scores) / len(scores)   <span class="c"># 9.0   the mean again</span></pre>
 
       <h2>Leaving a loop early</h2>
       <p>Two statements interrupt the normal run of a loop.
       <code>continue</code> ends this pass and starts the next.
       <code>break</code> ends the loop entirely.</p>
-<pre>for score in scores:
+      <p>A missing score arrives as <code>None</code>, and <code>None</code>
+      cannot be compared with a number. It raises the same kind of error as
+      comparing text with a number in step 4:</p>
+<pre>None &gt; 10.5
+<span class="c"># TypeError: '&gt;' not supported between instances of 'NoneType' and 'float'</span></pre>
+      <p><code>continue</code> skips a missing score before anything compares
+      it:</p>
+<pre>scores = [3.5, None, 14.5]
+
+for score in scores:
     if score is None:
-        continue          <span class="c"># no score here — on to the next one</span>
-    print(score)</pre>
+        continue          <span class="c"># no score here: on to the next one</span>
+    print(score)          <span class="c"># prints 3.5, then 14.5</span></pre>
+      <p><code>break</code> stops at the first score that answers the
+      question. The scores after it are not looked at.</p>
+<pre>scores = [3.5, 14.5, 9.0]
+
+for score in scores:
+    if score &gt; 10.5:
+        print("first above 10.5:", score)   <span class="c"># first above 10.5: 14.5</span>
+        break
+    print(score)          <span class="c"># prints 3.5 only, and 9.0 is never reached</span></pre>
       <div class="note trap">
         <h4>A <code>continue</code> is a decision about the data</h4>
         <p>Skipping a neighbourhood with no score is not the same as counting
@@ -209,7 +251,7 @@ COURSE.exercise("ex2", {
     "best = max(walkable)\n\n" +
     "print(walkable, best)\n\n" +
     "# The None check has to come first. 'score > 10.5' on a None raises a\n" +
-    "# TypeError, the same one step 1 met when text was compared with a number."
+    "# TypeError, the same kind step 4 showed when text was compared with a number."
 });
 </script>
 </body>

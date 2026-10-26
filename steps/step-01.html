@@ -50,8 +50,10 @@
       binds a name to a value. It produces nothing. The effect is the point.</p>
 
       <h3>Expression</h3>
-      <p>A piece of code that has a value: <code>21 / 1303</code>,
-      <code>len(rows)</code>, <code>bike &gt; 0</code>.</p>
+      <p>A piece of code that has a value.</p>
+<pre>21 / 1303         <span class="c"># 0.016116653875671526</span>
+1303 - 21         <span class="c"># 1282</span>
+len("walkable")   <span class="c"># 8      len gives the number of characters in text</span></pre>
       <p>Expressions are what statements are built from.</p>
 
       <figure>
@@ -79,8 +81,12 @@
         <h4>Nothing is shown unless you print it</h4>
         <p><code>bike = 21</code> displays nothing. A statement has no value.
         <code>bike / workers</code> displays nothing either: the value is
-        computed, then discarded. To see it, print it:
-        <code>print(bike / workers)</code>.</p>
+        computed, then discarded. To see it, print it.</p>
+<pre>print(21 / 1303)              <span class="c"># 0.016116653875671526</span>
+print("walkable", 21, 1303)   <span class="c"># walkable 21 1303</span></pre>
+        <p style="margin-bottom:0">Give <code>print</code> several values,
+        separated by commas, and it prints them on one line with a space between
+        each.</p>
       </div>
 
       <div id="q1"></div>
@@ -109,6 +115,9 @@ type("1303")   <span class="c"># str — text</span></pre>
       <p><code>1303</code> and <code>"1303"</code> are different values. The
       quotes are what make the second one text: a run of characters that
       happens to contain digits. You cannot do arithmetic with it.</p>
+      <p>A number can. <code>*</code> multiplies:</p>
+<pre>3.5 * 2        <span class="c"># 7.0</span>
+1303 * 2       <span class="c"># 2606</span></pre>
       <p>A value that looks like a number need not be one, and the screen does
       not show which you have. <code>type()</code> does.</p>
 
@@ -169,13 +178,13 @@ type("1303")   <span class="c"># str — text</span></pre>
     ["global", "Let a function reassign a name defined outside it.", null],
     ["if", "Do something only when a condition holds.", "Step 4"],
     ["import", "Load a module so you can use what is in it.", "Step 14"],
-    ["in", "Membership: tests whether an item is in a collection.", "Steps 5 and 6"],
+    ["in", "In a <code>for</code> loop, takes each item in turn. Elsewhere, tests whether an item is in a collection.", "Steps 6 and 7"],
     ["is", "Identity: tests whether two names refer to the same object. Usually seen as <code>is None</code>.", "Step 4"],
-    ["lambda", "A small unnamed function, written where it is used.", "Step 5"],
+    ["lambda", "A small unnamed function, written where it is used.", null],
     ["nonlocal", "Like <code>global</code>, but for an enclosing function.", null],
     ["not", "Gives the opposite of a condition.", "Step 4"],
     ["or", "True when either side is true.", "Step 4"],
-    ["pass", "Do nothing. A placeholder where the syntax requires a body.", "The starters below"],
+    ["pass", "Do nothing. A placeholder where the syntax requires a body.", "Step 6"],
     ["raise", "Signal an error yourself.", "Step 12"],
     ["return", "Send a value out of a function.", "Step 9"],
     ["try", "Attempt something that might fail.", "Step 12"],
@@ -219,7 +228,7 @@ COURSE.quiz("q1", {
   retry: "Not that one. Ask whether it has a value, or an effect.",
   question:
     "<p>One of these does something. The other three have a value.</p>" +
-    "<pre>workers = 1303\nlen(\"walkable\")\n21 / 1303\nworkers &gt; 0</pre>" +
+    "<pre>workers = 1303\nlen(\"walkable\")\n21 / 1303\n1303 - 21</pre>" +
     "<p>Which one is a statement?</p>",
   options: [
     { html: "<code>workers = 1303</code>", correct: true,
@@ -227,11 +236,11 @@ COURSE.quiz("q1", {
            "the whole point of writing it." },
     { html: "<code>len(\"walkable\")</code>" },
     { html: "<code>21 / 1303</code>" },
-    { html: "<code>workers &gt; 0</code>" }
+    { html: "<code>1303 - 21</code>" }
   ],
   why:
     "<p>The other three are expressions. Each of them has a value: 8, 0.0161, " +
-    "and <code>False</code>. Expressions are the parts statements are built " +
+    "and 1282. Expressions are the parts statements are built " +
     "from.</p>"
 });
 </script>

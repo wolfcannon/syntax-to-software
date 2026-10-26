@@ -45,6 +45,12 @@ scores[2:]     <span class="c"># [9.0, 19.5, 6.25]        everything from positi
 scores[-3:]    <span class="c"># [9.0, 19.5, 6.25]        the last three</span>
 scores[:-1]    <span class="c"># [3.5, 14.5, 9.0, 19.5]   everything except the last</span>
 scores[2:-1]   <span class="c"># [9.0, 19.5]              from position 2, stopping before the last</span></pre>
+      <p><code>sorted</code> makes a new list of the same values, smallest
+      first. The original list is not changed.</p>
+<pre>scores = [3.5, 14.5, 9.0, 19.5, 6.25]
+
+sorted(scores)   <span class="c"># [3.5, 6.25, 9.0, 14.5, 19.5]</span>
+scores           <span class="c"># [3.5, 14.5, 9.0, 19.5, 6.25]   unchanged</span></pre>
 
       <figure>
         <svg viewBox="0 0 720 180" role="img" aria-label="Slice indices sit between list elements, not on them.">
@@ -129,7 +135,14 @@ scores    <span class="c"># [14.5, 9.0]</span></pre>
 <pre>pair = ("180973401103", 14.5)
 
 geoid, score = pair    <span class="c"># unpacking: one name per part</span>
-pair[0]                <span class="c"># '180973401103'</span></pre>
+pair[0]                <span class="c"># '180973401103'</span>
+
+row = ("180973401103", 1303, 21)
+geoid, workers, bike = row    <span class="c"># three parts, so three names</span>
+bike                          <span class="c"># 21</span>
+
+counts = (workers, bike)      <span class="c"># a new tuple, built from names</span>
+counts                        <span class="c"># (1303, 21)</span></pre>
       <p>The difference from a list is not really about the punctuation:</p>
       <ul>
         <li>A <b>list</b> is a collection of things of the same kind, however

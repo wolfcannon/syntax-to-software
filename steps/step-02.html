@@ -51,7 +51,7 @@ label = "walkable"</pre>
       left to it. Nothing is printed. The effect is the point.</p>
       <p>The <code>=</code> is an instruction. It does not test whether two
       things are equal. That is <code>==</code>, and it comes in
-      step 4.</p>
+      step 4, Blocks and conditions.</p>
 
       <h2>Casting</h2>
       <p>Converting a value from one type to another. Each type name is also a way to produce a value of that type.</p>
@@ -118,12 +118,14 @@ workers = int(workers)</pre>
 
       <div class="note">
         <h4>Floats are approximate</h4>
-        <p><code>0.1 + 0.2</code> is <code>0.30000000000000004</code>. A
-        computer stores a float in binary and cannot write 0.1 exactly, in the
-        same way you cannot write 1/3 exactly as a decimal.</p>
-        <p style="margin-bottom:0">So never test whether two floats are equal. Test whether they are close enough: <code>abs(share - 0.05) &lt;
-        1e-9</code>. This can give a wrong result in step 4, when a score is exactly on a
-        category boundary.</p>
+<pre>0.1 + 0.2    <span class="c"># 0.30000000000000004</span></pre>
+        <p>A computer stores a float in binary and cannot write 0.1 exactly, in
+        the same way you cannot write 1/3 exactly as a decimal.</p>
+        <p style="margin-bottom:0">So a float you computed can differ from the
+        one you typed in its last digits. Never test whether a computed float is
+        exactly equal to another float. That gives a wrong result in step 4,
+        Blocks and conditions, when a score is exactly on a category
+        boundary.</p>
       </div>
 
       <h2>The mistake that matters most in this project</h2>
@@ -173,6 +175,15 @@ workers = int(workers)</pre>
         adding two of them together mean anything".</p>
       </div>
 
+      <p>Two tools let you check a GEOID. <code>len</code> counts its
+      characters. <code>==</code> asks whether two values are equal, and gives
+      <code>True</code> or <code>False</code>. Comparisons are covered in
+      step 4, Blocks and conditions.</p>
+<pre>geoid = "180973401103"
+len(geoid)                  <span class="c"># 12</span>
+geoid == "180973401103"     <span class="c"># True</span>
+geoid == "180970000000"     <span class="c"># False</span></pre>
+
       <div id="q1"></div>
 
       <h2>Exercises</h2>
@@ -182,8 +193,10 @@ workers = int(workers)</pre>
 
       <div class="project">
         <h4>Take it further</h4>
-        <p>In any editor above, convert the counts from one ACS row to integers
-        and compute that block group's bike share by hand. Then reproduce the bug yourself: take the string <code>"010730001001"</code>, convert
+        <p>In block group 3 of tract 3103.08, 4 of 57 workers cycle. In any
+        editor above, set <code>workers_text</code> to <code>"57"</code> and
+        <code>bike_text</code> to <code>"4"</code>. Convert them and compute
+        that block group's bike share. Then reproduce the bug yourself: take the string <code>"010730001001"</code>, convert
         it with <code>int()</code>, convert it back with <code>str()</code>,
         and compare lengths. State the rule in your own words before moving on. You will need it
         later.</p>
@@ -322,7 +335,7 @@ COURSE.exercise("ex3", {
   prompt:
     "<p>A tract code is six digits, and the last two are the decimal part: " +
     "<code>\"310103\"</code> means tract 3101.03. Use the integer " +
-    "<code>code</code> and arithmetic only, with no string methods this time. " +
+    "<code>code</code> and arithmetic only. " +
     "Produce <code>whole</code> (the 3101 part) and <code>decimal</code> (the " +
     "3 part), both as <code>int</code>.</p>" +
     "<p>Then set <code>printable</code> to the tract number as a " +

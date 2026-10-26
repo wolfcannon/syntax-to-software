@@ -28,6 +28,12 @@ row["workers"]            <span class="c"># 1303</span>
 row["walk_index"]         <span class="c"># KeyError — it isn't there</span>
 row.get("walk_index")     <span class="c"># None, and no error</span>
 row.get("walk_index", 0)  <span class="c"># 0 — with a default of your choosing</span></pre>
+      <p>Assigning to a key that is not there adds it. Assigning to a key
+      that is there replaces its value.</p>
+<pre>walk_lookup = {}
+walk_lookup["180973401103"] = 14.5   <span class="c"># adds the key "180973401103"</span>
+walk_lookup["180973401103"]          <span class="c"># 14.5</span>
+len(walk_lookup)                     <span class="c"># 1</span></pre>
       <p>The difference between <code>[]</code> and <code>.get()</code> is a
       decision about whether a missing key is a bug or a fact. For a column
       name you wrote yourself, missing means you mistyped it and you want the
@@ -35,13 +41,44 @@ row.get("walk_index", 0)  <span class="c"># 0 — with a default of your choosin
       exist in the other dataset, missing is data, and <code>.get()</code> lets
       you record it.</p>
 
+      <h2>The two sample tables</h2>
+      <p>From this step on, the exercises use two tables that are loaded
+      for you. <code>acs_raw</code> holds commuting counts from the Census
+      Bureau's American Community Survey (ACS). <code>walk_raw</code> holds
+      walkability scores from the US Environmental Protection Agency
+      (EPA).</p>
+      <p>Each table is a list of lists. The first row is a header of column
+      names. Every value, numbers included, is text. <code>acs_raw[6]</code>
+      and <code>walk_raw[6]</code> describe the same block group:</p>
+<pre><span class="c"># acs_raw   header row       acs_raw[6]           meaning</span>
+<span class="c"># 0</span>         "NAME"           "Block Group 3, ..." the block group's name
+<span class="c"># 1</span>         "B08301_001E"    "1303"               workers: everyone who commutes
+<span class="c"># 2</span>         "B08301_018E"    "21"                 bike: workers who commute by bicycle
+<span class="c"># 3 to 5</span>    three more columns                    not used in Unit 1
+<span class="c"># 6</span>         "state"          "18"                 GEOID part: state
+<span class="c"># 7</span>         "county"         "097"                GEOID part: county
+<span class="c"># 8</span>         "tract"          "340110"             GEOID part: tract
+<span class="c"># 9</span>         "block group"    "3"                  GEOID part: block group
+
+<span class="c"># walk_raw  header row       walk_raw[6]          meaning</span>
+<span class="c"># 0</span>         "STATEFP"        "18"                 GEOID part: state
+<span class="c"># 1</span>         "COUNTYFP"       "097"                GEOID part: county
+<span class="c"># 2</span>         "TRACTCE"        "340110"             GEOID part: tract
+<span class="c"># 3</span>         "BLKGRPCE"       "3"                  GEOID part: block group
+<span class="c"># 4</span>         "NatWalkInd"     "14.5"               the walkability score, 1 to 20
+<span class="c"># 5 to 8</span>    four ranked measures                  not used in Unit 1
+<span class="c"># 9</span>         "TotPop"         "2626"               total population</pre>
+      <p>Joined in order, the four GEOID parts give
+      <code>"180973401103"</code> in both tables. That shared GEOID is what
+      lets you combine them.</p>
+
       <h2>From positional rows to named fields</h2>
       <p><code>zip</code> pairs up two sequences. <code>dict</code> turns pairs
       into a mapping. Together they convert a row you read by counting positions
       into one you read by field name:</p>
 <pre>header = acs_raw[0]
 row = dict(zip(header, acs_raw[1]))
-row["B08301_001E"]    <span class="c"># '401' — no more row[1]</span></pre>
+row["B08301_001E"]    <span class="c"># '401': the worker count, read by name instead of row[1]</span></pre>
       <p>Do this conversion now, and keep it for the rest of the project.
       <code>row[8] + row[9]</code> was fine for two steps. It is hard to read
       in a hundred lines. If the API reorders its columns, it reads the wrong
@@ -110,10 +147,19 @@ row["B08301_001E"]    <span class="c"># '401' — no more row[1]</span></pre>
       </div>
 
       <h2>Iterating a dictionary</h2>
-<pre>for geoid in lookup:              <span class="c"># keys</span>
-for score in lookup.values():     <span class="c"># values</span>
+<pre>lookup = {"180973401103": 14.5, "180973417003": 11.833333}
+
+for geoid in lookup:                  <span class="c"># keys</span>
+    print(geoid)                      <span class="c"># 180973401103, then 180973417003</span>
+for score in lookup.values():         <span class="c"># values</span>
+    print(score)                      <span class="c"># 14.5, then 11.833333</span>
 for geoid, score in lookup.items():   <span class="c"># both, unpacked</span>
-"180973401103" in lookup          <span class="c"># membership — checks keys, and is fast</span></pre>
+    print(geoid, score)               <span class="c"># 180973401103 14.5, then 180973417003 11.833333</span>
+
+"180973401103" in lookup              <span class="c"># True: membership checks keys, and is fast</span>
+"180973103083" in lookup              <span class="c"># False</span>
+"180973103083" not in lookup          <span class="c"># True: not in is the opposite of in</span>
+14.5 in lookup                        <span class="c"># False: values are not checked</span></pre>
 
       <h2>Exercises</h2>
       <div id="ex1"></div>
@@ -165,11 +211,14 @@ for geoid, score in lookup.items():   <span class="c"># both, unpacked</span>
 COURSE.exercise("ex1", {
   id: "s07-zip", tag: "Exercise 1", title: "Rows with named fields",
   prompt:
-    "<p>Turn both raw tables into lists of dictionaries named <code>acs_rows</code> " +
+    "<p><code>acs_raw</code> holds the ACS commuting counts and <code>walk_raw</code> " +
+    "the EPA walkability scores. Each is a list of lists with a header row, every value text.</p>" +
+    "<p>Turn each table into a list of dictionaries, named <code>acs_rows</code> " +
     "and <code>walk_rows</code>. Use the header row for the keys. Do not " +
     "type the field names out. <code>zip</code> them.</p>" +
     "<p>Then set <code>first_workers</code> to the worker count of the first " +
-    "ACS row, looked up <em>by name</em>, as an <code>int</code>.</p>",
+    "ACS row, as an <code>int</code>. Look it up <em>by name</em>: the column is " +
+    "<code>B08301_001E</code>.</p>",
   setup: SAMPLE,
   starter:
     "acs_rows = \nwalk_rows = \n\n" +
@@ -188,18 +237,23 @@ COURSE.exercise("ex1", {
       code: "expect(expect_defined(globals(), 'first_workers'), 401)" }
   ],
   solution:
-    "acs_rows = [dict(zip(acs_raw[0], row)) for row in acs_raw[1:]]\n" +
-    "walk_rows = [dict(zip(walk_raw[0], row)) for row in walk_raw[1:]]\n\n" +
-    "first_workers = int(acs_rows[0][\"B08301_001E\"])\n\n" +
+    "acs_rows = []\n" +
+    "for row in acs_raw[1:]:                        # [1:] skips the header row\n" +
+    "    acs_rows.append(dict(zip(acs_raw[0], row)))\n\n" +
+    "walk_rows = []\n" +
+    "for row in walk_raw[1:]:\n" +
+    "    walk_rows.append(dict(zip(walk_raw[0], row)))\n\n" +
+    "first_workers = int(acs_rows[0][\"B08301_001E\"])   # text in the table, so int()\n\n" +
     "print(acs_rows[0][\"NAME\"])\n" +
     "print(first_workers)\n" +
-    "# A plain for-loop with .append() is just as correct here. Step 8 is where\n" +
-    "# the bracketed form above stops looking like a trick."
+    "# Step 8, Comprehensions, writes each of these loops on one line."
 });
 
 COURSE.exercise("ex2", {
   id: "s07-lookup", tag: "Exercise 2", title: "A lookup keyed by GEOID",
   prompt:
+    "<p><code>walk_raw</code> holds the EPA walkability table: GEOID parts at " +
+    "positions 0 to 3, the score at position 4, every value text.</p>" +
     "<p>Build <code>walk_lookup</code>: a dictionary mapping each " +
     "12-character GEOID string to that block group's walkability score as a " +
     "<code>float</code>.</p>" +
@@ -237,6 +291,8 @@ COURSE.exercise("ex2", {
 COURSE.exercise("ex3", {
   id: "s07-join", tag: "Exercise 3", title: "Write the join with a loop",
   prompt:
+    "<p><code>acs_raw</code> holds the ACS table: workers at position 1, bike " +
+    "at position 2, GEOID parts at positions 6 to 9. Every value is text.</p>" +
     "<p>Walk the ACS rows and attach each one's walkability score. Produce:</p>" +
     "<ul>" +
     "<li><code>joined</code>: a list of dicts, one per ACS row. Each has keys " +
@@ -252,8 +308,11 @@ COURSE.exercise("ex3", {
     "results that follow are useful to see.</p>",
   setup: SAMPLE,
   starter:
-    "# given: the lookup from exercise 2, written compactly (step 8 explains how)\n" +
-    "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n\n" +
+    "# given: the lookup you built in exercise 2\n" +
+    "walk_lookup = {}\n" +
+    "for row in walk_raw[1:]:\n" +
+    "    geoid = row[0] + row[1] + row[2] + row[3]\n" +
+    "    walk_lookup[geoid] = float(row[4])\n\n" +
     "joined = []\nfor row in acs_raw[1:]:\n    pass\n\n" +
     "n_matched = \nunmatched_geoids = \norphan_geoids = \n\n" +
     "print(n_matched, \"matched |\", unmatched_geoids, \"| orphans:\", orphan_geoids)",
@@ -279,8 +338,11 @@ COURSE.exercise("ex3", {
       code: "expect(sorted(expect_defined(globals(), 'orphan_geoids')), ['180973201071'])" }
   ],
   solution:
-    "# given: the lookup from exercise 2, written compactly (step 8 explains how)\n" +
-    "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n\n" +
+    "# given: the lookup you built in exercise 2\n" +
+    "walk_lookup = {}\n" +
+    "for row in walk_raw[1:]:\n" +
+    "    geoid = row[0] + row[1] + row[2] + row[3]\n" +
+    "    walk_lookup[geoid] = float(row[4])\n\n" +
     "joined = []\n" +
     "for row in acs_raw[1:]:\n" +
     "    geoid = row[6] + row[7] + row[8] + row[9]\n" +
@@ -290,14 +352,26 @@ COURSE.exercise("ex3", {
     "        \"bike\": int(row[2]),\n" +
     "        \"walk_index\": walk_lookup.get(geoid),   # None when absent\n" +
     "    })\n\n" +
-    "n_matched = sum(1 for r in joined if r[\"walk_index\"] is not None)\n" +
-    "unmatched_geoids = [r[\"geoid\"] for r in joined if r[\"walk_index\"] is None]\n" +
-    "asked_for = {r[\"geoid\"] for r in joined}\n" +
-    "orphan_geoids = [g for g in walk_lookup if g not in asked_for]\n\n" +
+    "n_matched = 0\n" +
+    "unmatched_geoids = []\n" +
+    "for r in joined:\n" +
+    "    if r[\"walk_index\"] is None:\n" +
+    "        unmatched_geoids.append(r[\"geoid\"])\n" +
+    "    else:\n" +
+    "        n_matched = n_matched + 1\n\n" +
+    "# The other side: walk the lookup and ask the ACS GEOIDs. A dictionary\n" +
+    "# is used here only for its keys, because membership on keys is fast.\n" +
+    "asked_for = {}\n" +
+    "for r in joined:\n" +
+    "    asked_for[r[\"geoid\"]] = True\n" +
+    "orphan_geoids = []\n" +
+    "for geoid in walk_lookup:\n" +
+    "    if geoid not in asked_for:\n" +
+    "        orphan_geoids.append(geoid)\n\n" +
     "print(n_matched, \"matched |\", unmatched_geoids, \"| orphans:\", orphan_geoids)\n" +
     "# 10 of 11 matched. Both leftovers are real: one block group the EPA never\n" +
-    "# scored, one the EPA scored and the ACS didn't report. Step 8 finds these\n" +
-    "# with a single set operation instead of two loops."
+    "# scored, one the EPA scored and the ACS did not report. Step 8,\n" +
+    "# Comprehensions, finds each side with one set operation instead of a loop."
 });
 </script>
 </body>

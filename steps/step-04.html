@@ -32,23 +32,29 @@
       deeply.</p>
 
       <figure>
-        <svg viewBox="0 0 720 210" role="img" aria-label="A colon line introduces a block; the indented lines beneath it are its contents, and blocks nest inside one another.">
-          <rect x="14" y="30" width="692" height="128" rx="8" fill="var(--accent-wash)" stroke="var(--accent)"/>
-          <rect x="52" y="72" width="640" height="72" rx="6" fill="var(--warn-wash)" stroke="var(--warn)"/>
+        <svg viewBox="0 0 720 312" role="img" aria-label="Eight lines of code. An if line with a colon opens a block. Inside it, a second if line opens a block nested inside the first. An else line at the margin opens a separate block. The last line, print(label), is back at the margin, outside every block.">
+          <rect x="14" y="42" width="692" height="140" rx="8" fill="var(--accent-wash)" stroke="var(--accent)"/>
+          <rect x="52" y="106" width="640" height="66" rx="6" fill="var(--warn-wash)" stroke="var(--warn)"/>
+          <rect x="14" y="192" width="692" height="62" rx="8" fill="var(--accent-wash)" stroke="var(--accent)"/>
 
           <g class="mono" style="font-size:13px">
-            <text x="28" y="56" class="svg-ink">for row in rows<tspan class="svg-accent" style="font-weight:700">:</tspan></text>
-            <text x="66" y="96" class="svg-ink">if row[1] != "0"<tspan style="font-weight:700" fill="var(--warn)">:</tspan></text>
-            <text x="104" y="132" class="svg-ink">counted = counted + 1</text>
-            <text x="28" y="180" class="svg-ink">print(counted)</text>
+            <text x="28" y="28" class="svg-ink">score = 14.5</text>
+            <text x="28" y="66" class="svg-ink">if score &gt; 10.5<tspan class="svg-accent" style="font-weight:700">:</tspan></text>
+            <text x="66" y="94" class="svg-ink">label = "Above Average"</text>
+            <text x="66" y="130" class="svg-ink">if score &gt; 15.25<tspan style="font-weight:700" fill="var(--warn)">:</tspan></text>
+            <text x="104" y="158" class="svg-ink">label = "Most Walkable"</text>
+            <text x="28" y="216" class="svg-ink">else<tspan class="svg-accent" style="font-weight:700">:</tspan></text>
+            <text x="66" y="242" class="svg-ink">label = "Below Average"</text>
+            <text x="28" y="284" class="svg-ink">print(label)</text>
           </g>
 
-          <text x="330" y="56" class="svg-accent" style="font-size:11px">the colon opens a block</text>
-          <text x="330" y="96" style="font-size:11px" fill="var(--warn)">and this one opens another, inside it</text>
-          <text x="330" y="132" class="svg-muted" style="font-size:11px">two levels deep — it belongs to both</text>
-          <text x="180" y="180" class="svg-muted" style="font-size:11px">back at the margin: outside both blocks, runs once</text>
+          <text x="330" y="66" class="svg-accent" style="font-size:11px">the colon opens a block</text>
+          <text x="330" y="130" style="font-size:11px" fill="var(--warn)">and this one opens another, inside it</text>
+          <text x="330" y="158" class="svg-muted" style="font-size:11px">two levels deep: it belongs to both</text>
+          <text x="330" y="216" class="svg-accent" style="font-size:11px">a separate block, run when score &gt; 10.5 is False</text>
+          <text x="180" y="284" class="svg-muted" style="font-size:11px">back at the margin: outside every block, runs once</text>
 
-          <line x1="14" y1="196" x2="706" y2="196" class="svg-line"/>
+          <line x1="14" y1="298" x2="706" y2="298" class="svg-line"/>
         </svg>
         <figcaption>Nothing closes these blocks. They end where the
         indentation stops, so the width of the gap on the left changes what the
@@ -81,14 +87,40 @@
         does more harm. The analysis produces a wrong number with no error
         message, and nobody questions it.</p>
       </div>
+
+      <h2>Comparing values</h2>
+      <p>A comparison is an expression whose value is <code>True</code> or
+      <code>False</code>.</p>
+<pre>score = 14.5
+
+score &lt; 5.75     <span class="c"># False   less than</span>
+score &lt;= 5.75    <span class="c"># False   less than or equal to</span>
+score &gt; 10.5     <span class="c"># True    greater than</span>
+score &gt;= 14.5    <span class="c"># True    greater than or equal to</span>
+score == 14.5    <span class="c"># True    equal to: two equals signs</span>
+score != 14.5    <span class="c"># False   not equal to</span></pre>
+      <p>One <code>=</code> assigns, as in step 2. Two <code>==</code> compares.</p>
+      <p>Comparisons join with <code>and</code>, <code>or</code> and
+      <code>not</code>. <code>and</code> is true only when both sides are.
+      <code>or</code> is true when either is. <code>not</code> turns
+      <code>True</code> into <code>False</code> and <code>False</code> into
+      <code>True</code>.</p>
+<pre>score = 14.5
+bike = 0
+
+score &gt; 10.5 and bike &gt; 0    <span class="c"># False   bike &gt; 0 is False</span>
+score &gt; 10.5 or bike &gt; 0     <span class="c"># True    score &gt; 10.5 is True</span>
+not score &gt; 10.5             <span class="c"># False</span></pre>
+      <p>Text cannot be compared with a number. This line is valid Python, so
+      Python reads it. It stops with an error when the line runs:</p>
+<pre>"3.5" &lt;= 5.75
+<span class="c"># TypeError: '&lt;=' not supported between instances of 'str' and 'float'</span></pre>
+      <p>That is a third kind of error. It is not a syntax error, because
+      Python could read the line. It is not a logic error, because Python
+      reports it.</p>
       <div id="q1"></div>
 
       <h2>Repair two blocks</h2>
-      <p>Both of these are the same five lines, with one thing wrong.</p>
-
-      <div id="ex1"></div>
-      <div id="ex2"></div>
-
       <div class="note">
         <h4>Tip 💡: reading an indentation error</h4>
         <ol>
@@ -104,18 +136,10 @@
         changes as you go, and each new one is progress.</p>
       </div>
 
+      <p>Both of these are the same five lines, with one thing wrong.</p>
 
-      <h2>Comparing values</h2>
-      <p>A comparison is an expression whose value is <code>True</code> or
-      <code>False</code>.</p>
-<pre>score &lt; 5.75     <span class="c"># less than</span>
-score &lt;= 5.75    <span class="c"># less than or equal to</span>
-score == 14.5    <span class="c"># equal to — two equals signs</span>
-score != 14.5    <span class="c"># not equal to</span></pre>
-      <p>One <code>=</code> assigns, as in step 2. Two <code>==</code> compares.</p>
-      <p>Comparisons join with <code>and</code>, <code>or</code> and
-      <code>not</code>. <code>and</code> is true only when both sides are.
-      <code>or</code> is true when either is.</p>
+      <div id="ex1"></div>
+      <div id="ex2"></div>
 
       <h2><code>if</code> / <code>elif</code> / <code>else</code></h2>
       <p>Only the first matching branch runs, and <code>elif</code> is the
@@ -128,15 +152,24 @@ elif score &lt;= 10.5:          <span class="c"># reached only if the first was 
 else:
     label = "Above Average"</pre>
       <p>Because earlier branches have already excluded the lower ranges, each
-      test only needs its upper bound. Writing <code>elif 5.76 &lt;= score &lt;=
-      10.5</code> is not wrong, but it states a condition that is already
-      guaranteed. A lower bound that you type can also leave a gap between two
-      ranges, and no error reports the gap.</p>
+      test only needs its upper bound. A lower bound as well, as in
+      <code>elif 5.76 &lt;= score and score &lt;= 10.5:</code>, states a
+      condition that is already guaranteed. A lower bound that you type can
+      also leave a gap between two ranges. A score of 5.755 matches neither
+      branch and is labelled Above Average, and no error reports the gap.</p>
 
       <h2>Truthiness</h2>
       <p>Python accepts almost any value as a condition. Zero is false, and
       so are <code>0.0</code>, the empty string <code>""</code>, and
       <code>None</code>. Essentially everything else is true.</p>
+      <p><code>is None</code> asks a different question: is the value
+      <code>None</code>? It is true for <code>None</code> and for nothing
+      else, so <code>0</code> gives <code>False</code>.</p>
+<pre>bike = None
+bike is None      <span class="c"># True    no figure</span>
+
+bike = 0
+bike is None      <span class="c"># False   0 is a figure</span></pre>
       <div class="note trap">
         <h4>Where truthiness gives the wrong answer</h4>
         <p>A neighbourhood where nobody cycles has a bike count of

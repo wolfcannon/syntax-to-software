@@ -24,7 +24,10 @@
     """Fraction of workers who commute by bicycle, or None if unknowable."""
     if workers == 0:
         return None
-    return bike / workers</pre>
+    return bike / workers
+
+bike_share(21, 1303)    <span class="c"># 0.016116653875671526</span>
+bike_share(4, 0)        <span class="c"># None</span></pre>
       <p>Three things in three lines. The <b>docstring</b> is the first
       statement in the body and is what <code>help(bike_share)</code> prints.
       Write it as a sentence about what comes out, not a restatement of the
@@ -33,6 +36,38 @@
       function that reaches the end of its body without a <code>return</code>
       gives back <code>None</code>. That is a real source of confusion when you meant to
       return something.</p>
+
+      <h3>One function calling another</h3>
+      <p>A function can call any function defined before the call runs.
+      <code>mean_share</code> calls <code>bike_share</code> once per row:</p>
+<pre>def mean_share(rows):
+    """Mean bicycle share over (bike, workers) pairs, skipping unknowable ones."""
+    shares = []
+    for bike, workers in rows:
+        share = bike_share(bike, workers)
+        if share is not None:
+            shares.append(share)
+    return sum(shares) / len(shares)
+
+mean_share([(21, 1303), (3, 184), (4, 0)])    <span class="c"># 0.01621050085087924: (4, 0) is skipped</span></pre>
+      <p><code>sum(shares) / len(shares)</code> is the mean: the total
+      divided by how many values there are.</p>
+
+      <h2>Default values and keyword arguments</h2>
+      <p>A parameter written with <code>=</code> has a default value. A
+      call that leaves that argument out gets the default. A call can also
+      name the parameter it sets. That is a <b>keyword argument</b>.</p>
+<pre>def is_withheld(count, sentinel=-666666666):
+    """True when a Census count is the code for a withheld estimate."""
+    return count == sentinel or count &lt; 0
+
+is_withheld(-666666666)       <span class="c"># True: sentinel is -666666666, the default</span>
+is_withheld(21)               <span class="c"># False</span>
+is_withheld(-1, -1)           <span class="c"># True: -1 given by position</span>
+is_withheld(-1, sentinel=-1)  <span class="c"># True: -1 given by name</span></pre>
+      <p><code>or</code> is true when either side is true, so any negative
+      count also gives <code>True</code>:</p>
+<pre>-5 == -666666666 or -5 &lt; 0    <span class="c"># True: the second test is true</span></pre>
 
       <h2>Pure functions</h2>
       <p>A <b>pure</b> function's answer depends only on its arguments, and it
@@ -75,6 +110,24 @@
         depend on something defined elsewhere that its parameters do not show.
         The level-up examines that risk in detail. If a function needs a value, take it as an argument.</p>
       </div>
+
+      <h2>Padding text, counting and sorting</h2>
+      <p>The exercises also need three small pieces. Step 3 padded numbers
+      with <code>0&gt;</code>. It pads text the same way:</p>
+<pre>f"{7:0&gt;3}"      <span class="c"># '007'</span>
+f"{'7':0&gt;3}"    <span class="c"># '007': text pads the same way</span>
+f"{'097':0&gt;3}"  <span class="c"># '097': already 3 wide, so unchanged</span></pre>
+      <p>To count how often each value appears, keep a dictionary of counts.
+      <code>.get(label, 0)</code> gives 0 the first time a label appears:</p>
+<pre>counts = {}
+for label in ["Above Average", "Most Walkable", "Above Average"]:
+    counts[label] = counts.get(label, 0) + 1
+counts    <span class="c"># {'Above Average': 2, 'Most Walkable': 1}</span></pre>
+      <p>Here a default of 0 is correct. A label that has not appeared yet
+      has been counted zero times, which is a true count. Step 7's warning
+      was about a missing score, which is not zero.</p>
+      <p><code>sorted</code> gives a new list in order:</p>
+<pre>sorted(["180973417003", "180973103083"])    <span class="c"># ['180973103083', '180973417003']</span></pre>
 
       <h2>What Unit 1 has actually built</h2>
       <p>Every stage of the pipeline exists now, in code spread across nine steps.
@@ -136,8 +189,9 @@
         <p>You now have four functions to keep. Copy
         <code>build_geoid()</code>, <code>bike_share()</code>,
         <code>walk_category()</code> and <code>summarize()</code> somewhere
-        you will find them again: a scratch file, a note, anywhere. The very
-        level-up has you paste them into an environment of your own.</p>
+        you will find them again: a scratch file, a note, anywhere. The next
+        level-up, Jupyter notebooks, has you paste them into an environment
+        of your own.</p>
         <p>Check them against the counts you kept in step 4: the same numbers
         should come out. If they do not, extracting the functions changed
         behaviour. Step 11 shows how to find which function changed it.</p>
@@ -281,8 +335,8 @@ COURSE.exercise("ex2", {
 COURSE.exercise("ex3", {
   id: "s09-pipeline", tag: "Exercise 3", title: "Compose the three functions",
   prompt:
-    "<p>This is the last exercise of Unit 1. Three functions are already defined for you above the " +
-    "editor: <code>build_geoid</code>, <code>bike_share</code> and " +
+    "<p>This is the last exercise of Unit 1. The top of the editor defines three " +
+    "functions: <code>build_geoid</code>, <code>bike_share</code> and " +
     "<code>walk_category</code>. Use them to write " +
     "<code>summarize(acs_raw, walk_raw)</code>. It returns a dict with exactly " +
     "these keys:</p>" +
@@ -295,9 +349,15 @@ COURSE.exercise("ex3", {
     "over usable rows</li>" +
     "<li><code>\"unmatched\"</code>: sorted list of ACS GEOIDs with no score</li>" +
     "</ul>" +
+    "<p><code>acs_raw</code> is the ACS table: workers at position 1, bike at " +
+    "position 2, GEOID parts at positions 6 to 9. <code>walk_raw</code> is the EPA " +
+    "table: GEOID parts at positions 0 to 3, the score at position 4.</p>" +
+    "<p>Both have a header row, and every value is text. Convert counts with " +
+    "<code>int</code> and scores with <code>float</code>.</p>" +
     "<p>Take both tables as arguments. Do not read them from the " +
     "surrounding code.</p>",
-  setup: SAMPLE + "\n" +
+  setup: SAMPLE,
+  starter:
     "def build_geoid(state, county, tract, block_group):\n" +
     "    \"\"\"Return the 12-character block group GEOID as a string.\"\"\"\n" +
     "    return f'{state:0>2}{county:0>3}{tract:0>6}{block_group}'\n\n" +
@@ -314,8 +374,7 @@ COURSE.exercise("ex3", {
     "        return 'Below Average'\n" +
     "    if score <= 15.25:\n" +
     "        return 'Above Average'\n" +
-    "    return 'Most Walkable'\n",
-  starter:
+    "    return 'Most Walkable'\n" + "\n" +
     "def summarize(acs_raw, walk_raw):\n" +
     "    \"\"\"Join the two tables and describe the usable sample.\"\"\"\n" +
     "    \n" +
@@ -359,6 +418,23 @@ COURSE.exercise("ex3", {
       code: "expect(summarize(acs_raw, walk_raw), summarize(acs_raw, walk_raw))" }
   ],
   solution:
+    "def build_geoid(state, county, tract, block_group):\n" +
+    "    \"\"\"Return the 12-character block group GEOID as a string.\"\"\"\n" +
+    "    return f'{state:0>2}{county:0>3}{tract:0>6}{block_group}'\n\n" +
+    "def bike_share(bike, workers, sentinel=-666666666):\n" +
+    "    \"\"\"Bicycle commute share, or None where none exists.\"\"\"\n" +
+    "    if bike == sentinel or bike < 0 or workers <= 0:\n" +
+    "        return None\n" +
+    "    return bike / workers\n\n" +
+    "def walk_category(score):\n" +
+    "    \"\"\"EPA walkability band for a National Walkability Index score.\"\"\"\n" +
+    "    if score <= 5.75:\n" +
+    "        return 'Least Walkable'\n" +
+    "    if score <= 10.5:\n" +
+    "        return 'Below Average'\n" +
+    "    if score <= 15.25:\n" +
+    "        return 'Above Average'\n" +
+    "    return 'Most Walkable'\n" + "\n" +
     "def summarize(acs_raw, walk_raw):\n" +
     "    \"\"\"Join the two tables and describe the usable sample.\"\"\"\n" +
     "    walk_lookup = {build_geoid(r[0], r[1], r[2], r[3]): float(r[4])\n" +

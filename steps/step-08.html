@@ -23,12 +23,19 @@
       </ul>
 
       <h2>The same loop in one line</h2>
+      <p>The examples on this page use <code>joined</code>, the list that
+      step 7's exercise 3 built. It holds one dictionary per ACS row:</p>
+<pre>joined[5]    <span class="c"># {'geoid': '180973401103', 'workers': 1303, 'bike': 21, 'walk_index': 14.5}</span>
+len(joined)  <span class="c"># 11</span></pre>
       <p>You can write four lines that build a list as one line:</p>
 <pre>shares = []
 for row in joined:
     shares.append(row["bike"] / row["workers"])
 
 shares = [row["bike"] / row["workers"] for row in joined]</pre>
+      <p>Both versions stop with <code>ZeroDivisionError</code> on the
+      row with no workers. The figure below adds the condition that skips
+      it.</p>
       <p>The order is unfamiliar at first, because the value you are
       collecting comes before the loop that collects it. It is the same three
       pieces you already write, moved onto one line:</p>
@@ -66,6 +73,14 @@ shares = [row["bike"] / row["workers"] for row in joined]</pre>
       <p>Read a comprehension by finding the <code>for</code> first. Everything
       to its left is what you are collecting, everything to its right is where
       the values come from and which ones to keep.</p>
+      <p>The condition after <code>if</code> can join several tests with
+      <code>and</code>. A row is kept only when every test is true:</p>
+<pre>busy = [row["geoid"] for row in joined if row["workers"] &gt; 1000 and row["bike"] &gt; 0]
+busy    <span class="c"># ['180973401103']: two rows have over 1000 workers, one has no cyclists</span></pre>
+      <p>A comprehension also gives you the list to average.
+      <code>sum</code> adds it up and <code>len</code> counts it:</p>
+<pre>workers = [row["workers"] for row in joined if row["walk_index"] is not None]
+sum(workers) / len(workers)    <span class="c"># 573.9: the mean worker count of the 10 matched rows</span></pre>
 
       <h2>Three brackets, three types</h2>
 <pre>[f(x) for x in xs]          <span class="c"># list — ordered, duplicates kept</span>
@@ -87,12 +102,13 @@ shares = [row["bike"] / row["workers"] for row in joined]</pre>
       <p>Step 7 needed two loops to find the unmatched rows on each side. With
       sets, each side needs one operator, and the code has the same form as
       the question:</p>
-<pre>acs_ids = {row["geoid"] for row in acs_rows}
-walk_ids = set(walk_lookup)          <span class="c"># a dict yields its keys</span>
+<pre>acs_rows = [dict(zip(acs_raw[0], r)) for r in acs_raw[1:]]
+acs_ids = {r["state"] + r["county"] + r["tract"] + r["block group"] for r in acs_rows}
+walk_ids = set(walk_lookup)          <span class="c"># walk_lookup from the section above. A dict yields its keys</span>
 
-unmatched = acs_ids - walk_ids       <span class="c"># asked for, never scored</span>
-orphans   = walk_ids - acs_ids       <span class="c"># scored, never asked for</span>
-both      = acs_ids &amp; walk_ids       <span class="c"># the actual analysis sample</span></pre>
+unmatched = acs_ids - walk_ids       <span class="c"># {'180973103083'}: asked for, never scored</span>
+orphans   = walk_ids - acs_ids       <span class="c"># {'180973201071'}: scored, never asked for</span>
+both      = acs_ids &amp; walk_ids       <span class="c"># 10 GEOIDs: the actual analysis sample</span></pre>
       <p>A membership test on a set is fast for the same reason that a
       dictionary lookup is fast. So <code>if geoid in walk_ids</code> stays
       fast for data of any size. The same test against a <em>list</em> scans it from the start
@@ -161,10 +177,14 @@ both      = acs_ids &amp; walk_ids       <span class="c"># the actual analysis s
 COURSE.exercise("ex1", {
   id: "s08-dictcomp", tag: "Exercise 1", title: "Same lookup, one line",
   prompt:
+    "<p><code>acs_raw</code> holds the ACS commuting table and <code>walk_raw</code> the " +
+    "EPA walkability table. Both are lists of lists with a header row, every value text.</p>" +
+    "<p>In <code>walk_raw</code>, positions 0 to 3 are the GEOID parts. Position 4 is the " +
+    "score and position 9 is <code>TotPop</code>, the population. Step 7's table lists every column.</p>" +
     "<p>Build all three in comprehension form:</p><ul>" +
     "<li><code>acs_rows</code>: a list of dicts, header zipped onto each row</li>" +
     "<li><code>walk_lookup</code>: GEOID string to score as a float</li>" +
-    "<li><code>pop_lookup</code>: GEOID string to <code>TotPop</code> as an int</li>" +
+    "<li><code>pop_lookup</code>: GEOID string to <code>TotPop</code> (position 9) as an int</li>" +
     "</ul><p>Then set <code>no_duplicate_keys</code> to whether " +
     "<code>walk_lookup</code> has as many entries as there were rows.</p>",
   setup: SAMPLE,
@@ -242,17 +262,23 @@ COURSE.exercise("ex2", {
 COURSE.exercise("ex3", {
   id: "s08-filter", tag: "Exercise 3", title: "Filter down to usable rows",
   prompt:
+    "<p><code>rows</code> is <code>acs_raw</code>, the ACS table, as dictionaries. " +
+    "<code>B08301_018E</code> is the bike count and <code>B08301_001E</code> the worker count. " +
+    "The GEOID is <code>state</code>, <code>county</code>, <code>tract</code> and " +
+    "<code>block group</code> joined. The top of the editor sets " +
+    "<code>walk_lookup</code> and <code>SENTINEL</code>.</p>" +
     "<p>Build <code>usable</code>: a list of <code>(geoid, share, walk_index)</code> " +
     "tuples for the block groups the analysis can use. A row qualifies " +
     "only if it has a walkability score and at least one worker. Its bike " +
     "count must also not be the Census sentinel <code>-666666666</code>.</p>" +
+    "<p>Share is bike divided by workers. Both are text, so convert them with <code>int</code>.</p>" +
     "<p>Then set <code>n_dropped</code> to how many ACS rows are not in " +
     "<code>usable</code>. Set <code>mean_share</code> to the mean bike share " +
     "of the rows in <code>usable</code>.</p>",
-  setup: SAMPLE + "\n" +
-    "walk_lookup = {r[0]+r[1]+r[2]+r[3]: float(r[4]) for r in walk_raw[1:]}\n" +
-    "SENTINEL = -666666666\n",
+  setup: SAMPLE,
   starter:
+    "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n" +
+    "SENTINEL = -666666666   # the Census code for an estimate it withheld\n\n" +
     "rows = [dict(zip(acs_raw[0], r)) for r in acs_raw[1:]]\n\n" +
     "usable = \n\n" +
     "n_dropped = \nmean_share = \n\n" +
@@ -275,6 +301,8 @@ COURSE.exercise("ex3", {
       code: "expect_close(expect_defined(globals(), 'mean_share'), sum(s for g, s, w in usable) / len(usable), 1e-12)" }
   ],
   solution:
+    "walk_lookup = {r[0] + r[1] + r[2] + r[3]: float(r[4]) for r in walk_raw[1:]}\n" +
+    "SENTINEL = -666666666   # the Census code for an estimate it withheld\n\n" +
     "rows = [dict(zip(acs_raw[0], r)) for r in acs_raw[1:]]\n\n" +
     "usable = [\n" +
     "    (r[\"state\"] + r[\"county\"] + r[\"tract\"] + r[\"block group\"],\n" +
@@ -290,7 +318,7 @@ COURSE.exercise("ex3", {
     "print(len(usable), n_dropped, round(mean_share, 5))\n" +
     "# Notice how often the GEOID expression repeats, and how the conditions\n" +
     "# are piling up. That repetition means the comprehension is now too long to read.\n" +
-    "# Step 9 gives each of these pieces a name."
+    "# Step 9, Functions, gives each of these pieces a name."
 });
 </script>
 </body>
